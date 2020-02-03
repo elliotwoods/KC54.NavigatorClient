@@ -1,0 +1,21 @@
+{
+	"name": "KC54.Navigator.Client",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"start": "electron ./app.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/elliotwoods/KC54.NavigatorClient"
+	},
+	"author": "Elliot Woods",
+	"license": "MIT",
+	"devDependencies": {
+		"electron": "^7.1.11"
+	},
+	"dependencies": {
+		"jquery": "^3.4.1"
+	}
+}
