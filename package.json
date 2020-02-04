@@ -16,6 +16,10 @@
 		"electron": "^7.1.11"
 	},
 	"dependencies": {
-		"jquery": "^3.4.1"
+		"@svgdotjs/svg.js": "^3.0.16",
+		"golden-layout": "^1.5.9",
+		"jquery": "^3.4.1",
+		"lowdb": "^1.0.0",
+		"shortid": "^2.2.15"
 	}
 }

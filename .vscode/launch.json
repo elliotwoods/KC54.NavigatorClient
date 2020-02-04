@@ -7,13 +7,33 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Electron Main",
+			"name": "Electron : Main",
 			"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+			"runtimeArgs": [
+				"--remote-debugging-port=9223",
+				"."
+			],
 			"program": "${workspaceFolder}/app.js",
 			"skipFiles": [
 				"<node_internals>/**"
 			]
+		},
+		{
+			"name" : "Electron : Renderer",
+			"type" : "chrome",
+			"request": "attach",
+			"port" : 9223,
+			"webRoot": "${workspaceFolder}",
+			"timeout": 30000
 		}
-		
+	],
+	"compounds": [
+		{
+			"name": "Electron (both)",
+			"configurations": [
+				"Electron : Main",
+				"Electron : Renderer"
+			]
+		}
 	]
 }
