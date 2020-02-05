@@ -56,6 +56,13 @@ class Utils extends Base {
 				});
 				let content = JSON.parse(contentAsJson);
 
+				//validate frame
+				if(!('forces' in content && 'configuration' in content)) {
+					//skip frame
+					console.log("Skipping content for frame " + fileName);
+					continue;
+				}
+
 				document.get('frames')
 					.push({
 						'id': shortid.generate(),

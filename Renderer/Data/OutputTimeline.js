@@ -1,19 +1,67 @@
 import { document, settings } from '../Database.js'
 
 class OutputTimeline {
-	getTracks() {
-		tracks = {};
-		trackAddresses = [
-			"forces.force.x",
-			"forces.force.y",
-			"forces.force.z",
-			"forces.moment.x",
-			"forces.moment.y",
-			"forces.moment.z"
-		];
+	constructor() {
+		this._cache = {
+			dirty: true,
+			tracks: {},
+			frameCount: 0
+		}
 
-		// for each track address, load the data into a track
+		this.trackAddresses = [
+			["force", "x"],
+			["force", "y"],
+			["force", "z"],
+			["moment", "x"],
+			["moment", "y"],
+			["moment", "z"]
+		];
+	}
+	getTracks() {
+		this.buildTracks();
+		return this._cache.tracks;
+	}
+
+	getFrameCount() {
+		this.buildTracks();
+		return this._cache.frameCount;
+	}
+
+	buildTracks() {
+		if (!this._cache.dirty) {
+			return;
+		}
+
+		// create tracks
+		{
+			let tracks = {};
+
+			let forcesPerFrames = document.get("outputFrames").map("content").map("forces").value();
+			// format is forces[frame index][joint index]
+
+			// for each track address, load the data into a track
+			for (let trackAddress of this.trackAddresses) {
+				let outputTrack = new OutputTrack();
+				outputTrack.name = trackAddress.join('-');
+
+				// for each frame take the relevant values
+				outputTrack.data = forcesPerFrames.map((jointsForces) => {
+					let valuesPerJoint = jointsForces.map((jointForce) => jointForce[trackAddress[0]][trackAddress[1]]);
+					return Math.max(...valuesPerJoint);
+				});
+
+				tracks[outputTrack.name] = outputTrack;
+			}
+
+			this._cache.tracks = tracks;
+		}
+
+		// calculate frame count
+		{
+			this._cache.frameCount = Math.max(...Object.values(this._cache.tracks).map(track => track.data.length));
+		}
 		
+		this._cache.dirty = false;
 	}
 }
 
@@ -24,9 +72,9 @@ class OutputTrack {
 
 
 		this._cache = {
-			dirty : true,
-			maximum : 0,
-			normalizedData : []
+			dirty: true,
+			absMaximum: 0,
+			normalizedData: []
 		};
 	}
 
@@ -36,22 +84,17 @@ class OutputTrack {
 		}
 
 		// calculate range
-		let maximum = null;
+		let absMaximum = 0;
 		this.data.map(x => {
 			let absValue = Math.abs(x);
-			if(maximum == null) {
-				maximum = absValue;
-			}
-			else if (absValue > maximum) {
-				maximum = absValue;
+			if (absValue > absMaximum) {
+				absMaximum = absValue;
 			}
 		});
-		this._cache.maximum = maximum;
+		this._cache.absMaximum = absMaximum;
 
 		//calculate normalized values
-		this._cache.normalizedData = this.data.map(value => {
-			value / maximum;
-		});
+		this._cache.normalizedData = this.data.map(value =>value / absMaximum);
 
 		this._cache.dirty = false;
 	}

@@ -5,6 +5,7 @@ import { outputTimeline } from '../Data/OutputTimeline.js'
 
 const heightPerTrack = 25;
 const widthPerFrame = 10;
+const trackSpacing = 5;
 
 class Timeline extends Base {
 	constructor(container, state) {
@@ -36,61 +37,64 @@ class Timeline extends Base {
 		// .get('outputFrames')
 		// .value();
 		// let frameCount = this.outputData.length;
+		let tracks = outputTimeline.getTracks();
 
-		let frameCount = 100;
-
-		// let path = new paper.Path();
-		// path.strokeColor = 'black';
-		// let start = new paper.Point(100, 100);
-		// path.moveTo(start);
-		// path.lineTo(start.add([100, -50]));
-		// paper.view.draw();
-
-
-
-		let rows = 5;
-
-
-		let yGutter = rows * heightPerTrack;
-		const gutterHeight = 30;
-		let height = yGutter + gutterHeight;
-		let width = frameCount * 10;
+		let frameCount = outputTimeline.getFrameCount();
 
 		// draw tracks
-		{
-			let foregroundColor = '#f06';
-			let backgroundColor = '#ffe6f0';
+		let trackArray = Object.values(tracks);
+		let trackCount = trackArray.length;
+
+		let trackBackgroundArea = this.draw.rect(widthPerFrame * frameCount, (heightPerTrack + trackSpacing) * trackCount).attr({ fill: '#fff' });
+
+		for(let trackIndex = 0; trackIndex < trackArray.length; trackIndex++) {
+			let trackData = trackArray[trackIndex];
+			
+			let dimensionName = trackData.name.substr(-1);
+
+			let foregroundColor;
+			let backgroundColor;
+			switch(dimensionName) {
+				case 'x':
+					foregroundColor = '#f06';
+					backgroundColor = '#ffe6f0';
+					break;
+				case 'y':
+					foregroundColor = '#6f0';
+					backgroundColor = '#f0ffe6';
+					break;
+				case 'z':
+					foregroundColor = '#06f';
+					backgroundColor = '#e6f0ff';
+					break;
+				default:
+					foregroundColor = '#f06';
+					backgroundColor = '#ffe6f0';
+					break;
+			}
 			//95% value from #f06 on https://www.w3schools.com/colors/colors_picker.asp?colorhex=ff0000
 
-			let trackBackground = this.draw.rect(width, rows * heightPerTrack).attr({ fill: '#fff' });
+			let trackWidth = trackData.data.length * widthPerFrame;
 
-			let nomralizedData = [];
-			{
-				let a = 0.0;
-				for (let i = 0; i < 100; i++) {
-					a += Math.random(1) - 0.5;
-					nomralizedData.push(a);
-				}
-				console.log(nomralizedData);
-			}
+			let normalizedData = trackData.getNormalizedData();
 
-			let yValues = nomralizedData.map(x => heightPerTrack * (1.0 - Math.abs(x)));
+			let yValues = normalizedData.map(x => heightPerTrack * (1.0 - Math.abs(x)));
 
 			// draw example result track
 			{
-				let track = this.draw.nested().move(0, 0);
-				let background = track.rect(nomralizedData.length * widthPerFrame, heightPerTrack);
-				//background.stroke({ color: '#f06', width: 2 });
-				background.fill({ color: '#ffe6f0' })
+				let track = this.draw.nested().move(0, trackIndex * (heightPerTrack + trackSpacing));
+				let background = track.rect(normalizedData.length * widthPerFrame, heightPerTrack);
+				
+				background.fill({ color: backgroundColor })
 
-				if (nomralizedData.length == 0) {
+				if (normalizedData.length == 0) {
 
 				}
-				else if (nomralizedData.length == 1) {
+				else if (normalizedData.length == 1) {
 					//draw as rect
 					let absValue = absoluteValues[0];
 					let rect = track.rect(widthPerFrame, heightPerTrack - yValues[0]).move(0, yValues[0]);
-					if (nomralizedData[0] > 0) {
+					if (normalizedData[0] > 0) {
 						rect.fill({ color: foregroundColor });
 					}
 					else {
@@ -100,11 +104,11 @@ class Timeline extends Base {
 				}
 				else {
 					// draw path
-					let positive = nomralizedData[0] > 0.0;
+					let positive = normalizedData[0] > 0.0;
 					let pathData = [];
 					pathData.push(`M0 ${heightPerTrack} V${yValues[0]}`);
-					for(let i=0; i<nomralizedData.length; i++) {
-						let newPositive = nomralizedData[i] > 0.0;
+					for(let i=0; i<normalizedData.length; i++) {
+						let newPositive = normalizedData[i] > 0.0;
 						if(newPositive != positive) {
 							//end old path and start a new one
 							let y_xCrossOver = (i - 0.5) * widthPerFrame;
@@ -120,7 +124,7 @@ class Timeline extends Base {
 
 							// start new path
 							pathData = [`M${y_xCrossOver} ${heightPerTrack}`];
-							positive = nomralizedData[i] > 0;
+							positive = normalizedData[i] > 0;
 						}
 						pathData.push(`L${i * widthPerFrame} ${yValues[i]}`);
 					}
@@ -136,10 +140,15 @@ class Timeline extends Base {
 					}
 				}
 
-				track.text('Mx').move(10, heightPerTrack-20).font({family : 'Helvetica', size : 18});
-
+				// draw tittle
+				track.text(trackData.name).move(10, heightPerTrack-20).font({family : 'Helvetica', size : 18});
 			}
 		}
+
+		let yGutter = trackCount * (heightPerTrack + trackSpacing);
+		const gutterHeight = 30;
+		let height = yGutter + gutterHeight;
+		let width = frameCount * 10;
 
 		// draw frame gutter
 		{
