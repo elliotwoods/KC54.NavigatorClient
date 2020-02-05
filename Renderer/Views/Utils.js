@@ -2,6 +2,7 @@ import { Base } from './Base.js'
 
 import { openDirectoryDialog } from '../routerRenderer.js'
 const { fs } = require('fs')
+import { document } from '../Database.js'
 
 class Utils extends Base {
 	constructor(container, state) {

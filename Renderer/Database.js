@@ -13,4 +13,8 @@ document.defaults({
 	"frames" : []
 }).write();
 
+window.db = {};
+window.db.document = document;
+window.db.settings = settings;
+
 export { settings, document }

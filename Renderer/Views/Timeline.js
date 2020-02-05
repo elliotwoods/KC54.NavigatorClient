@@ -1,6 +1,7 @@
 import { Base } from './Base.js'
 import { SVG } from '../../node_modules/@svgdotjs/svg.js/dist/svg.esm.js'
 import { document, settings } from '../Database.js'
+import { outputTimeline } from '../Data/OutputTimeline.js'
 
 const heightPerTrack = 25;
 const widthPerFrame = 10;
