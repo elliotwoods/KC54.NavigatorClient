@@ -1,6 +1,6 @@
 import { Base } from './Base.js'
-const { ipcRenderer } = require('electron')
-import { SVG } from '../node_modules/@svgdotjs/svg.js/dist/svg.esm.js'
+import { SVG } from '../../node_modules/@svgdotjs/svg.js/dist/svg.esm.js'
+import { document, settings } from '../Database.js'
 
 const heightPerTrack = 25;
 const widthPerFrame = 10;
@@ -24,14 +24,17 @@ class Timeline extends Base {
 	}
 
 	refresh() {
-		this.zoomLevel = ipcRenderer.sendSync("getTimelineZoomLevel");
+		this.zoomLevel = settings
+			.get('zoomLevel')
+			.value();
 		this.refreshOutput();
 	}
 
 	refreshOutput() {
-		// this.outputData = ipcRenderer.sendSync("getTimelineOutput");
+		// this.outputData = document
+		// .get('outputFrames')
+		// .value();
 		// let frameCount = this.outputData.length;
-		// this.outputData = ipcRenderer.sendSync("getTimelineOutput");
 
 		let frameCount = 100;
 

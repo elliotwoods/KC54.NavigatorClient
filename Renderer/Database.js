@@ -1,5 +1,5 @@
 const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
+const FileSync = require('../node_modules/lowdb/adapters/FileSync')
 
 const settings = low(new FileSync('settings.json'));
 settings.defaults({
@@ -12,5 +12,5 @@ const document = new low(new FileSync(documentPath));
 document.defaults({
 	"frames" : []
 }).write();
-module.exports.settings = settings;
-module.exports.document = document;
+
+export { settings, document }

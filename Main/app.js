@@ -1,6 +1,5 @@
 const { app, BrowserWindow } = require('electron')
-const { document, settings } = require('./database');
-require('./Router.js')
+require('./routerMain.js')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -17,7 +16,7 @@ function createWindow() {
 	})
 
 	// and load the index.html of the app.
-	win.loadFile('index.html')
+	win.loadFile('./Renderer/index.html')
 
 	// Open the DevTools.
 	//win.webContents.openDevTools()

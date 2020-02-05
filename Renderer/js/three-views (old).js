@@ -1,7 +1,7 @@
 import * as THREE from '/node_modules/three/build/three.module.js';
 import { OrbitControls } from '/node_modules/three/examples/jsm/controls/OrbitControls.js';
-import { buildScene } from './scene.js.js';
-import { RoomGrid } from './roomGrid.js.js';
+import { buildScene } from './scene.js.js.js';
+import { RoomGrid } from './roomGrid.js.js.js';
 
 var cameraPerspective, cameraTop, cameraFront;
 var controls, scene, renderer;

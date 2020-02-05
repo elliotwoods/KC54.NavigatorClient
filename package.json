@@ -2,9 +2,9 @@
 	"name": "KC54.Navigator.Client",
 	"version": "1.0.0",
 	"description": "",
-	"main": "app.js",
+	"main": "Main/app.js",
 	"scripts": {
-		"start": "electron ./app.js"
+		"start": "electron ./Main/app.js"
 	},
 	"repository": {
 		"type": "git",
