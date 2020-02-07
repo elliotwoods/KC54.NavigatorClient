@@ -1,5 +1,11 @@
-.scrollContainer {
+.scrollContainerX {
 	width: 100%;
 	height: 100%;
 	overflow-x: scroll;
+}
+
+.scrollContainerY {
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
 }

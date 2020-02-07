@@ -1,7 +1,7 @@
 import { Base } from './Base.js'
 import { SVG } from '../../node_modules/@svgdotjs/svg.js/dist/svg.esm.js'
 import { document, settings } from '../Database.js'
-import { outputTimeline } from '../Data/OutputTimeline.js'
+import { outputTimeline } from '../Data/outputTimeline.js'
 import { rendererRouter } from '../rendererRouter.js';
 
 const heightPerTrack = 25;
@@ -18,7 +18,7 @@ class Timeline extends Base {
 	}
 
 	init() {
-		this.scrollDiv = $(`<div class="scrollContainer" />`);
+		this.scrollDiv = $(`<div class="scrollContainerX" />`);
 		this.container.getElement().append(this.scrollDiv);
 		this.draw = SVG().addTo(this.scrollDiv[0]);
 		this.refresh();

@@ -1,4 +1,5 @@
 import { document, settings } from '../Database.js'
+import { rendererRouter } from '../rendererRouter.js'
 
 class OutputTimeline {
 	constructor() {
@@ -25,6 +26,15 @@ class OutputTimeline {
 	getFrameCount() {
 		this.buildTracks();
 		return this._cache.frameCount;
+	}
+
+	getCurrentFrameIndex() {
+		return rendererRouter.appState.get_outputFrameIndex();
+	}
+
+	getCurrentFrame() {
+		let outputFrameIndex = this.getCurrentFrameIndex();
+		return  document.get("outputFrames").nth(outputFrameIndex).value();
 	}
 
 	buildTracks() {

@@ -1,5 +1,6 @@
 import { Utils } from './Views/Utils.js'
 import { Timeline } from './Views/Timeline.js'
+import { AnglePlots } from './Views/AnglePlots.js'
 
 let standardConfig = {
 	content: [{
@@ -43,6 +44,13 @@ let standardConfig = {
 				componentState: {
 					"label": "Transport"
 				}
+			},
+			{
+				type: 'component',
+				componentName: "AnglePlots",
+				componentState: {
+					"label": "AnglePlots"
+				}
 			}]
 		}]
 	}]
@@ -55,6 +63,7 @@ function setup() {
 
 	Utils.register(goldenLayout);
 	Timeline.register(goldenLayout);
+	AnglePlots.register(goldenLayout);
 
 	goldenLayout.registerComponent('Placeholder', function(container, componentState){
 		container.getElement().html('<h2>' + componentState.label + '</h2>');
