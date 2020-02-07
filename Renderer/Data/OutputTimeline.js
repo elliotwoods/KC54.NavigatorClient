@@ -46,6 +46,10 @@ class OutputTimeline {
 
 				// for each frame take the relevant values
 				outputTrack.data = forcesPerFrames.map((jointsForces) => {
+					let value = jointsForces;
+					for(let addressPart of trackAddress) {
+						value = value.map((data) => data[addressPart]);
+					}
 					let valuesPerJoint = jointsForces.map((jointForce) => jointForce[trackAddress[0]][trackAddress[1]]);
 					return Math.max(...valuesPerJoint);
 				});

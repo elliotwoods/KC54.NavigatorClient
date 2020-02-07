@@ -1,6 +1,6 @@
 import { Base } from './Base.js'
 
-import { openDirectoryDialog } from '../routerRenderer.js'
+import { rendererRouter } from '../rendererRouter.js'
 const { fs } = require('fs')
 import { document } from '../Database.js'
 
@@ -30,7 +30,10 @@ class Utils extends Base {
 	}
 
 	importFolderAnimation() {
-		let result = openDirectoryDialog();
+		let result = rendererRouter.openDirectoryDialog();
+		if(result == null) {
+			return;
+		}
 
 		let count = 0;
 

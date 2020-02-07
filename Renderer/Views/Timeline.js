@@ -2,6 +2,7 @@ import { Base } from './Base.js'
 import { SVG } from '../../node_modules/@svgdotjs/svg.js/dist/svg.esm.js'
 import { document, settings } from '../Database.js'
 import { outputTimeline } from '../Data/OutputTimeline.js'
+import { rendererRouter } from '../rendererRouter.js';
 
 const heightPerTrack = 25;
 const widthPerFrame = 10;
@@ -169,11 +170,17 @@ class Timeline extends Base {
 		}
 
 
+		this.refreshCursor();
 
 		this.draw.size(width, height);
 
 		window.svg = this.svg;
 		window.draw = this.draw;
+	}
+
+	refreshCursor() {
+		let outputFrameIndex = rendererRouter.appState.get_outputFrameIndex();
+		rendererRouter.appState.set_outputFrameIndex(100);
 	}
 }
 
