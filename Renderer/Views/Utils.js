@@ -78,20 +78,22 @@ class Utils extends Base {
 					continue;
 				}
 
-				document.get('outputFrames')
-					.push({
-						'id': shortid.generate(),
-						'content': content,
-						'importReport': {
-							'path': path.join(folder, fileName),
-							'date': Date.now()
-						}
-					})
-					.write();
-
+				contentToAdd.push({
+					'id': shortid.generate(),
+					'content': content,
+					'importReport': {
+						'path': path.join(folder, fileName),
+						'date': Date.now()
+					}
+				});
+				
 				console.log(`Importing ${fileName}`);
 				framesAdded++;
 			}
+
+			document.get('outputFrames')
+				.push(...contentToAdd)
+				.write();
 
 
 			console.log(`Imported ${framesAdded} from ${folder}`);

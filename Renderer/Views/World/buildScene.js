@@ -30,15 +30,15 @@ function makeMomentGeometry(value) {
 
 let materialRed = new THREE.MeshBasicMaterial({
 	color: 0xff0000,
-	side : THREE.DoubleSide
+	side: THREE.DoubleSide
 });
 let materialGreen = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
-	side : THREE.DoubleSide
+	side: THREE.DoubleSide
 });
 let materialBlue = new THREE.MeshBasicMaterial({
 	color: 0x0000ff,
-	side : THREE.DoubleSide
+	side: THREE.DoubleSide
 });
 
 
@@ -52,7 +52,7 @@ function makeMoments(forcesItem) {
 		mesh.rotateY(Math.PI / 2.0);
 		moments.add(mesh);
 	}
-	
+
 	{
 		let momentGeomtry = makeMomentGeometry(momentData.y / 5000);
 		let mesh = new THREE.Mesh(momentGeomtry, materialGreen);
@@ -86,18 +86,19 @@ async function buildScene(scene) {
 	}
 
 	scene.updateMatrixWorld();
+	if (frameData.forces) {
+		for (let i = 0; i < frameData.forces.length; i++) {
+			let positionInBlock = i % 2 == 0
+				? new THREE.Vector3(0, 0, 0)
+				: new THREE.Vector3(1.0, 0, 0.0);
+			let block = blocks[Math.floor(i / 2)];
 
-	for(let i=0; i<frameData.forces.length; i++) {
-		let positionInBlock = i % 2 == 0
-			? new THREE.Vector3(0, 0, 0) 
-			: new THREE.Vector3(1.0, 0, 0.0);
-		let block = blocks[Math.floor(i/2)];
+			let positionInWorld = block.localToWorld(positionInBlock);
 
-		let positionInWorld = block.localToWorld(positionInBlock);
-
-		let momentHelper = makeMoments(frameData.forces[i]);
-		momentHelper.position.copy(positionInWorld);
-		system.add(momentHelper);
+			let momentHelper = makeMoments(frameData.forces[i]);
+			momentHelper.position.copy(positionInWorld);
+			system.add(momentHelper);
+		}
 	}
 }
 
