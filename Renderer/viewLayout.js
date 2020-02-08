@@ -1,6 +1,7 @@
 import { Utils } from './Views/Utils.js'
 import { Timeline } from './Views/Timeline.js'
 import { AnglePlots } from './Views/AnglePlots.js'
+import { World } from './Views/World.js'
 
 let standardConfig = {
 	content: [{
@@ -9,7 +10,7 @@ let standardConfig = {
 			type: "column",
 			content: [{
 				type: 'component',
-				componentName: "Placeholder",
+				componentName: "World",
 				componentState: {
 					"label": "3D View (solid, perspective)"
 				}
@@ -64,6 +65,7 @@ function setup() {
 	Utils.register(goldenLayout);
 	Timeline.register(goldenLayout);
 	AnglePlots.register(goldenLayout);
+	World.register(goldenLayout);
 
 	goldenLayout.registerComponent('Placeholder', function(container, componentState){
 		container.getElement().html('<h2>' + componentState.label + '</h2>');

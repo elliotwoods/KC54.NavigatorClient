@@ -34,7 +34,7 @@ class OutputTimeline {
 
 	getCurrentFrame() {
 		let outputFrameIndex = this.getCurrentFrameIndex();
-		return  document.get("outputFrames").nth(outputFrameIndex).value();
+		return document.get("outputFrames").nth(outputFrameIndex).value();
 	}
 
 	buildTracks() {
@@ -51,20 +51,25 @@ class OutputTimeline {
 
 			// for each track address, load the data into a track
 			for (let trackAddress of this.trackAddresses) {
-				let outputTrack = new OutputTrack();
-				outputTrack.name = trackAddress.join('-');
+				try {
+					let outputTrack = new OutputTrack();
+					outputTrack.name = trackAddress.join('-');
 
-				// for each frame take the relevant values
-				outputTrack.data = forcesPerFrames.map((jointsForces) => {
-					let value = jointsForces;
-					for(let addressPart of trackAddress) {
-						value = value.map((data) => data[addressPart]);
-					}
-					let valuesPerJoint = jointsForces.map((jointForce) => jointForce[trackAddress[0]][trackAddress[1]]);
-					return Math.max(...valuesPerJoint);
-				});
+					// for each frame take the relevant values
+					outputTrack.data = forcesPerFrames.map((jointsForces) => {
+						let value = jointsForces;
+						for (let addressPart of trackAddress) {
+							value = value.map((data) => data[addressPart]);
+						}
+						let valuesPerJoint = jointsForces.map((jointForce) => jointForce[trackAddress[0]][trackAddress[1]]);
+						return Math.max(...valuesPerJoint);
+					});
 
-				tracks[outputTrack.name] = outputTrack;
+					tracks[outputTrack.name] = outputTrack;
+				}
+				catch (exception) {
+					console.log(`Cannot add track ${trackAddress}`)
+				}
 			}
 
 			this._cache.tracks = tracks;
@@ -74,7 +79,7 @@ class OutputTimeline {
 		{
 			this._cache.frameCount = Math.max(...Object.values(this._cache.tracks).map(track => track.data.length));
 		}
-		
+
 		this._cache.dirty = false;
 	}
 }
@@ -108,7 +113,7 @@ class OutputTrack {
 		this._cache.absMaximum = absMaximum;
 
 		//calculate normalized values
-		this._cache.normalizedData = this.data.map(value =>value / absMaximum);
+		this._cache.normalizedData = this.data.map(value => value / absMaximum);
 
 		this._cache.dirty = false;
 	}

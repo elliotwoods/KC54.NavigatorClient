@@ -1,7 +1,9 @@
 import { Base } from './Base.js'
 
 import { rendererRouter } from '../rendererRouter.js'
-const { fs } = require('fs')
+const fs = require('fs')
+const path = require('path')
+const shortid = require('shortid')
 import { document } from '../Database.js'
 
 class Utils extends Base {
@@ -29,17 +31,27 @@ class Utils extends Base {
 		}
 	}
 
+	clearAnimation() {
+		document.set('outputFrames', [])
+			.write();
+	}
+
 	importFolderAnimation() {
-		let result = rendererRouter.openDirectoryDialog();
+		let result = rendererRouter.openDialog({
+			properties : ['openDirectory']
+		});
 		if(result == null) {
 			return;
 		}
 
-		let count = 0;
+		let framesAdded = 0;
 
 		if (result) {
 			let folder = result[0];
 			let fileNames = fs.readdirSync(folder).sort();
+
+			let contentToAdd = [];
+
 			for (let fileName of fileNames) {
 				let extension = path.extname(fileName);
 				if (extension != ".json") {
@@ -66,7 +78,7 @@ class Utils extends Base {
 					continue;
 				}
 
-				document.get('frames')
+				document.get('outputFrames')
 					.push({
 						'id': shortid.generate(),
 						'content': content,
@@ -74,15 +86,69 @@ class Utils extends Base {
 							'path': path.join(folder, fileName),
 							'date': Date.now()
 						}
-					}).write();
+					})
+					.write();
 
-				console.log(`Imported ${fileName}`);
-				count++;
+				console.log(`Importing ${fileName}`);
+				framesAdded++;
 			}
+
+
+			console.log(`Imported ${framesAdded} from ${folder}`);
 		}
-		return {
-			'importedFrames': count
-		};
+	}
+
+	importFileAnimation() {
+		let result = rendererRouter.openDialog({
+			properties : ['openFile'],
+			filters : [
+				{ name : 'Json animations', extensions : ['json'] }
+			],
+			message : "Open Json animation"
+		});
+		if (result.length != 1) {
+			return;
+		}
+
+		let filename = result[0];
+
+		let contentAsJson = fs.readFileSync(filename, {
+			encoding: 'utf8',
+			flag: 'r'
+		});
+		let content = JSON.parse(contentAsJson);
+
+		// check format
+		{ 
+			content = content.map((frame) => {
+				if(frame.configuration) {
+					return frame;
+				}
+				else {
+					return {
+						configuration : frame
+					};
+				}
+			});
+		}
+
+		let framesAdded = 0;
+
+		for(let frame of content) {
+			document.get('outputFrames')
+			.push({
+				'id': shortid.generate(),
+				'content': frame,
+				'importReport': {
+					'path': filename,
+					'date': Date.now()
+				}
+			}).write();
+
+			framesAdded++;
+		}
+
+		console.log(`Imported ${framesAdded} from ${filename}`);
 	}
 }
 

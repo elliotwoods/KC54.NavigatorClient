@@ -21,7 +21,7 @@ class Timeline extends Base {
 		this.scrollDiv = $(`<div class="scrollContainerX" />`);
 		this.container.getElement().append(this.scrollDiv);
 		this.draw = SVG().addTo(this.scrollDiv[0]);
-		this.refresh();
+		this.tryRefresh();
 
 		this.timelineOutputCursor = null;
 	}

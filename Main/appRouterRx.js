@@ -6,7 +6,7 @@ class SyncHandlers {
 		return appRouterRx.syncHandlerNames;
 	}
 
-	static openDirectoryDialog(args) {
+	static openDialog(args) {
 		let result = dialog.showOpenDialogSync(args);
 		return result;
 	}

@@ -4,8 +4,13 @@ class Base {
 		this.state = state;
 	}
 
-	refresh() {
-
+	tryRefresh() {
+		try {
+			this.refresh();
+		}
+		catch(exception) {
+			// print error to container
+		}
 	}
 	
 	static register(goldenLayout) {
