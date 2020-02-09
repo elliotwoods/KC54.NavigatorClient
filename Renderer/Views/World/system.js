@@ -1,6 +1,7 @@
 import * as THREE from '../../../node_modules/three/build/three.module.js';
 
 import { document, settings } from '../../Database.js'
+import { rendererRouter } from '../../rendererRouter.js'
 
 let blockMaterial = null;
 
@@ -90,12 +91,20 @@ let frameData = document.getCurrentOutputFrame();
 let blocks = [];
 for (let blockData of frameData.configuration) {
 	let block = makeBlock();
-	block.position.set(blockData.start.x, blockData.start.y, blockData.start.z);
-	block.rotateZ(blockData.angleToX);
 	system.add(block);
 	blocks.push(block);
 }
 
+function setBlockTransforms(frameData) {
+	for(let i = 0; i < blocks.length; i++) {
+		let block = blocks[i];
+		let blockData = frameData.configuration[i];
+		block.position.set(blockData.start.x, blockData.start.y, blockData.start.z);
+		block.rotation.z = blockData.angleToX;
+	}
+}
+
+setBlockTransforms(frameData)
 
 // Build the forces
 let showForces = settings.get("world")
@@ -116,5 +125,10 @@ if (showForces && frameData.forces) {
 		system.add(momentHelper);
 	}
 }
+
+// listen for changes
+rendererRouter.onChange('outputFrame', () => {
+	setBlockTransforms(document.getCurrentOutputFrame());
+})
 
 export { system }

@@ -10,6 +10,7 @@ class AnglePlots extends Base {
 		super(container, state);
 		this.container = container;
 		this.state = state;
+		this.needsUpdateTraces = true;
 
 		this.init();
 	}
@@ -49,7 +50,7 @@ class AnglePlots extends Base {
 		for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
 			let shaftAnglesForOneAxis = framePerShaftAngle[shaftIndex]
 			let plot = {
-				type : 'scatterpolargl',
+				type : 'scatterpolar',
 				mode : 'lines',
 				r : AxisMath.radiansToCycles(shaftAnglesForOneAxis),
 				theta : AxisMath.radiansToDegrees(shaftAnglesForOneAxis),
@@ -59,7 +60,7 @@ class AnglePlots extends Base {
 
 			// add a marker for the current position
 			let traceCurrentPosition = {
-				type : 'scatterpolargl',
+				type : 'scatterpolar',
 				mode : 'markers',
 				r : AxisMath.radiansToCycles([shaftAnglesForOneAxis[currentFrameIndex]]),
 				theta : AxisMath.radiansToDegrees([shaftAnglesForOneAxis[currentFrameIndex]]),
@@ -246,13 +247,51 @@ class AnglePlots extends Base {
 		this.plot = Plotly.newPlot(this.div[0], plotData.concat(markersData), layout, config);
 		this.plot.then((plotDiv) => {
 			$(plotDiv).height("100%");
+			this.plotDiv = plotDiv;
+
+			rendererRouter.onChange("outputFrame", () => {
+				this.needsUpdateTraces = true;
+			});
 		});
+
+		// start update loop
+		this.updateShaftCursors();
 
 		// for debug
 		window.axisMath = AxisMath;
 		window.anglePlots = this;
 		window.anglesToX = shaftAnglesPerFrame[0];
 	}
+
+	async updateShaftCursors() {
+		if(this.needsUpdateTraces) {
+			let frame = document.getCurrentOutputFrame();
+			let anglesToX = frame.configuration.map(block => block.angleToX);
+			let shaftAngles = AxisMath.anglesToXToShaftAngles(anglesToX);
+	
+			let traceIndices = new Array(shaftAngles.length).fill(0).map((_, i) => i + shaftAngles.length);
+	
+			traceData = {
+				data : shaftAngles.map((shaftAngle) => {
+					return {
+						r : [shaftAngle / (Math.PI * 2)],
+						theta : [shaftAngle / (Math.PI * 2) * 360]
+					};
+				}),
+				traces : traceIndices
+			}
+	
+			await Plotly.animate(this.div[0], traceData);
+
+			this.needsUpdateTraces = false;
+		}
+		
+		setTimeout(() => {
+			this.updateShaftCursors();
+		}, 10);
+	}
 }
+
+let traceData = null;
 
 export { AnglePlots }

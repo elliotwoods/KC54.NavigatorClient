@@ -157,6 +157,38 @@ class Utils extends Base {
 
 		console.log(`Imported ${framesAdded} from ${filename}`);
 	}
+
+	jumpToOutputFrame() {
+
+	}
+
+	nextOutputFrame() {
+		let nextFrameIndex = rendererRouter.appState.get_outputFrameIndex() + 1;
+		let outputFrameCount = document.get('outputFrames')
+			.value()
+			.length;
+
+		if(nextFrameIndex > outputFrameCount) {
+			nextFrameIndex = 0;
+		}
+
+		rendererRouter.appState.set_outputFrameIndex(nextFrameIndex);
+		console.log(rendererRouter.appState.get_outputFrameIndex());
+	}
+
+	play() {
+		rendererRouter.appState.set_playing(true);
+	}
+
+	pause() {
+		rendererRouter.appState.set_playing(false);
+	}
+
+	stop() {
+		rendererRouter.appState.set_playing(false);
+		rendererRouter.appState.set_outputFrameIndex(0);
+	}
+
 }
 
 export { Utils }

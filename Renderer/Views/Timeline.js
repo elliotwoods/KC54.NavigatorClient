@@ -180,7 +180,7 @@ class Timeline extends Base {
 
 	refreshCursor() {
 		let outputFrameIndex = rendererRouter.appState.get_outputFrameIndex();
-		rendererRouter.appState.set_outputFrameIndex(100);
+		//rendererRouter.appState.set_outputFrameIndex(100);
 	}
 }
 

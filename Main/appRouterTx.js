@@ -7,6 +7,10 @@ class AppRouterTx {
 			window.send(channel, message);
 		}
 	}
+
+	announcePropertyChange(propertyName) {
+		this.sendToAllWindows('changeProperty', propertyName);
+	}
 }
 
 let appRouterTx = new AppRouterTx();

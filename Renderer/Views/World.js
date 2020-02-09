@@ -46,8 +46,8 @@ class World extends Base {
 				{
 					// cameras
 					{
-						this.camera = new THREE.PerspectiveCamera(30, width / height, 0.01, 1000);
-						this.camera.position.set(4.0, -20.0, 5.0);
+						this.camera = new THREE.PerspectiveCamera(60, width / height, 0.01, 1000);
+						this.camera.position.set(Constants.footDistance / 2, -9.0, 1.8 - 0.6);
 						this.camera.up.set(0, 0, 1);
 					}
 
@@ -66,7 +66,7 @@ class World extends Base {
 						this.controls.minDistance = 0.01;
 						this.controls.maxDistance = 100;
 						this.controls.maxPolarAngle = Math.PI / 2;
-						this.controls.target.set(Constants.footDistance / 2, 0, 2);
+						this.controls.target.set(Constants.footDistance / 2, 0, 3);
 					}
 				}
 				break;

@@ -6,7 +6,7 @@
     "blockMaterial": {
       "color": 11184810,
       "metalness": 0.8,
-      "roughness": 0.05,
+      "roughness": 0.1,
       "envMapIntensity": 1
     },
     "sunLight": {

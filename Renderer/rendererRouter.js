@@ -2,6 +2,8 @@ const { ipcRenderer } = require('electron')
 
 class RendererRouter {
 	constructor() {
+		this.propertyListeners = [];
+
 		// Add local methods for all syncHandler end-points in main app
 		{
 			let syncHandlerNames = ipcRenderer.sendSync("getSyncHandlerNames");
@@ -30,6 +32,18 @@ class RendererRouter {
 				}
 			}
 		}
+
+		ipcRenderer.on('changeProperty', (event, arg) => {
+			let releventListeners = this.propertyListeners.filter(propertyListener => propertyListener.name == arg);
+			releventListeners.map(listener => listener.action());
+		});
+	}
+
+	onChange(propertyName, action) {
+		this.propertyListeners.push({
+			name : propertyName,
+			action : action
+		});
 	}
 }
 

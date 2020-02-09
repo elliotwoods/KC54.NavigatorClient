@@ -53,9 +53,18 @@ document.defaults({
 
 document.getCurrentOutputFrame = () => {
 	let currentFrameIndex = rendererRouter.appState.get_outputFrameIndex();
-	return document.get('outputFrames')
-		.nth(currentFrameIndex)
-		.value().content;
+	let outputFrames = document.get('outputFrames')
+		.value();
+	if(outputFrames.length == 0) {
+		return {}
+	}
+	else if (currentFrameIndex >= outputFrames.length) {
+		rendererRouter.appState.set_outputFrameIndex(0);
+		return outputFrames[0].content;
+	}
+	else {
+		return outputFrames[currentFrameIndex].content;
+	}
 };
 
 
