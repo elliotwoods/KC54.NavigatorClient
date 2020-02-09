@@ -65,7 +65,7 @@ class World extends Base {
 						this.controls.screenSpacePanning = false;
 						this.controls.minDistance = 0.01;
 						this.controls.maxDistance = 100;
-						this.controls.maxPolarAngle = Math.PI / 2;
+						this.controls.maxPolarAngle = Math.PI / 2 * 6 / 5;
 						this.controls.target.set(Constants.footDistance / 2, 0, 3);
 					}
 				}
@@ -79,7 +79,7 @@ class World extends Base {
 
 		// Post processing
 		{
-			let postProcessingSettings = settings.get("world")
+			let postProcessingSettings = settings.get("World")
 				.get("postProcessing")
 				.value();
 

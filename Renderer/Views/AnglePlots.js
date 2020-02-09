@@ -1,6 +1,6 @@
 import { Base } from './Base.js'
 import { outputTimeline } from '../Data/outputTimeline.js'
-import { document } from '../Database.js'
+import { document, settings } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { rendererRouter } from '../rendererRouter.js'
@@ -255,7 +255,11 @@ class AnglePlots extends Base {
 		});
 
 		// start update loop
-		this.updateShaftCursors();
+		if(settings.get("AnglePlots")
+			.get("animationEnabled")
+			.value()) {
+				this.updateShaftCursors();
+			}
 
 		// for debug
 		window.axisMath = AxisMath;

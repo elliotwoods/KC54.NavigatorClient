@@ -6,7 +6,7 @@ import { rendererRouter } from '../../rendererRouter.js'
 let blockMaterial = null;
 
 function initBlockMaterial() {
-	let materialSettings = settings.get("world")
+	let materialSettings = settings.get("World")
 		.get("blockMaterial")
 		.value();
 
