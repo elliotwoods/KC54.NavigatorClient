@@ -1,18 +1,29 @@
 import * as THREE from '../../../node_modules/three/build/three.module.js';
-import { document } from '../../Database.js'
+
+import { document, settings } from '../../Database.js'
+
+let blockMaterial = null;
+
+function initBlockMaterial() {
+	let materialSettings = settings.get("world")
+		.get("blockMaterial")
+		.value();
+
+	blockMaterial = new THREE.MeshPhysicalMaterial(materialSettings);
+}
 
 function makeBlock() {
 	let block = new THREE.Object3D();
 
 	{
 		let geometry = new THREE.BoxGeometry(1.5, 0.3, 0.3);
-		let material = new THREE.MeshBasicMaterial({
-			color: 0x001100,
-			wireframe: true
-		});
-		let cube = new THREE.Mesh(geometry, material);
-		cube.position.set(0.5, 0.0, 0.15);
-		block.add(cube);
+		let mesh = new THREE.Mesh(geometry, blockMaterial);
+		mesh.position.set(0.5, 0.0, 0.15);
+
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+
+		block.add(mesh);
 	}
 
 	return block;
@@ -74,6 +85,8 @@ async function buildScene(scene) {
 	let system = new THREE.Object3D();
 	scene.add(system);
 
+	// Build the blocks
+	initBlockMaterial();
 	let frameData = document.getCurrentOutputFrame();
 
 	let blocks = [];
@@ -85,8 +98,10 @@ async function buildScene(scene) {
 		blocks.push(block);
 	}
 
-	scene.updateMatrixWorld();
+
+	// Build the forces
 	if (frameData.forces) {
+		scene.updateMatrixWorld();
 		for (let i = 0; i < frameData.forces.length; i++) {
 			let positionInBlock = i % 2 == 0
 				? new THREE.Vector3(0, 0, 0)

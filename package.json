@@ -17,7 +17,6 @@
 	},
 	"dependencies": {
 		"@svgdotjs/svg.js": "^3.0.16",
-		"css-element-queries": "^1.2.3",
 		"golden-layout": "^1.5.9",
 		"jquery": "^3.4.1",
 		"lowdb": "^1.0.0",

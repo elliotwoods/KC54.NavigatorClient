@@ -1,4 +1,26 @@
 {
   "documentPath": "document.json",
-  "zoomLevel": 1
+  "zoomLevel": 1,
+  "world": {
+    "blockMaterial": {
+      "metalness": 1,
+      "roughness": 0.5,
+      "envMapIntensity": 1
+    },
+    "sunLight": {
+      "intensity": 0.8,
+      "castShadow": true,
+      "showHelper": false,
+      "nearClip": 50,
+      "farClip": 800,
+      "position": [
+        0,
+        -200,
+        400
+      ],
+      "size": 20,
+      "mapSize": 2048,
+      "shadowBias": -0.0005
+    }
+  }
 }

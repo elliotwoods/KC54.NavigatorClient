@@ -5,8 +5,12 @@ class RoomGrid extends THREE.Object3D {
 		super();
 
 
-		let materialFloor = new THREE.MeshBasicMaterial();
-		let materialBack = new THREE.MeshBasicMaterial();
+		let materialFloor = new THREE.MeshPhongMaterial({
+			shininess : 0,
+			color : 0xeeeeee,
+			specular : 0x000000
+		});
+		let materialBack = materialFloor.clone();
 
 		this.texture = new THREE.TextureLoader().load("images/grid-10.png", function (texture) {
 			texture.wrapS = THREE.RepeatWrapping;
@@ -36,6 +40,7 @@ class RoomGrid extends THREE.Object3D {
 			let geometry = new THREE.PlaneGeometry(roomMax.x - roomMin.x, roomMax.y - roomMin.y);
 			let mesh = new THREE.Mesh(geometry, materialFloor);
 			mesh.position.set((roomMax.x + roomMin.x) / 2.0, (roomMin.y + roomMax.y) / 2.0, roomMin.z);
+			mesh.receiveShadow = true;
 			this.add(mesh);
 		}
 
@@ -45,6 +50,7 @@ class RoomGrid extends THREE.Object3D {
 			let mesh = new THREE.Mesh(geometry, materialBack);
 			mesh.rotateX(Math.PI / 2.0)
 			mesh.position.set((roomMax.x + roomMin.x) / 2.0, roomMax.y, (roomMax.z + roomMin.z) / 2.0);
+			mesh.receiveShadow = true;
 			this.add(mesh);
 		}
 

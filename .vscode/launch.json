@@ -31,8 +31,8 @@
 		{
 			"name": "Electron (both)",
 			"configurations": [
-				"Electron : Main",
-				"Electron : Renderer"
+				"Electron : Renderer",
+				"Electron : Main"
 			]
 		}
 	]

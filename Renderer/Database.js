@@ -6,7 +6,20 @@ const FileSync = require('../node_modules/lowdb/adapters/FileSync')
 const settings = low(new FileSync('settings.json'));
 settings.defaults({
 	documentPath : "document.json",
-	zoomLevel : 1
+	zoomLevel : 1,
+	world : {
+		sunLight : {
+			intensity : 0.3,
+			castShadow : true,
+			showHelper : false,
+			nearClip : 0,
+			farClip : 200,
+			position : [-200, -400, 400],
+			size : 50,
+			mapSize : 1024,
+			shadowBias : -0.0002
+		}
+	}
 }).write();
 
 let documentPath = settings.get('documentPath').value();

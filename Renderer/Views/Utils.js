@@ -86,7 +86,7 @@ class Utils extends Base {
 						'date': Date.now()
 					}
 				});
-				
+
 				console.log(`Importing ${fileName}`);
 				framesAdded++;
 			}
@@ -136,19 +136,24 @@ class Utils extends Base {
 
 		let framesAdded = 0;
 
+		let contentToAdd = [];
 		for(let frame of content) {
-			document.get('outputFrames')
-			.push({
+			contentToAdd.push({
 				'id': shortid.generate(),
 				'content': frame,
 				'importReport': {
 					'path': filename,
 					'date': Date.now()
 				}
-			}).write();
+			});
 
 			framesAdded++;
 		}
+
+		
+		document.get('outputFrames')
+			.push(...contentToAdd)
+			.write();
 
 		console.log(`Imported ${framesAdded} from ${filename}`);
 	}
