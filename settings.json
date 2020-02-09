@@ -2,6 +2,7 @@
   "documentPath": "document.json",
   "zoomLevel": 1,
   "world": {
+    "showForces": false,
     "blockMaterial": {
       "metalness": 1,
       "roughness": 0.1,

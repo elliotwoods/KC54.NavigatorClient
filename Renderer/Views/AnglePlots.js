@@ -2,7 +2,7 @@ import { Base } from './Base.js'
 import { outputTimeline } from '../Data/outputTimeline.js'
 import { document } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
-import { totalBlockHeight, totalShaftCount } from '../Utils/Constants.js'
+import { Constants } from '../Utils/Constants.js'
 import { rendererRouter } from '../rendererRouter.js'
 
 class AnglePlots extends Base {
@@ -38,7 +38,7 @@ class AnglePlots extends Base {
 
 		// invert the dataset so that it is categorised per axis
 		let framePerShaftAngle = [];
-		for(let i = 0; i < totalShaftCount; i++) {
+		for(let i = 0; i < Constants.totalShaftCount; i++) {
 			let shaftAnglesForOneAxis = shaftAnglesPerFrame.map(frame => frame[i]);
 			framePerShaftAngle.push(shaftAnglesForOneAxis);
 		}
@@ -46,7 +46,7 @@ class AnglePlots extends Base {
 		// create the plotData
 		let plotData = [];
 		let markersData = [];
-		for(let shaftIndex = 0; shaftIndex < totalShaftCount; shaftIndex++) {
+		for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
 			let shaftAnglesForOneAxis = framePerShaftAngle[shaftIndex]
 			let plot = {
 				type : 'scatterpolargl',
@@ -94,15 +94,15 @@ class AnglePlots extends Base {
 		const size = 1/12 - padding;
 		const colPositions = [1/12, 3/12, 5/12, 7/12, 9/12, 11/12];
 		const cols = 12;
-		const rows = totalBlockHeight + 1;
+		const rows = Constants.totalBlockHeight + 1;
 
-		for(let shaftIndex = 0; shaftIndex < totalShaftCount; shaftIndex++) {
+		for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
 			// see page 14 of 2020-February notes
 			let shaftName = AxisMath.shaftIndexToName(shaftIndex);
 			let towerName = shaftName.substr(0, 1);
 			let shaftTier = parseInt(shaftName.substr(1));
 			let col;
-			if(shaftTier == totalBlockHeight - 1) {
+			if(shaftTier == Constants.totalBlockHeight - 1) {
 				// top block
 				switch(towerName) {
 					case 'A':

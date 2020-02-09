@@ -1,4 +1,4 @@
-import { totalBlockHeight, totalShaftCount } from './Constants.js'
+import { Constants } from './Constants.js'
 
 class AxisMath {
 
@@ -14,7 +14,7 @@ class AxisMath {
 		shaftAngles.push(anglesToX[0])
 
 		// Tower A (ascending)
-		for (let i = 1; i < totalBlockHeight; i++) {
+		for (let i = 1; i < Constants.totalBlockHeight; i++) {
 			shaftAngles.push(anglesToX[i] - anglesToX[i - 1]);
 		}
 
@@ -27,7 +27,7 @@ class AxisMath {
 			shaftAngles.push(invertAngle(anglesToX[anglesToX.length - 1]));
 
 			let i = anglesToX.length - 2;
-			while(i > totalBlockHeight - 2) {
+			while(i > Constants.totalBlockHeight - 2) {
 				shaftAngles.push(invertAngle(anglesToX[i]) - invertAngle(anglesToX[i + 1]));
 				i--;
 			}
@@ -37,11 +37,11 @@ class AxisMath {
 	}
 
 	static shaftIndexToName(shaftIndex) {
-		if(shaftIndex < totalBlockHeight) {
+		if(shaftIndex < Constants.totalBlockHeight) {
 			return 'A' + shaftIndex;
 		}
 		else {
-			return 'B' + (shaftIndex - totalBlockHeight);
+			return 'B' + (shaftIndex - Constants.totalBlockHeight);
 		}
 	}
 

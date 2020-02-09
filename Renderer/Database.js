@@ -8,6 +8,7 @@ settings.defaults({
 	documentPath : "document.json",
 	zoomLevel : 1,
 	world : {
+		showForces : false,
 		sunLight : {
 			intensity : 0.3,
 			castShadow : true,

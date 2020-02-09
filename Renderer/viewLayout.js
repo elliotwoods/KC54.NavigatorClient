@@ -9,11 +9,21 @@ let standardConfig = {
 		content: [{
 			type: "column",
 			content: [{
-				type: 'component',
-				componentName: "World",
-				componentState: {
-					"label": "3D View (solid, perspective)"
-				}
+				type: 'column',
+				content: [{
+					type: 'component',
+					componentName: "World",
+					componentState: {
+						"camera": "perspective"
+					}
+				},
+				{
+					type: 'component',
+					componentName: "World",
+					componentState: {
+						"camera": "top"
+					}
+				}]
 			},
 			{
 				type: 'component',
@@ -67,10 +77,10 @@ function setup() {
 	AnglePlots.register(goldenLayout);
 	World.register(goldenLayout);
 
-	goldenLayout.registerComponent('Placeholder', function(container, componentState){
+	goldenLayout.registerComponent('Placeholder', function (container, componentState) {
 		container.getElement().html('<h2>' + componentState.label + '</h2>');
 	});
-	
+
 	goldenLayout.init();
 }
 
