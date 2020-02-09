@@ -5,20 +5,42 @@ const FileSync = require('../node_modules/lowdb/adapters/FileSync')
 
 const settings = low(new FileSync('settings.json'));
 settings.defaults({
-	documentPath : "document.json",
-	zoomLevel : 1,
-	world : {
-		showForces : false,
-		sunLight : {
-			intensity : 0.3,
-			castShadow : true,
-			showHelper : false,
-			nearClip : 0,
-			farClip : 200,
-			position : [-200, -400, 400],
-			size : 50,
-			mapSize : 1024,
-			shadowBias : -0.0002
+	documentPath: "document.json",
+	zoomLevel: 1,
+	world: {
+		showForces: false,
+		sunLight: {
+			intensity: 0.8,
+			castShadow: true,
+			showHelper: false,
+			nearClip: 50,
+			farClip: 200,
+			position: [0, -50, 100],
+			size: 20,
+			mapSize: 2048,
+			shadowBias: -0.00001
+		},
+		postProcessing: {
+			enabled: true,
+			ambientLight: {
+				type: "SAO",
+				SAO: {
+					saoBias: 0.5,
+					saoIntensity: 0.001,
+					saoScale: 10,
+					saoKernelRadius: 16,
+					saoMinResolution: 0,
+					saoBlur: true,
+					saoBlurRadius: 50,
+					saoBlurStdDev: 2,
+					saoBlurDepthCutOff: 0.1
+				},
+				SSAO: {
+					kernelRadius: 8,
+					minDistance: 0.01,
+					maxDistance: 1
+				}
+			}
 		}
 	}
 }).write();
@@ -26,7 +48,7 @@ settings.defaults({
 let documentPath = settings.get('documentPath').value();
 const document = new low(new FileSync(documentPath));
 document.defaults({
-	outputFrames : []
+	outputFrames: []
 }).write();
 
 document.getCurrentOutputFrame = () => {

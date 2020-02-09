@@ -96,7 +96,7 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 
 // Ambient light
 {
-	let ambientLight = new THREE.AmbientLight(0x555555);
+	let ambientLight = new THREE.AmbientLight(0x888888);
 	scene.add(ambientLight);
 }
 

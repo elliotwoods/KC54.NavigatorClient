@@ -3,9 +3,16 @@ import { Base } from './Base.js'
 import * as THREE from '../../node_modules/three/build/three.module.js';
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js';
 
+import { EffectComposer } from '../../node_modules/three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from '../../node_modules/three/examples/jsm/postprocessing/RenderPass.js';
+import { SAOPass } from '../../node_modules/three/examples/jsm/postprocessing/SAOPass.js';
+import { SSAOPass } from '../../node_modules/three/examples/jsm/postprocessing/SSAOPass.js';
+
 import { scene } from './World/scene.js'
 
 import { Constants } from '../Utils/Constants.js'
+import { settings } from '../Database.js'
+
 let worlds = [];
 
 class World extends Base {
@@ -29,47 +36,89 @@ class World extends Base {
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-		this.renderer.toneMapping = THREE.LinearToneMapping;
+		//this.renderer.toneMapping = THREE.LinearToneMapping;
 
 		this.div.append(this.renderer.domElement);
 
 		// setup the camera
-		switch(this.state.camera) {
+		switch (this.state.camera) {
 			case "perspective":
-			{
-				// cameras
 				{
-					this.camera = new THREE.PerspectiveCamera(30, width / height, 0.01, 1000);
-					this.camera.position.set(4.0, -20.0, 5.0);
-					this.camera.up.set(0, 0, 1);
-				}
-
-				// controls
-				this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-				{
-					this.controls.mouseButtons = {
-						LEFT: THREE.MOUSE.ROTATE,
-						MIDDLE: THREE.MOUSE.DOLLY,
-						RIGHT: THREE.MOUSE.PAN
+					// cameras
+					{
+						this.camera = new THREE.PerspectiveCamera(30, width / height, 0.01, 1000);
+						this.camera.position.set(4.0, -20.0, 5.0);
+						this.camera.up.set(0, 0, 1);
 					}
-					
-					this.controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-					this.controls.dampingFactor = 0.05;
-					this.controls.screenSpacePanning = false;
-					this.controls.minDistance = 0.01;
-					this.controls.maxDistance = 100;
-					this.controls.maxPolarAngle = Math.PI / 2;
-					this.controls.target.set(Constants.footDistance / 2, 2, 0);
+
+					// controls
+					this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+					{
+						this.controls.mouseButtons = {
+							LEFT: THREE.MOUSE.ROTATE,
+							MIDDLE: THREE.MOUSE.DOLLY,
+							RIGHT: THREE.MOUSE.PAN
+						}
+
+						this.controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+						this.controls.dampingFactor = 0.05;
+						this.controls.screenSpacePanning = false;
+						this.controls.minDistance = 0.01;
+						this.controls.maxDistance = 100;
+						this.controls.maxPolarAngle = Math.PI / 2;
+						this.controls.target.set(Constants.footDistance / 2, 0, 2);
+					}
 				}
-			}
-			break;
+				break;
 			case "top":
-			{
-				this.camera = new THREE.OrthographicCamera(-6.0, 6.0, 6.0, -6.0, -100.0, 100.0);
-				this.camera.position.set(Constants.footDistance / 2, 0, 0);
+				{
+					this.camera = new THREE.OrthographicCamera(-6.0, 6.0, 6.0, -6.0, -10000.0, 10000.0);
+					this.camera.position.set(Constants.footDistance / 2, 0, 0);
+				}
+		}
+
+		// Post processing
+		{
+			let postProcessingSettings = settings.get("world")
+				.get("postProcessing")
+				.value();
+
+			if(postProcessingSettings.enabled) {
+				this.composer = new EffectComposer(this.renderer);
+				let renderPass = new RenderPass(scene, this.camera);
+				this.composer.addPass(renderPass);
+	
+				let ambientOcclusionSettings = postProcessingSettings.ambientOcclusion
+				switch (ambientOcclusionSettings.type) {
+					case "SAO":
+						{
+	
+							let saoPass = new SAOPass(scene, this.camera, false, true);
+							this.composer.addPass(saoPass);
+							{
+								let settings = ambientOcclusionSettings.SAO;
+								for (let paramName in settings) {
+									saoPass.params[paramName] = settings[paramName];
+								}
+							}
+						}
+						break;
+	
+					case "SSAO":
+						{
+							let ssaoPass = new SSAOPass(scene, this.camera);
+							this.composer.addPass(ssaoPass);
+							{
+								let settings = ambientOcclusionSettings.SSAO;
+								for (let paramName in settings) {
+									ssaoPass[paramName] = settings[paramName];
+								}
+							}
+						}
+						break;
+				}
 			}
 		}
-		
 
 		this.container.on("resize", () => {
 			this.onResize();
@@ -84,11 +133,11 @@ class World extends Base {
 	onResize() {
 		var w = this.div.width();
 		var h = this.div.height();
-	
+
 		this.renderer.setSize(w, h);
-		
+
 		let aspect = w / h;
-		if(this.camera instanceof THREE.PerspectiveCamera) {
+		if (this.camera instanceof THREE.PerspectiveCamera) {
 			this.camera.aspect = aspect;
 		}
 		else {
@@ -97,12 +146,20 @@ class World extends Base {
 			this.camera.top = height / 2;
 			this.camera.bottom = - height / 2;
 		}
-
 		this.camera.updateProjectionMatrix();
+
+		if(this.composer) {
+			this.composer.setSize(w, h);
+		}
 	}
 
 	render() {
-		this.renderer.render(scene, this.camera);
+		if(this.composer) {
+			this.composer.render();
+		}
+		else {
+			this.renderer.render(scene, this.camera);
+		}
 	}
 
 	refresh() {
@@ -111,8 +168,8 @@ class World extends Base {
 
 function animate() {
 	requestAnimationFrame(animate);
-	for(let world of worlds) {
-		if(world.controls) {
+	for (let world of worlds) {
+		if (world.controls) {
 			world.controls.update();
 		}
 		world.render();
