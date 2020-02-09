@@ -72,7 +72,8 @@ class World extends Base {
 			let pmremGenerator = new THREE.PMREMGenerator(this.renderer);
 			pmremGenerator.compileEquirectangularShader();
 
-			if(false) {
+			const useHDR = false;
+			if(useHDR) {
 				// https://github.com/mrdoob/three.js/blob/master/examples/webgl_materials_reflectivity.html
 				new RGBELoader()
 					.setDataType(THREE.UnsignedByteType)
@@ -91,8 +92,7 @@ class World extends Base {
 	
 					});
 			}
-
-			if(true) {
+			else {
 				// https://threejs.org/docs/#api/en/loaders/CubeTextureLoader
 				this.scene.environment = new THREE.CubeTextureLoader()
 				.setPath('images/Environment/')

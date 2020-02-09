@@ -4,7 +4,7 @@
   "world": {
     "blockMaterial": {
       "metalness": 1,
-      "roughness": 0.5,
+      "roughness": 0.1,
       "envMapIntensity": 1
     },
     "sunLight": {
