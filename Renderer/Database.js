@@ -6,6 +6,13 @@ const FileSync = require('../node_modules/lowdb/adapters/FileSync')
 const settings = low(new FileSync('settings.json'));
 settings.defaults({
 	documentPath: "document.json",
+	system: {
+		stopperSettings: {
+			stopperOffsetDegrees: 5,
+			minStopperSizeDegrees: 5
+		},
+		stoppers: []
+	},
 	zoomLevel: 1,
 	world: {
 		showForces: false,
@@ -42,6 +49,8 @@ settings.defaults({
 				}
 			}
 		}
+	},
+	viewLayout: {
 	}
 }).write();
 
@@ -55,7 +64,7 @@ document.getCurrentOutputFrame = () => {
 	let currentFrameIndex = rendererRouter.appState.get_outputFrameIndex();
 	let outputFrames = document.get('outputFrames')
 		.value();
-	if(outputFrames.length == 0) {
+	if (outputFrames.length == 0) {
 		return {}
 	}
 	else if (currentFrameIndex >= outputFrames.length) {

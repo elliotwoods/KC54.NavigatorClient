@@ -107,7 +107,7 @@ function setBlockTransforms(frameData) {
 setBlockTransforms(frameData)
 
 // Build the forces
-let showForces = settings.get("world")
+let showForces = settings.get("World")
 	.get("showForces")
 	.value();;
 if (showForces && frameData.forces) {

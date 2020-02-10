@@ -4,7 +4,8 @@ import { rendererRouter } from '../rendererRouter.js'
 const fs = require('fs')
 const path = require('path')
 const shortid = require('shortid')
-import { document } from '../Database.js'
+import { document, settings } from '../Database.js'
+import { AxisMath } from '../Utils/AxisMath.js'
 
 class Utils extends Base {
 	constructor(container, state) {
@@ -160,6 +161,24 @@ class Utils extends Base {
 
 	jumpToOutputFrame() {
 
+	}
+
+	calculateStopperAngles() {
+		let outputFrames = document.get('outputFrames')
+			.value();
+
+		let shaftAnglesPerFrame = AxisMath.outputFramesToShaftAnglesPerFrame(outputFrames);
+		let framesPerShaft = AxisMath.shaftAnglesPerFrameToFramesPerShaft(shaftAnglesPerFrame);
+
+		let rangePerShaft = framesPerShaft.map(frames => AxisMath.shaftAngleRange(frames));
+
+		let stoppers = rangePerShaft.map(shaftAngleRange => AxisMath.calculateStopper(shaftAngleRange));
+
+		settings.get("system")
+			.set("stoppers", stoppers)
+			.write();
+		
+		rendererRouter.notifyChange("stoppers");
 	}
 
 	nextOutputFrame() {

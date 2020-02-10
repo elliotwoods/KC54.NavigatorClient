@@ -34,8 +34,7 @@ class RendererRouter {
 		}
 
 		ipcRenderer.on('changeProperty', (event, arg) => {
-			let releventListeners = this.propertyListeners.filter(propertyListener => propertyListener.name == arg);
-			releventListeners.map(listener => listener.action());
+			this.notifyChange(arg);
 		});
 	}
 
@@ -44,6 +43,11 @@ class RendererRouter {
 			name : propertyName,
 			action : action
 		});
+	}
+
+	notifyChange(propertyName) {
+		let releventListeners = this.propertyListeners.filter(propertyListener => propertyListener.name == propertyName);
+		releventListeners.map(listener => listener.action());
 	}
 }
 

@@ -48,7 +48,7 @@
     }
   },
   "AnglePlots": {
-    "animationEnabled": false
+    "animationEnabled": true
   },
   "world": {
     "showForces": false,
@@ -89,5 +89,246 @@
         }
       }
     }
+  },
+  "viewLayout": {
+    "state": {
+      "settings": {
+        "hasHeaders": true,
+        "constrainDragToContainer": false,
+        "reorderEnabled": true,
+        "selectionEnabled": false,
+        "popoutWholeStack": false,
+        "blockedPopoutsThrowError": true,
+        "closePopoutsOnUnload": true,
+        "showPopoutIcon": true,
+        "showMaximiseIcon": true,
+        "showCloseIcon": true,
+        "responsiveMode": "onload",
+        "tabOverlapAllowance": 0,
+        "reorderOnTabMenuClick": true,
+        "tabControlOffset": 10
+      },
+      "dimensions": {
+        "borderWidth": 5,
+        "borderGrabWidth": 15,
+        "minItemHeight": 10,
+        "minItemWidth": 10,
+        "headerHeight": 20,
+        "dragProxyWidth": 300,
+        "dragProxyHeight": 200
+      },
+      "labels": {
+        "close": "close",
+        "maximise": "maximise",
+        "minimise": "minimise",
+        "popout": "open in new window",
+        "popin": "pop in",
+        "tabDropdown": "additional tabs"
+      },
+      "content": [
+        {
+          "type": "row",
+          "isClosable": true,
+          "reorderEnabled": true,
+          "title": "",
+          "content": [
+            {
+              "type": "column",
+              "isClosable": true,
+              "reorderEnabled": true,
+              "title": "",
+              "width": 28.376068376068375,
+              "content": [
+                {
+                  "type": "stack",
+                  "width": 52.5,
+                  "height": 60.590823381521055,
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "content": [
+                    {
+                      "type": "component",
+                      "componentName": "World",
+                      "height": 60,
+                      "componentState": {
+                        "camera": "perspective"
+                      },
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "World"
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "header": {},
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "height": 39.409176618478945,
+                  "content": [
+                    {
+                      "title": "perspective",
+                      "type": "component",
+                      "componentName": "World",
+                      "componentState": {
+                        "camera": "perspective"
+                      },
+                      "isClosable": true,
+                      "reorderEnabled": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "column",
+              "width": 71.62393162393163,
+              "isClosable": true,
+              "reorderEnabled": true,
+              "title": "",
+              "content": [
+                {
+                  "type": "stack",
+                  "height": 17.954769461135054,
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "content": [
+                    {
+                      "type": "component",
+                      "componentName": "Utils",
+                      "componentState": {
+                        "label": "Utils"
+                      },
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "Utils"
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "height": 71.89205443067335,
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "content": [
+                    {
+                      "type": "component",
+                      "componentName": "AnglePlots",
+                      "componentState": {
+                        "label": "AnglePlots"
+                      },
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "AnglePlots"
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "height": 10.153176108191587,
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "content": [
+                    {
+                      "type": "component",
+                      "componentName": "ViewPalette",
+                      "componentState": {},
+                      "isClosable": false,
+                      "reorderEnabled": true,
+                      "title": "ViewPalette"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "isClosable": true,
+      "reorderEnabled": true,
+      "title": "",
+      "openPopouts": [],
+      "maximisedItemId": null
+    }
+  },
+  "system": {
+    "stopperSettings": {
+      "stopperOffsetDegrees": 5,
+      "minStopperSizeDegrees": 5
+    },
+    "stoppers": [
+      {
+        "min": -1.3581857697633797,
+        "max": -1.532758742143779
+      },
+      null,
+      {
+        "min": -0.7102688750387973,
+        "max": 3.0115037038442236
+      },
+      {
+        "min": -3.054326190990077,
+        "max": -2.145112777824754
+      },
+      null,
+      null,
+      {
+        "min": 1.3104310764377494,
+        "max": 3.054326190990077
+      },
+      {
+        "min": -3.054326190990077,
+        "max": -1.5173105073840851
+      },
+      null,
+      null,
+      null,
+      null,
+      {
+        "min": 1.3104310764377494,
+        "max": -1.9534059860614843
+      },
+      {
+        "min": 1.7834068838264134,
+        "max": 1.6088339114460142
+      },
+      null,
+      null,
+      null,
+      {
+        "min": -0.34250592759129794,
+        "max": 3.054326190990077
+      },
+      null,
+      {
+        "min": 1.3137912477669071,
+        "max": 3.054326190990077
+      },
+      {
+        "min": -3.054326190990077,
+        "max": -1.5562236162703407
+      },
+      {
+        "min": 1.3137912477669071,
+        "max": 3.054326190990077
+      },
+      null,
+      null,
+      null,
+      {
+        "min": 1.3137912477669071,
+        "max": -2.8582234442463474
+      }
+    ]
   }
 }

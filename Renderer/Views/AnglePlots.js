@@ -5,6 +5,8 @@ import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { rendererRouter } from '../rendererRouter.js'
 
+const radialDomainScale = 8;
+
 class AnglePlots extends Base {
 	constructor(container, state) {
 		super(container, state);
@@ -31,28 +33,20 @@ class AnglePlots extends Base {
 		}
  
 		// gather the shaft angles for each frame
-		let shaftAnglesPerFrame = outputFrames.map((frame) => {
-			let anglesToX = frame.content.configuration.map(block => block.angleToX);
-			let shaftAngles = AxisMath.anglesToXToShaftAngles(anglesToX);
-			return shaftAngles;
-		});
-
+		let shaftAnglesPerFrame = AxisMath.outputFramesToShaftAnglesPerFrame(outputFrames);
+	
 		// invert the dataset so that it is categorised per axis
-		let framePerShaftAngle = [];
-		for(let i = 0; i < Constants.totalShaftCount; i++) {
-			let shaftAnglesForOneAxis = shaftAnglesPerFrame.map(frame => frame[i]);
-			framePerShaftAngle.push(shaftAnglesForOneAxis);
-		}
+		let framePerShaftAngle = AxisMath.shaftAnglesPerFrameToFramesPerShaft(shaftAnglesPerFrame);
 
 		// create the plotData
 		let plotData = [];
-		let markersData = [];
+		let markersPlotData = [];
 		for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
 			let shaftAnglesForOneAxis = framePerShaftAngle[shaftIndex]
 			let plot = {
-				type : 'scatterpolar',
+				type : 'scatterpolargl',
 				mode : 'lines',
-				r : AxisMath.radiansToCycles(shaftAnglesForOneAxis),
+				r : AxisMath.radiansToCycles(shaftAnglesForOneAxis).map(cycles => Math.max(Math.min(cycles, radialDomainScale - 1), - radialDomainScale + 1)),
 				theta : AxisMath.radiansToDegrees(shaftAnglesForOneAxis),
 				subplot : shaftIndex == 0 ? 'polar' : `polar${shaftIndex + 1}`
 			};
@@ -60,7 +54,7 @@ class AnglePlots extends Base {
 
 			// add a marker for the current position
 			let traceCurrentPosition = {
-				type : 'scatterpolar',
+				type : 'scatterpolargl',
 				mode : 'markers',
 				r : AxisMath.radiansToCycles([shaftAnglesForOneAxis[currentFrameIndex]]),
 				theta : AxisMath.radiansToDegrees([shaftAnglesForOneAxis[currentFrameIndex]]),
@@ -74,7 +68,53 @@ class AnglePlots extends Base {
 				},
 				subplot : plot.subplot
 			};
-			markersData.push(traceCurrentPosition);
+			markersPlotData.push(traceCurrentPosition);
+		}
+		
+		// draw the stoppers
+		let stopperPlotData = [];
+		{
+			let stopperData = settings.get("system")
+				.get("stoppers")
+				.value();
+
+			if(stopperData.length == Constants.totalShaftCount) {
+				for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
+					if(stopperData[shaftIndex] == null) {
+						continue;
+					}
+					let min = stopperData[shaftIndex].min;
+					let max = stopperData[shaftIndex].max;
+
+					//rectify to positive facing range for drawing
+					if(min > max) {
+						min -= Math.PI * 2;
+					}
+
+					let middleThetaValues = [];
+					for(let t = 0; t<=1; t += 0.01) {
+						middleThetaValues.push(t * (max - min) + min);
+					}
+					
+					let middleRValues = middleThetaValues.map(_ => radialDomainScale);
+
+					let plot = {
+						type : "scatterpolargl",
+						mode : 'lines',
+						r : [-radialDomainScale, radialDomainScale, ...middleRValues, radialDomainScale, -radialDomainScale],
+						theta : AxisMath.radiansToDegrees([min, min, ...middleThetaValues, max, max]),
+						fill : "toself",
+						fillcolor : '#333333',
+						line : {
+							color : '#333333'
+						},
+						opacity : 0.5,
+						subplot : plotData[shaftIndex].subplot
+					};
+
+					stopperPlotData.push(plot);
+				}
+			}
 		}
 		
 		let layout = {
@@ -138,14 +178,13 @@ class AnglePlots extends Base {
 						, plotY + size]
 				},
 				radialaxis : {
-					range : [-4, 4],
+					range : [-radialDomainScale, radialDomainScale],
 					nticks : 5,
 					tickfont : {
 						size : 8
 					}
 				},
 				angularaxis : {
-					//thetaunit: "radians"
 					tickfont : {
 						size : 8
 					},
@@ -244,7 +283,7 @@ class AnglePlots extends Base {
 			showEditInChartStudio : true
 		};
 
-		this.plot = Plotly.newPlot(this.div[0], plotData.concat(markersData), layout, config);
+		this.plot = Plotly.newPlot(this.div[0], plotData.concat(markersPlotData).concat(stopperPlotData), layout, config);
 		this.plot.then((plotDiv) => {
 			$(plotDiv).height("100%");
 			this.plotDiv = plotDiv;
