@@ -74,8 +74,8 @@ class AxisMath {
 		return Math.atan2(Math.sin(radians), Math.cos(radians))
 	}
 
-	// see February notes page 19
-	static shaftAngleRange(shaftAnglesForOneAxis, epsilon = 1 / 360 * Math.PI * 2) {
+	// see February notes page 21
+	static shaftAngleRange(shaftAnglesForOneAxis) {
 		let result = {
 			min : 0,
 			max : 0
@@ -85,58 +85,61 @@ class AxisMath {
 			return result;
 		}
 
-		let negativeAngles = [];
-		let positiveAngles = [];
-
-		// offset everything to +/- pi
-		let normalisedAngles = shaftAnglesForOneAxis.map(angle => AxisMath.moduloOneCycle(angle));
-
-		// get range of angles for + and - individually
-		let sortFunction = (a, b) => {
-			return a - b;
-		};
-		negativeAngles = normalisedAngles.filter(angle => angle < 0).sort(sortFunction);
-		positiveAngles = normalisedAngles.filter(angle => angle >= 0).sort(sortFunction);
-
-		
-		let negativeRange = {
-			min : negativeAngles[0],
-			max : negativeAngles[negativeAngles.length - 1]
-		};
-		let positiveRange = {
-			min : positiveAngles[0],
-			max : positiveAngles[positiveAngles.length - 1]
-		};
-
-		if(negativeAngles.length > 0 && positiveAngles.length > 0) {
-			// find which section of range is closer (next to 0 or next to pi)
-			let distanceAtZero = positiveRange.min - negativeRange.max;
-			let distanceAtPi = (negativeRange.min + Math.PI * 2) - positiveRange.max;
-			if(distanceAtPi > distanceAtZero) {
-				result.min = negativeRange.min;
-				result.max = positiveRange.max;
+		// we need to create contiguous values
+		let priorValue = shaftAnglesForOneAxis[0];
+		let contiguousValues = [priorValue];
+		let findClosestCycle = (newValue, priorValue) => {
+			while(newValue - priorValue > Math.PI) {
+				newValue -= Math.PI * 2;
 			}
-			else {
-				result.min = positiveRange.min;
-				result.max = negativeRange.max + Math.PI * 2; // keep the range as being from lower value to higher, so we can interpolate across it
+			while(newValue - priorValue < - Math.PI) {
+				newValue += Math.PI * 2;
 			}
+			return newValue;
+		};
+		for(let i = 1; i < shaftAnglesForOneAxis.length; i++) {
+			let value = findClosestCycle(shaftAnglesForOneAxis[i], priorValue);
+			contiguousValues.push(value);
+			priorValue = value;
 		}
-		else if(negativeAngles.length > 0) {
-			result = negativeRange;
+
+		let max = Math.max.apply(null, contiguousValues);
+		let min = Math.min.apply(null, contiguousValues);
+
+		if(max - min > Math.PI * 2) {
+			// we went over one cycle
+			result.min = -Math.PI;
+			result.max = Math.PI
 		}
-		else { // postitiveAngles.length > 0
-			result = positiveRange;
+		else {
+			result.min = AxisMath.moduloOneCycle(min);
+			result.max = AxisMath.moduloOneCycle(max);
 		}
 
 		return result;
 	}
 
-	static calculateStopper(shaftAngleRange) {
+	static calculateStopper(shaftAngleRange, shaftIndex) {
 		// feb 2020 p20
 
 		let stopperSettings = settings.get("system")
 			.get("stopperSettings")
 			.value();
+
+		let shaftName = AxisMath.shaftIndexToName(shaftIndex);
+		if(shaftName == "A0") {
+			return {
+				min : (-Math.PI / 2) + stopperSettings.shaft0StopperRangeDegrees / 360 * (Math.PI * 2),
+				max : (-Math.PI / 2) - stopperSettings.shaft0StopperRangeDegrees / 360 * (Math.PI * 2)
+			};
+		}
+		else if (shaftName == "B0") {
+			return {
+				min : (Math.PI / 2) + stopperSettings.shaft0StopperRangeDegrees / 360 * (Math.PI * 2),
+				max : (Math.PI / 2) - stopperSettings.shaft0StopperRangeDegrees / 360 * (Math.PI * 2)
+			};
+		}
+		
 		let stopperOffset = stopperSettings.stopperOffsetDegrees / 360 * (Math.PI * 2);
 		let minStopperSize = stopperSettings.minStopperSizeDegrees / 360 * (Math.PI * 2);
 
@@ -146,7 +149,7 @@ class AxisMath {
 		{
 			let usedSize = !rangePassesPi
 				? shaftAngleRange.max - shaftAngleRange.min
-				: shaftAngleRange.min + (Math.PI * 2) - shaftAngleRange.max;
+				: (shaftAngleRange.max + (Math.PI * 2)) - shaftAngleRange.min;
 			let unusedSize = (Math.PI * 2) - usedSize;
 			if(unusedSize < stopperOffset * 2 + minStopperSize) {
 				// not enough space remaining for stopper

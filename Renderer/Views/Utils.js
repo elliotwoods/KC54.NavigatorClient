@@ -6,6 +6,7 @@ const path = require('path')
 const shortid = require('shortid')
 import { document, settings } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
+import { Constants } from '../Utils/Constants.js'
 
 class Utils extends Base {
 	constructor(container, state) {
@@ -14,8 +15,8 @@ class Utils extends Base {
 		this.state = state;
 
 		let methodNames = Object.getOwnPropertyNames(Utils.prototype);
-		for(let methodName of methodNames) {
-			if(methodName == 'constructor') {
+		for (let methodName of methodNames) {
+			if (methodName == 'constructor') {
 				continue;
 			}
 
@@ -23,8 +24,8 @@ class Utils extends Base {
 				//https://stackoverflow.com/questions/4149276/how-to-convert-camelcase-to-camel-case
 				// insert a space before all caps
 				methodName.replace(/([A-Z])/g, ' $1')
-				// uppercase the first character
-				.replace(/^./, function(str){ return str.toUpperCase(); })
+					// uppercase the first character
+					.replace(/^./, function (str) { return str.toUpperCase(); })
 
 			let button = $(`<button type="button" class="btn btn-primary btn-lg btn-block">${methodNameLong}</button>`);
 			button.click(this[methodName]);
@@ -39,9 +40,9 @@ class Utils extends Base {
 
 	importFolderAnimation() {
 		let result = rendererRouter.openDialog({
-			properties : ['openDirectory']
+			properties: ['openDirectory']
 		});
-		if(result == null) {
+		if (result == null) {
 			return;
 		}
 
@@ -73,7 +74,7 @@ class Utils extends Base {
 				let content = JSON.parse(contentAsJson);
 
 				//validate frame
-				if(!('forces' in content && 'configuration' in content)) {
+				if (!('forces' in content && 'configuration' in content)) {
 					//skip frame
 					console.log("Skipping content for frame " + fileName);
 					continue;
@@ -103,11 +104,11 @@ class Utils extends Base {
 
 	importFileAnimation() {
 		let result = rendererRouter.openDialog({
-			properties : ['openFile'],
-			filters : [
-				{ name : 'Json animations', extensions : ['json'] }
+			properties: ['openFile'],
+			filters: [
+				{ name: 'Json animations', extensions: ['json'] }
 			],
-			message : "Open Json animation"
+			message: "Open Json animation"
 		});
 		if (result.length != 1) {
 			return;
@@ -122,14 +123,14 @@ class Utils extends Base {
 		let content = JSON.parse(contentAsJson);
 
 		// check format
-		{ 
+		{
 			content = content.map((frame) => {
-				if(frame.configuration) {
+				if (frame.configuration) {
 					return frame;
 				}
 				else {
 					return {
-						configuration : frame
+						configuration: frame
 					};
 				}
 			});
@@ -138,7 +139,7 @@ class Utils extends Base {
 		let framesAdded = 0;
 
 		let contentToAdd = [];
-		for(let frame of content) {
+		for (let frame of content) {
 			contentToAdd.push({
 				'id': shortid.generate(),
 				'content': frame,
@@ -151,7 +152,7 @@ class Utils extends Base {
 			framesAdded++;
 		}
 
-		
+
 		document.get('outputFrames')
 			.push(...contentToAdd)
 			.write();
@@ -172,13 +173,62 @@ class Utils extends Base {
 
 		let rangePerShaft = framesPerShaft.map(frames => AxisMath.shaftAngleRange(frames));
 
-		let stoppers = rangePerShaft.map(shaftAngleRange => AxisMath.calculateStopper(shaftAngleRange));
+		let stoppers = rangePerShaft.map((shaftAngleRange, shaftIndex) => AxisMath.calculateStopper(shaftAngleRange, shaftIndex));
 
 		settings.get("system")
 			.set("stoppers", stoppers)
 			.write();
-		
+
 		rendererRouter.notifyChange("stoppers");
+	}
+
+	exportStopperReport() {
+		let saveResult = rendererRouter.saveDialog({
+			title: "Export stopper report",
+			filters: [
+				{ name: 'Text files', extensions: ['txt'] }
+			]
+		});
+
+		if (!saveResult) {
+			return;
+		}
+
+		let stoppers = settings.get("system")
+			.get("stoppers")
+			.value();
+		if (stoppers.length != Constants.totalShaftCount) {
+			throw ("Stoppers are not correctly calculated");
+		}
+
+		let reportRows = [];
+		for (let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
+			let shaftName = AxisMath.shaftIndexToName(shaftIndex);
+			let stopper = stoppers[shaftIndex];
+			reportRows.push(`Stopper on shaft ${shaftName} :`);
+			if (stopper) {
+				//rectify stopper to be positive range
+				let stopperMax = stopper.max < stopper.min ? stopper.max + Math.PI * 2 : stopper.max;
+				stopperMax = stopperMax / (Math.PI * 2) * 360;;
+				let stopperMin = stopper.min / (Math.PI * 2) * 360;
+
+				reportRows.push(`\tRange : ${stopperMin.toFixed(2)} -> ${stopperMax.toFixed(2)} degrees`);
+			}
+			else {
+				reportRows.push('\tNo stopper');
+			}
+
+			// overrides for bottom shafts
+			if(shaftName == 'A1' || shaftName == 'B1') {
+				reportRows.push(`\tSlip Ring`);
+			}
+			
+			reportRows.push('');
+		}
+
+		let reportString = reportRows.join('\n');
+
+		fs.writeFileSync(saveResult, reportString);
 	}
 
 	nextOutputFrame() {
@@ -187,7 +237,7 @@ class Utils extends Base {
 			.value()
 			.length;
 
-		if(nextFrameIndex > outputFrameCount) {
+		if (nextFrameIndex > outputFrameCount) {
 			nextFrameIndex = 0;
 		}
 

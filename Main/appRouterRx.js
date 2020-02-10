@@ -11,6 +11,11 @@ class SyncHandlers {
 		return result;
 	}
 
+	static saveDialog(args) {
+		let result = dialog.showSaveDialogSync(args);
+		return result;
+	}
+
 	static getAppStatePropertyNames() {
 		let propertyNames = Object.getOwnPropertyNames(appState);
 		return propertyNames;
