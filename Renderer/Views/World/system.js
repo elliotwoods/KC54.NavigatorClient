@@ -1,14 +1,18 @@
 import * as THREE from '../../../node_modules/three/build/three.module.js';
 
-import { document, settings } from '../../Database.js'
+import { document, SettingNamespace } from '../../Database.js'
 import { rendererRouter } from '../../rendererRouter.js'
 
+let settingsNamespace = new SettingNamespace(["Views", "World"])
 let blockMaterial = null;
 
 function initBlockMaterial() {
-	let materialSettings = settings.get("World")
-		.get("blockMaterial")
-		.value();
+	let materialSettings = settingsNamespace.get("blockMaterial", {
+		color: 11184810,
+		metalness: 0.8,
+		roughness: 0.1,
+		envMapIntensity: 1
+	});
 
 	blockMaterial = new THREE.MeshPhysicalMaterial(materialSettings);
 }
@@ -96,7 +100,7 @@ for (let blockData of frameData.configuration) {
 }
 
 function setBlockTransforms(frameData) {
-	for(let i = 0; i < blocks.length; i++) {
+	for (let i = 0; i < blocks.length; i++) {
 		let block = blocks[i];
 		let blockData = frameData.configuration[i];
 		block.position.set(blockData.start.x, blockData.start.y, blockData.start.z);
@@ -107,9 +111,8 @@ function setBlockTransforms(frameData) {
 setBlockTransforms(frameData)
 
 // Build the forces
-let showForces = settings.get("World")
-	.get("showForces")
-	.value();;
+let showForces = settingsNamespace.get("showForces", false);
+
 if (showForces && frameData.forces) {
 	system.updateMatrixWorld();
 	for (let i = 0; i < frameData.forces.length; i++) {

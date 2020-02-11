@@ -2,11 +2,13 @@ import * as THREE from '../../../node_modules/three/build/three.module.js';
 import { RGBELoader } from '../../../node_modules/three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
-import { settings } from '../../Database.js'
+import { SettingNamespace } from '../../Database.js'
 import { RoomGrid } from './roomGrid.js';
 import { system } from './system.js'
 
 import { Constants } from '../../Utils/Constants.js'
+let settingsNamespace = new SettingNamespace(["Views", "World"]);
+
 
 const useHDR = false;
 
@@ -72,10 +74,21 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 
 // Shadow casting light
 {
-	let sunLightSettings = settings
-		.get("World")
-		.get("sunLight")
-		.value();
+	let sunLightSettings = settingsNamespace.get("sunLight", {
+		intensity: 0.8,
+		castShadow: true,
+		showHelper: false,
+		nearClip: 50,
+		farClip: 200,
+		position: [
+			0,
+			0,
+			100
+		],
+		size: 20,
+		mapSize: 2048,
+		shadowBias: -0.00001
+	});
 
 	let sunLight = new THREE.DirectionalLight(0xffffff, sunLightSettings.intensity);
 	sunLight.position.set(sunLightSettings.position[0], sunLightSettings.position[1], sunLightSettings.position[2]);
@@ -114,10 +127,10 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 		gltf.scene.position.set(Constants.footDistance / 2, -5, 0.5);
 		scene.add(gltf.scene);
 	}
-	, undefined
-	, (error) => {
-		console.log(error);
-	});
+		, undefined
+		, (error) => {
+			console.log(error);
+		});
 }
 
 // System

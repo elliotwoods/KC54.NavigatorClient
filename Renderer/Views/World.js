@@ -11,7 +11,8 @@ import { SSAOPass } from '../../node_modules/three/examples/jsm/postprocessing/S
 import { scene } from './World/scene.js'
 
 import { Constants } from '../Utils/Constants.js'
-import { settings } from '../Database.js'
+import { settings, SettingNamespace } from '../Database.js'
+let settingsNamespace = new SettingNamespace(["Views", "World"]);
 
 let worlds = [];
 
@@ -87,20 +88,39 @@ class World extends Base {
 
 		// Post processing
 		{
-			let postProcessingSettings = settings.get("World")
-				.get("postProcessing")
-				.value();
+			let postProcessingSettings = settingsNamespace.get("postProcessing", {
+				enabled: true,
+				ambientOcclusion: {
+					type: "SAO",
+					SAO: {
+						saoBias: 0.5,
+						saoIntensity: 0.001,
+						saoScale: 10,
+						saoKernelRadius: 16,
+						saoMinResolution: 0,
+						saoBlur: true,
+						saoBlurRadius: 50,
+						saoBlurStdDev: 2,
+						saoBlurDepthCutOff: 0.1
+					},
+					SSAO: {
+						kernelRadius: 8,
+						minDistance: 0.01,
+						maxDistance: 1
+					}
+				}
+			});
 
-			if(postProcessingSettings.enabled) {
+			if (postProcessingSettings.enabled) {
 				this.composer = new EffectComposer(this.renderer);
 				let renderPass = new RenderPass(scene, this.camera);
 				this.composer.addPass(renderPass);
-	
+
 				let ambientOcclusionSettings = postProcessingSettings.ambientOcclusion
 				switch (ambientOcclusionSettings.type) {
 					case "SAO":
 						{
-	
+
 							let saoPass = new SAOPass(scene, this.camera, false, true);
 							this.composer.addPass(saoPass);
 							{
@@ -111,7 +131,7 @@ class World extends Base {
 							}
 						}
 						break;
-	
+
 					case "SSAO":
 						{
 							let ssaoPass = new SSAOPass(scene, this.camera);
@@ -156,13 +176,13 @@ class World extends Base {
 		}
 		this.camera.updateProjectionMatrix();
 
-		if(this.composer) {
+		if (this.composer) {
 			this.composer.setSize(w, h);
 		}
 	}
 
 	render() {
-		if(this.composer) {
+		if (this.composer) {
 			this.composer.render();
 		}
 		else {
