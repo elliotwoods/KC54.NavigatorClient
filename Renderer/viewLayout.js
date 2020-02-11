@@ -1,4 +1,4 @@
-import { Utils } from './Views/Utils.js'
+import { ImportExport } from './Views/ImportExport.js'
 import { Timeline } from './Views/Timeline.js'
 import { AnglePlots } from './Views/AnglePlots.js'
 import { World } from './Views/World.js'
@@ -43,10 +43,7 @@ let standardConfig = {
 			width : 30,
 			content: [{
 				type: 'component',
-				componentName: "Utils",
-				componentState: {
-					"label": "Utils"
-				}
+				componentName: "ImportExport"
 			},
 			{
 				type: 'component',
@@ -131,7 +128,7 @@ function setup() {
 		goldenLayout = new GoldenLayout(standardConfig);
 	}
 
-	Utils.register(goldenLayout);
+	ImportExport.register(goldenLayout);
 	Timeline.register(goldenLayout);
 	AnglePlots.register(goldenLayout);
 	World.register(goldenLayout);

@@ -10,7 +10,19 @@
 	overflow-y: auto;
 }
 
+.scrollContainerAuto {
+	width: 100%;
+	height: 100%;
+	overflow-x: auto;
+	overflow-y: auto;
+}
+
+
 .rendererContainer {
 	width: 100%;
 	height: 100%;
+}
+
+.functionsContainer {
+	padding : 10px;
 }

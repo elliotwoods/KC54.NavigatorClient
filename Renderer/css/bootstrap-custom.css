@@ -1,0 +1,19 @@
+.btn {
+	filter: drop-shadow(3px 3px 4px #D1CDC7) drop-shadow(-3px -3px 4px white);
+	border: #fff 1px;
+	border-radius: 5px;
+	font-weight: 200;
+	background: #efeeee;
+	border: 5px black;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+
+.btn-icon {
+	width: 40px;
+	height : 40px;
+}
+
+.container {
+	background: #efeeee;
+}

@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron')
+const path = require('path')
 require('./appRouterRx.js')
 require('./appState.js')
 
@@ -14,6 +15,11 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true
 		}
+	});
+
+	// add folder for debugging / editing
+	win.webContents.on('devtools-opened', () => {
+		win.webContents.addWorkSpace(path.join(__dirname, '../Renderer/'));
 	})
 
 	// and load the index.html of the app.
