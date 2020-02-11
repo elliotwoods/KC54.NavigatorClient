@@ -1,12 +1,11 @@
 .btn {
 	filter: drop-shadow(3px 3px 4px #D1CDC7) drop-shadow(-3px -3px 4px white);
 	border: #fff 1px;
-	border-radius: 5px;
+	border-radius: 10px;
 	font-weight: 200;
 	background: #efeeee;
 	border: 5px black;
-	margin-bottom: 20px;
-	margin-right: 10px;
+	margin: 10px;
 }
 
 .btn-icon {
@@ -16,5 +15,5 @@
 
 .btn-play-pressed {
 	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
-	background: #ffeeee;
+	background: #d9eed7;
 }

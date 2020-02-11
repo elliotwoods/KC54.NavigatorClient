@@ -52,7 +52,7 @@
                 {
                   "type": "stack",
                   "width": 52.5,
-                  "height": 53.31932025291975,
+                  "height": 47.615815053024534,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
@@ -78,7 +78,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 23.78191387114764,
+                  "height": 25.249930873721986,
                   "content": [
                     {
                       "title": "top",
@@ -99,7 +99,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 22.898765875932607,
+                  "height": 27.13425407325348,
                   "content": [
                     {
                       "title": "front",
@@ -124,7 +124,7 @@
               "content": [
                 {
                   "type": "stack",
-                  "height": 9.705869005604953,
+                  "height": 7.717424900840015,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
@@ -144,7 +144,7 @@
                 },
                 {
                   "type": "stack",
-                  "height": 67.46838000279519,
+                  "height": 69.45682410756014,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
