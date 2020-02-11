@@ -11,36 +11,35 @@ import { Constants } from '../Utils/Constants.js'
 class ImportExport extends Functions {
 	constructor(container, state, childType) {
 		super(container, state, ImportExport, {
-			clearAnimation : {
-				icon : "fas fa-trash"
+			clearAnimation: {
+				icon: "fas fa-trash"
 			},
-			importFolderAnimation : {
-				icon : "fas fa-folder-open"
+			importFolderAnimation: {
+				icon: "fas fa-folder-open"
 			},
-			importFileAnimation : {
-				icon : "fas fa-file-import"
+			importFileAnimation: {
+				icon: "fas fa-file-import"
 			},
-			calculateStopperAngles : {
-				icon : "fas fa-circle-notch"
+			calculateStopperAngles: {
+				icon: "fas fa-circle-notch"
 			},
-			exportStopperReport : {
-				icon : "fas fa-file-contract"
+			exportStopperReport: {
+				icon: "fas fa-file-contract"
 			},
-			nextOutputFrame : {
-				icon : "fas fa-step-forward"
+			playPause: {
+				icon: "fas fa-play"
 			},
-			nextOutputFrame : {
-				icon : "fas fa-step-forward"
+			nextOutputFrame: {
+				icon: "fas fa-step-forward"
 			},
-			play : {
-				icon : "fas fa-play"
-			},
-			pause : {
-				icon : "fas fa-pause"
-			},
-			stop : {
-				icon : "fas fa-stop"
+			stop: {
+				icon: "fas fa-stop"
 			}
+		});
+
+		this._updatePlayState();
+		rendererRouter.onChange("playing", () => {
+			this._updatePlayState();
 		});
 	}
 
@@ -226,16 +225,25 @@ class ImportExport extends Functions {
 			}
 
 			// overrides for bottom shafts
-			if(shaftName == 'A1' || shaftName == 'B1') {
+			if (shaftName == 'A1' || shaftName == 'B1') {
 				reportRows.push(`\tSlip Ring`);
 			}
-			
+
 			reportRows.push('');
 		}
 
 		let reportString = reportRows.join('\n');
 
 		fs.writeFileSync(saveResult, reportString);
+	}
+
+	playPause() {
+		if (!rendererRouter.appState.get_playing()) {
+			rendererRouter.appState.set_playing(true);
+		}
+		else {
+			rendererRouter.appState.set_playing(false);
+		}
 	}
 
 	nextOutputFrame() {
@@ -252,17 +260,24 @@ class ImportExport extends Functions {
 		console.log(rendererRouter.appState.get_outputFrameIndex());
 	}
 
-	play() {
-		rendererRouter.appState.set_playing(true);
-	}
-
-	pause() {
-		rendererRouter.appState.set_playing(false);
-	}
-
 	stop() {
 		rendererRouter.appState.set_playing(false);
 		rendererRouter.appState.set_outputFrameIndex(0);
+	}
+
+	_updatePlayState() {
+		let button = this.buttons["playPause"];
+		let icon = button.find("i");
+		if (rendererRouter.appState.get_playing()) {
+			button.addClass("btn-play-pressed");
+			icon.removeClass("fa-play");
+			icon.addClass("fa-pause");
+		}
+		else {
+			button.removeClass("btn-play-pressed");
+			icon.addClass("fa-play");
+			icon.removeClass("fa-pause");
+		}
 	}
 }
 

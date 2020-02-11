@@ -248,25 +248,6 @@ class AnglePlots extends Base {
 					}
 				})
 			}
-
-			// Add current frame data in top-left
-			{
-				let shaftAngle = shaftAnglesPerFrame[currentFrameIndex][shaftIndex] * (180 / Math.PI);
-
-				layout.annotations.push({
-					"x": plotX - size * 0.8,
-					"y": plotY + size * 0.8,
-					"text": `${shaftAngle.toFixed(1)}`,
-					"xref": "paper",
-					"yref": "paper",
-					"xanchor": "left",
-					"yanchor": "top",
-					"showarrow": false,
-					"font": {
-						"size": 10
-					}
-				})
-			}
 		}
 
 		if(settingNamespace.get('showDebugText', false)) {
@@ -328,6 +309,7 @@ class AnglePlots extends Base {
 		this.plotDiv = await Plotly.newPlot(this.div[0], plotData.concat(markersPlotData).concat(stopperPlotData), layout, config);
 		$(this.plotDiv).height("100%");
 		$(this.plotDiv).width("100%");
+		$(this.plotDiv).addClass("AnglePlots_plots");
 
 		rendererRouter.onChange("outputFrame", () => {
 			this.needsUpdateTraces = true;

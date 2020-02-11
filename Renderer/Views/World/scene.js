@@ -75,7 +75,7 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 // Shadow casting light
 {
 	let sunLightSettings = settingsNamespace.get("sunLight", {
-		intensity: 0.8,
+		intensity: 0.3,
 		castShadow: true,
 		showHelper: false,
 		nearClip: 50,

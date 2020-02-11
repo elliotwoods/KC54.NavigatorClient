@@ -1,5 +1,6 @@
 const { ipcMain, dialog } = require('electron')
 const { appState } = require('./appState.js')
+const { appRouterTx } = require('./appRouterTx.js')
 
 class SyncHandlers {
 	static getSyncHandlerNames() {
@@ -36,11 +37,12 @@ class SyncHandlers {
 		// use custom setter if exists
 		let setterName = "set_" + args.name;
 		if(setterName in appState) {
-			return appState[setterName](args.value);
+			appState[setterName](args.value);
 		}
 		else {
 			appState[args.name] = args.value;
 		}
+		appRouterTx.announcePropertyChange(args.name);
 	}
 }
 

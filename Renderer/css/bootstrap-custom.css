@@ -13,3 +13,8 @@
 	width: 40px;
 	height : 40px;
 }
+
+.btn-play-pressed {
+	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
+	background: #ffeeee;
+}

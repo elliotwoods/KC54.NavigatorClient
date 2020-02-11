@@ -47,12 +47,12 @@
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 58.711217183770884,
+              "width": 58.64045864045864,
               "content": [
                 {
                   "type": "stack",
                   "width": 52.5,
-                  "height": 60.590823381521055,
+                  "height": 53.31932025291975,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
@@ -78,14 +78,35 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 39.409176618478945,
+                  "height": 23.78191387114764,
                   "content": [
                     {
-                      "title": "perspective",
+                      "title": "top",
                       "type": "component",
                       "componentName": "World",
                       "componentState": {
-                        "camera": "perspective"
+                        "camera": "top"
+                      },
+                      "isClosable": true,
+                      "reorderEnabled": true
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "header": {},
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "height": 22.898765875932607,
+                  "content": [
+                    {
+                      "title": "front",
+                      "type": "component",
+                      "componentName": "World",
+                      "componentState": {
+                        "camera": "front"
                       },
                       "isClosable": true,
                       "reorderEnabled": true
@@ -96,7 +117,7 @@
             },
             {
               "type": "column",
-              "width": 41.288782816229116,
+              "width": 41.35954135954136,
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
@@ -123,7 +144,7 @@
                 },
                 {
                   "type": "stack",
-                  "height": 38.65244573991911,
+                  "height": 67.46838000279519,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
@@ -144,7 +165,7 @@
                 },
                 {
                   "type": "stack",
-                  "height": 51.64168525447594,
+                  "height": 22.825750991599868,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
@@ -285,7 +306,7 @@
         }
       },
       "sunLight": {
-        "intensity": 0.8,
+        "intensity": 0.3,
         "castShadow": true,
         "showHelper": false,
         "nearClip": 50,

@@ -1,13 +1,5 @@
 import { Base } from './Base.js'
 
-import { rendererRouter } from '../rendererRouter.js'
-const fs = require('fs')
-const path = require('path')
-const shortid = require('shortid')
-import { document, settings } from '../Database.js'
-import { AxisMath } from '../Utils/AxisMath.js'
-import { Constants } from '../Utils/Constants.js'
-
 class Functions extends Base {
 	constructor(container, state, childType, preferences) {
 		super();
@@ -24,7 +16,7 @@ class Functions extends Base {
 		let itemsPerCol = Math.floor(methodNames.length) / 1;
 		let indexToColChange = itemsPerCol;
 		for (let methodName of methodNames) {
-			if (methodName == 'constructor') {
+			if (methodName == 'constructor' || methodName[0] == "_") {
 				continue;
 			}
 			let methodNameLong =
@@ -56,10 +48,12 @@ class Functions extends Base {
 			
 			let button = $(`<button type="button" class="btn btn-outline-secondary ${buttonClasses.join(" ")}" ${buttonPreferences.join(' ')}></button>`);
 			button.append(buttonContent);
-			button.click(this[methodName]);
+			button.click(() => {
+				this[methodName]();
+			});
 			this.div.append(button);
 
-			this.buttons.methodName = button;
+			this.buttons[methodName] = button;
 		}
 	}
 }
