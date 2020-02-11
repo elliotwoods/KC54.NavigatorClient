@@ -1,11 +1,12 @@
 import { Base } from './Base.js'
 import { outputTimeline } from '../Data/outputTimeline.js'
-import { document, settings } from '../Database.js'
+import { document, settings, SettingNamespace } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { rendererRouter } from '../rendererRouter.js'
 
 const radialDomainScale = 8;
+const settingNamespace = new SettingNamespace(["Views", "AnglePlots"]);
 
 class AnglePlots extends Base {
 	constructor(container, state) {
@@ -20,57 +21,94 @@ class AnglePlots extends Base {
 	init() {
 		this.div = $(`<div class="scrollContainerAuto" />`);
 		this.container.getElement().append(this.div);
-		
+
 		this.tryRefresh();
 	}
 
-	refresh() {
+	addOptionsDiv() {
+		// options div
+		{
+			let optionsDiv = $(`<div class="anglePlotsOptions" />`);
+
+			let addOption = (settingName, caption, defaultValue) => {
+				let optionDiv = $(`<div class="custom-control custom-switch" />`);
+				{
+
+					let checkBox = $(`<input type="checkbox" class="custom-control-input" id="AnglePlots_${settingName}_switch" checked="">`);
+					optionDiv.append(checkBox);
+
+					let value = settingNamespace.get(settingName, defaultValue);
+					if(!value) {
+						checkBox.removeAttr("checked");
+					}
+
+					checkBox.change((value) => {
+						settingNamespace.set(settingName, value.target.checked);
+					});
+
+					let label = $(`<label class="custom-control-label" for="AnglePlots_${settingName}_switch">${caption}</label>`);
+					optionDiv.append(label);
+				}
+
+				optionsDiv.append(optionDiv);
+			}
+
+			addOption('liveUpdate', 'Live update', true);
+			addOption('showDebugText', 'Show debug text', false);
+
+			this.container.getElement().append(optionsDiv);
+		}
+	}
+
+	async refresh() {
+		this.addOptionsDiv();
+
 		let outputFrames = document.get('outputFrames').value();
 		let currentFrameIndex = rendererRouter.appState.get_outputFrameIndex();
 
-		if(currentFrameIndex >= outputFrames.length) {
+		if (currentFrameIndex >= outputFrames.length) {
 			return;
 		}
- 
+
 		// gather the shaft angles for each frame
 		let shaftAnglesPerFrame = AxisMath.outputFramesToShaftAnglesPerFrame(outputFrames);
-	
+
 		// invert the dataset so that it is categorised per axis
 		let framePerShaftAngle = AxisMath.shaftAnglesPerFrameToFramesPerShaft(shaftAnglesPerFrame);
 
 		// create the plotData
 		let plotData = [];
 		let markersPlotData = [];
-		for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
+		for (let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
 			let shaftAnglesForOneAxis = framePerShaftAngle[shaftIndex]
 			let plot = {
-				type : 'scatterpolargl',
-				mode : 'lines',
-				r : AxisMath.radiansToCycles(shaftAnglesForOneAxis).map(cycles => Math.max(Math.min(cycles, radialDomainScale - 1), - radialDomainScale + 1)),
-				theta : AxisMath.radiansToDegrees(shaftAnglesForOneAxis),
-				subplot : shaftIndex == 0 ? 'polar' : `polar${shaftIndex + 1}`
+				type: 'scatterpolargl',
+				mode: 'lines',
+				r: AxisMath.radiansToCycles(shaftAnglesForOneAxis).map(cycles => Math.max(Math.min(cycles, radialDomainScale - 1), - radialDomainScale + 1)),
+				theta: AxisMath.radiansToDegrees(shaftAnglesForOneAxis),
+				subplot: shaftIndex == 0 ? 'polar' : `polar${shaftIndex + 1}`
 			};
 			plotData.push(plot);
 
 			// add a marker for the current position
 			let traceCurrentPosition = {
-				type : 'scatterpolargl',
-				mode : 'markers',
-				r : AxisMath.radiansToCycles([shaftAnglesForOneAxis[currentFrameIndex]]),
-				theta : AxisMath.radiansToDegrees([shaftAnglesForOneAxis[currentFrameIndex]]),
-				marker : {
-					color : "transparent",
-					size : 10,
-					line : {
-						color : '#000',
-						width : 2
+				type: 'scatterpolargl',
+				mode: 'markers',
+				r: AxisMath.radiansToCycles([shaftAnglesForOneAxis[currentFrameIndex]]),
+				theta: AxisMath.radiansToDegrees([shaftAnglesForOneAxis[currentFrameIndex]]),
+				marker: {
+					color: "transparent",
+					size: 10,
+					line: {
+						color: '#000',
+						width: 2
 					}
 				},
-				subplot : plot.subplot
+				subplot: plot.subplot
 			};
 			markersPlotData.push(traceCurrentPosition);
 		}
-		
+
 		// draw the stoppers
 		let stopperPlotData = [];
 		{
@@ -78,74 +116,75 @@ class AnglePlots extends Base {
 				.get("stoppers")
 				.value();
 
-			if(stopperData.length == Constants.totalShaftCount) {
-				for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
-					if(stopperData[shaftIndex] == null) {
+			if (stopperData.length == Constants.totalShaftCount) {
+				for (let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
+					if (stopperData[shaftIndex] == null) {
 						continue;
 					}
 					let min = stopperData[shaftIndex].min;
 					let max = stopperData[shaftIndex].max;
 
 					//rectify to positive facing range for drawing
-					if(min > max) {
+					if (min > max) {
 						min -= Math.PI * 2;
 					}
 
 					let middleThetaValues = [];
-					for(let t = 0; t<=1; t += 0.01) {
+					for (let t = 0; t <= 1; t += 0.01) {
 						middleThetaValues.push(t * (max - min) + min);
 					}
-					
+
 					let middleRValues = middleThetaValues.map(_ => radialDomainScale);
 
 					let plot = {
-						type : "scatterpolargl",
-						mode : 'lines',
-						r : [-radialDomainScale, radialDomainScale, ...middleRValues, radialDomainScale, -radialDomainScale],
-						theta : AxisMath.radiansToDegrees([min, min, ...middleThetaValues, max, max]),
-						fill : "toself",
-						fillcolor : '#333333',
-						line : {
-							color : '#333333'
+						type: "scatterpolargl",
+						mode: 'lines',
+						r: [-radialDomainScale, radialDomainScale, ...middleRValues, radialDomainScale, -radialDomainScale],
+						theta: AxisMath.radiansToDegrees([min, min, ...middleThetaValues, max, max]),
+						fill: "toself",
+						fillcolor: '#333333',
+						line: {
+							color: '#333333'
 						},
-						opacity : 0.5,
-						subplot : plotData[shaftIndex].subplot
+						opacity: 0.5,
+						subplot: plotData[shaftIndex].subplot
 					};
 
 					stopperPlotData.push(plot);
 				}
 			}
 		}
-		
+
 		let layout = {
-			showlegend : false,
-			annotations : [],
-			autosize : true,
-			height : 1000,
-			margin : { 
-				l : 20,
-				r : 20,
-				b : 20,
-				t : 20,
-				pad : 0
-			}
+			showlegend: false,
+			annotations: [],
+			autosize: true,
+			margin: {
+				l: 20,
+				r: 20,
+				b: 20,
+				t: 20,
+				pad: 0
+			},
+			paper_bgcolor: 'rgba(0,0,0,0)',
+			plot_bgcolor: 'rgba(0,0,0,0)'
 		};
 
 		const padding = 0.01;
-		const size = 1/12 - padding;
-		const colPositions = [1/12, 3/12, 5/12, 7/12, 9/12, 11/12];
+		const size = 1 / 12 - padding;
+		const colPositions = [1 / 12, 3 / 12, 5 / 12, 7 / 12, 9 / 12, 11 / 12];
 		const cols = 12;
 		const rows = Constants.totalBlockHeight + 1;
 
-		for(let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
+		for (let shaftIndex = 0; shaftIndex < Constants.totalShaftCount; shaftIndex++) {
 			// see page 14 of 2020-February notes
 			let shaftName = AxisMath.shaftIndexToName(shaftIndex);
 			let towerName = shaftName.substr(0, 1);
 			let shaftTier = parseInt(shaftName.substr(1));
 			let col;
-			if(shaftTier == Constants.totalBlockHeight - 1) {
+			if (shaftTier == Constants.totalBlockHeight - 1) {
 				// top block
-				switch(towerName) {
+				switch (towerName) {
 					case 'A':
 						col = 5;
 						break;
@@ -156,7 +195,7 @@ class AnglePlots extends Base {
 			}
 			else {
 				// other blocks
-				switch(towerName) {
+				switch (towerName) {
 					case 'A':
 						col = (shaftTier % 2) * 2 + 1;
 						break;
@@ -167,45 +206,45 @@ class AnglePlots extends Base {
 			}
 			let row = shaftTier + 1;
 
-			let plotX = col  / cols;
+			let plotX = col / cols;
 			let plotY = row / rows;
-			
+
 			layout[plotData[shaftIndex].subplot] = {
-				domain : {
-					x : [plotX - size
+				domain: {
+					x: [plotX - size
 						, plotX + size],
-					y : [plotY - size
+					y: [plotY - size
 						, plotY + size]
 				},
-				radialaxis : {
-					range : [-radialDomainScale, radialDomainScale],
-					nticks : 5,
-					tickfont : {
-						size : 8
+				radialaxis: {
+					range: [-radialDomainScale, radialDomainScale],
+					nticks: 5,
+					tickfont: {
+						size: 8
 					}
 				},
-				angularaxis : {
-					tickfont : {
-						size : 8
+				angularaxis: {
+					tickfont: {
+						size: 8
 					},
-					dtick : 90
+					dtick: 90
 				},
-				hole : 0.3
+				hole: 0.3
 			}
 
 			// Add title in center
 			{
 				layout.annotations.push({
-					"x" : plotX,
-					"y" : plotY,
-					"text" : `${AxisMath.shaftIndexToName(shaftIndex)}`,
+					"x": plotX,
+					"y": plotY,
+					"text": `${AxisMath.shaftIndexToName(shaftIndex)}`,
 					"xref": "paper",
 					"yref": "paper",
 					"xanchor": "center",
 					"yanchor": "middle",
-					"showarrow" : false,
-					"font" : {
-						"size" : 10
+					"showarrow": false,
+					"font": {
+						"size": 10
 					}
 				})
 			}
@@ -215,16 +254,16 @@ class AnglePlots extends Base {
 				let shaftAngle = shaftAnglesPerFrame[currentFrameIndex][shaftIndex] * (180 / Math.PI);
 
 				layout.annotations.push({
-					"x" : plotX - size * 0.8,
-					"y" : plotY + size * 0.8,
-					"text" : `${shaftAngle.toFixed(1)}`,
+					"x": plotX - size * 0.8,
+					"y": plotY + size * 0.8,
+					"text": `${shaftAngle.toFixed(1)}`,
 					"xref": "paper",
 					"yref": "paper",
 					"xanchor": "left",
 					"yanchor": "top",
-					"showarrow" : false,
-					"font" : {
-						"size" : 10
+					"showarrow": false,
+					"font": {
+						"size": 10
 					}
 				})
 			}
@@ -233,23 +272,23 @@ class AnglePlots extends Base {
 		{
 			let angleToXArray = outputFrames[currentFrameIndex].content.configuration.map(config => config.angleToX * (180 / Math.PI));
 			let angleToXReport = [];
-			for(let i = 0; i < angleToXArray.length; i++) {
+			for (let i = 0; i < angleToXArray.length; i++) {
 				angleToXReport.push(`[${i}] ${angleToXArray[i].toFixed(1)}`);
 			}
 			angleToXReport = angleToXReport.reverse();
 			angleToXReport = ['angleToX:'].concat(angleToXReport);
 
 			layout.annotations.push({
-				"x" : 0.5,
-				"y" : (10 / rows),
-				"text" : angleToXReport.join('<br />'),
+				"x": 0.5,
+				"y": (10 / rows),
+				"text": angleToXReport.join('<br />'),
 				"xref": "paper",
 				"yref": "paper",
 				"xanchor": "right",
 				"yanchor": "top",
-				"showarrow" : false,
-				"font" : {
-					"size" : 12
+				"showarrow": false,
+				"font": {
+					"size": 12
 				}
 			});
 		}
@@ -257,81 +296,86 @@ class AnglePlots extends Base {
 		{
 			let shaftAnglesArray = shaftAnglesPerFrame[currentFrameIndex].map(shaftAngle => shaftAngle * (180 / Math.PI));
 			let shaftAnglesReport = [];
-			for(let i = 0; i < shaftAnglesArray.length; i++) {
+			for (let i = 0; i < shaftAnglesArray.length; i++) {
 				shaftAnglesReport.push(`[${i}] ${shaftAnglesArray[i].toFixed(1)}`);
 			}
 			shaftAnglesReport = shaftAnglesReport.reverse();
 			shaftAnglesReport = ['shaftAngle:'].concat(shaftAnglesReport);
 
 			layout.annotations.push({
-				"x" : 0.5,
-				"y" : (10 / rows),
-				"text" : shaftAnglesReport.join('<br />'),
+				"x": 0.5,
+				"y": (10 / rows),
+				"text": shaftAnglesReport.join('<br />'),
 				"xref": "paper",
 				"yref": "paper",
 				"xanchor": "left",
 				"yanchor": "top",
-				"showarrow" : false,
-				"font" : {
-					"size" : 12
+				"showarrow": false,
+				"font": {
+					"size": 12
 				}
 			});
 		}
 
 		let config = {
-			responsive : true,
-			showEditInChartStudio : true
+			responsive: true,
+			showEditInChartStudio: true
 		};
 
-		this.plot = Plotly.newPlot(this.div[0], plotData.concat(markersPlotData).concat(stopperPlotData), layout, config);
-		this.plot.then((plotDiv) => {
-			$(plotDiv).height("100%");
-			this.plotDiv = plotDiv;
+		this.plotDiv = await Plotly.newPlot(this.div[0], plotData.concat(markersPlotData).concat(stopperPlotData), layout, config);
+		$(this.plotDiv).height("100%");
+		$(this.plotDiv).width("100%");
 
-			rendererRouter.onChange("outputFrame", () => {
-				this.needsUpdateTraces = true;
-			});
+		rendererRouter.onChange("outputFrame", () => {
+			this.needsUpdateTraces = true;
 		});
 
 		// start update loop
-		if(settings.get("AnglePlots")
+		if (settings.get("AnglePlots")
 			.get("animationEnabled")
 			.value()) {
-				this.updateShaftCursors();
-			}
+			this.updateShaftCursors();
+		}
 
-		// for debug
-		window.axisMath = AxisMath;
-		window.anglePlots = this;
-		window.anglesToX = shaftAnglesPerFrame[0];
+		this.container.on("resize", async () => {
+			await this.resize();
+		});
+		this.resize();
 	}
 
 	async updateShaftCursors() {
-		if(this.needsUpdateTraces) {
+		if (this.needsUpdateTraces) {
 			let frame = document.getCurrentOutputFrame();
 			let anglesToX = frame.configuration.map(block => block.angleToX);
 			let shaftAngles = AxisMath.anglesToXToShaftAngles(anglesToX);
-	
+
 			let traceIndices = new Array(shaftAngles.length).fill(0).map((_, i) => i + shaftAngles.length);
-	
+
 			traceData = {
-				data : shaftAngles.map((shaftAngle) => {
+				data: shaftAngles.map((shaftAngle) => {
 					return {
-						r : [shaftAngle / (Math.PI * 2)],
-						theta : [shaftAngle / (Math.PI * 2) * 360]
+						r: [shaftAngle / (Math.PI * 2)],
+						theta: [shaftAngle / (Math.PI * 2) * 360]
 					};
 				}),
-				traces : traceIndices
+				traces: traceIndices
 			}
-	
+
 			await Plotly.animate(this.div[0], traceData);
 
 			this.needsUpdateTraces = false;
 		}
-		
+
 		setTimeout(() => {
 			this.updateShaftCursors();
 		}, 10);
+	}
+
+	async resize() {
+		Plotly.relayout(this.plotDiv, {
+			width: $(this.plotDiv).width(),
+			height: $(this.plotDiv).height()
+		});
 	}
 }
 

@@ -76,9 +76,55 @@ document.getCurrentOutputFrame = () => {
 	}
 };
 
+class SettingNamespace{
+	constructor(outerSettingNameSpace) {
+		this.outerSettingNameSpace = outerSettingNameSpace;
+	}
+
+	totalNamespace(innerSettingNameSpace) {
+		return this.outerSettingNameSpace.concat(innerSettingNameSpace);
+	}
+
+	get(innerSettingNameSpace, defaultValue) {
+		let namespace = this.totalNamespace(innerSettingNameSpace);
+		
+		let setting = settings;
+		for(let level in namespace) {
+			setting = setting.get(level);
+		}
+		let value = setting.value();
+
+		if(value !== undefined) {
+			return value;
+		}
+		else {
+			this.set(innerSettingNameSpace, defaultValue);
+			return defaultValue;
+		}
+	}
+
+	set(innerSettingNameSpace, value) {
+		let namespace = this.totalNamespace(innerSettingNameSpace);
+		
+		let setting = settings;
+		for(let levelIndex = 0; levelIndex < namespace.length -1; levelIndex++) {
+			let levelName = namespace[levelIndex];
+			let nextLevel = setting.get(levelName);
+			if(nextLevel.value() == undefined) {
+				setting.set(levelName, {}).write();
+			}
+			setting = nextLevel;
+		}
+		setting.set(namespace[namespace.length - 1], value).write();
+	}
+
+	forceNamespace(namespace, defaultValue) {
+
+	}
+}
 
 window.db = {};
 window.db.document = document;
 window.db.settings = settings;
 
-export { settings, document }
+export { settings, document, SettingNamespace }
