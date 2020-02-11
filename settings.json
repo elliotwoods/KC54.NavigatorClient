@@ -339,7 +339,7 @@
   },
   "Views": {
     "AnglePlots": {
-      "liveUpdate": true,
+      "liveUpdate": false,
       "showDebugText": false
     }
   }

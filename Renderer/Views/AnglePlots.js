@@ -269,53 +269,56 @@ class AnglePlots extends Base {
 			}
 		}
 
-		{
-			let angleToXArray = outputFrames[currentFrameIndex].content.configuration.map(config => config.angleToX * (180 / Math.PI));
-			let angleToXReport = [];
-			for (let i = 0; i < angleToXArray.length; i++) {
-				angleToXReport.push(`[${i}] ${angleToXArray[i].toFixed(1)}`);
-			}
-			angleToXReport = angleToXReport.reverse();
-			angleToXReport = ['angleToX:'].concat(angleToXReport);
-
-			layout.annotations.push({
-				"x": 0.5,
-				"y": (10 / rows),
-				"text": angleToXReport.join('<br />'),
-				"xref": "paper",
-				"yref": "paper",
-				"xanchor": "right",
-				"yanchor": "top",
-				"showarrow": false,
-				"font": {
-					"size": 12
+		if(settingNamespace.get('showDebugText', false)) {
+			{
+				let angleToXArray = outputFrames[currentFrameIndex].content.configuration.map(config => config.angleToX * (180 / Math.PI));
+				let angleToXReport = [];
+				for (let i = 0; i < angleToXArray.length; i++) {
+					angleToXReport.push(`[${i}] ${angleToXArray[i].toFixed(1)}`);
 				}
-			});
+				angleToXReport = angleToXReport.reverse();
+				angleToXReport = ['angleToX:'].concat(angleToXReport);
+
+				layout.annotations.push({
+					"x": 0.5,
+					"y": (10 / rows),
+					"text": angleToXReport.join('<br />'),
+					"xref": "paper",
+					"yref": "paper",
+					"xanchor": "right",
+					"yanchor": "top",
+					"showarrow": false,
+					"font": {
+						"size": 12
+					}
+				});
+			}
+
+			{
+				let shaftAnglesArray = shaftAnglesPerFrame[currentFrameIndex].map(shaftAngle => shaftAngle * (180 / Math.PI));
+				let shaftAnglesReport = [];
+				for (let i = 0; i < shaftAnglesArray.length; i++) {
+					shaftAnglesReport.push(`[${i}] ${shaftAnglesArray[i].toFixed(1)}`);
+				}
+				shaftAnglesReport = shaftAnglesReport.reverse();
+				shaftAnglesReport = ['shaftAngle:'].concat(shaftAnglesReport);
+
+				layout.annotations.push({
+					"x": 0.5,
+					"y": (10 / rows),
+					"text": shaftAnglesReport.join('<br />'),
+					"xref": "paper",
+					"yref": "paper",
+					"xanchor": "left",
+					"yanchor": "top",
+					"showarrow": false,
+					"font": {
+						"size": 12
+					}
+				});
+			}
 		}
 
-		{
-			let shaftAnglesArray = shaftAnglesPerFrame[currentFrameIndex].map(shaftAngle => shaftAngle * (180 / Math.PI));
-			let shaftAnglesReport = [];
-			for (let i = 0; i < shaftAnglesArray.length; i++) {
-				shaftAnglesReport.push(`[${i}] ${shaftAnglesArray[i].toFixed(1)}`);
-			}
-			shaftAnglesReport = shaftAnglesReport.reverse();
-			shaftAnglesReport = ['shaftAngle:'].concat(shaftAnglesReport);
-
-			layout.annotations.push({
-				"x": 0.5,
-				"y": (10 / rows),
-				"text": shaftAnglesReport.join('<br />'),
-				"xref": "paper",
-				"yref": "paper",
-				"xanchor": "left",
-				"yanchor": "top",
-				"showarrow": false,
-				"font": {
-					"size": 12
-				}
-			});
-		}
 
 		let config = {
 			responsive: true,
@@ -331,11 +334,7 @@ class AnglePlots extends Base {
 		});
 
 		// start update loop
-		if (settings.get("AnglePlots")
-			.get("animationEnabled")
-			.value()) {
-			this.updateShaftCursors();
-		}
+		this.updateShaftCursors();
 
 		this.container.on("resize", async () => {
 			await this.resize();
@@ -344,7 +343,7 @@ class AnglePlots extends Base {
 	}
 
 	async updateShaftCursors() {
-		if (this.needsUpdateTraces) {
+		if (this.needsUpdateTraces && settingNamespace.get('liveUpdate')) {
 			let frame = document.getCurrentOutputFrame();
 			let anglesToX = frame.configuration.map(block => block.angleToX);
 			let shaftAngles = AxisMath.anglesToXToShaftAngles(anglesToX);

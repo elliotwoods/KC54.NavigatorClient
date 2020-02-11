@@ -89,7 +89,7 @@ class SettingNamespace{
 		let namespace = this.totalNamespace(innerSettingNameSpace);
 		
 		let setting = settings;
-		for(let level in namespace) {
+		for(let level of namespace) {
 			setting = setting.get(level);
 		}
 		let value = setting.value();
@@ -97,7 +97,7 @@ class SettingNamespace{
 		if(value !== undefined) {
 			return value;
 		}
-		else {
+		else if(defaultValue !== undefined) {
 			this.set(innerSettingNameSpace, defaultValue);
 			return defaultValue;
 		}
