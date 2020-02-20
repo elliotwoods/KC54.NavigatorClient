@@ -37,3 +37,23 @@
 .AnglePlots_plots {
 	padding-top: 50px;
 }
+
+.Transport_timeStatus_div { 
+	float: right;
+}
+
+.Transport_timeStatus_frames {
+	display: block;
+	font-family: 'Courier New', Courier, monospace;
+	font-weight: bold;
+}
+
+.Transport_timeStatus_seconds {
+	display: block;
+	font-family: 'Courier New', Courier, monospace;
+}
+
+.Transport_playCursor {
+	display : block;
+	width : 100%;
+}

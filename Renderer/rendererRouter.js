@@ -1,5 +1,12 @@
 const { ipcRenderer } = require('electron')
 
+// for reference
+let channelNames = [
+	'stoppers',
+	'outputFrameData',
+	'outputFrame'
+];
+
 class RendererRouter {
 	constructor() {
 		this.propertyListeners = [];

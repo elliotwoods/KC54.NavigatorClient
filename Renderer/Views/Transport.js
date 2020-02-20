@@ -10,6 +10,7 @@ import { Constants } from '../Utils/Constants.js'
 
 class Transport extends Functions {
 	constructor(container, state, childType) {
+		// Setup buttons
 		super(container, state, Transport, {
 			previousOutputFrame: {
 				icon: "fas fa-step-backward"
@@ -24,6 +25,24 @@ class Transport extends Functions {
 				icon: "fas fa-stop"
 			}
 		});
+
+		{
+			this.timeStatusDiv = $(`<div class="Transport_timeStatus_div">`);
+			this.div.append(this.timeStatusDiv);
+
+			this.playCursor = $(`<input type="range" class="custom-slider Transport_playCursor">`);
+			this.playCursor.on('input', (args) => {
+				this._jumpToFrame(parseInt(this.playCursor.val()));
+			});
+			this.div.append(this.playCursor);
+
+			let redraw = () => {
+				this._updateTimeStatus();
+			};
+			rendererRouter.onChange('outputFrame', redraw);
+			rendererRouter.onChange('outputFrameData', redraw);
+			redraw();
+		}
 
 		this._updatePlayState();
 		rendererRouter.onChange("playing", () => {
@@ -55,15 +74,7 @@ class Transport extends Functions {
 
 	nextOutputFrame() {
 		let nextFrameIndex = rendererRouter.appState.get_outputFrameIndex() + 1;
-		let outputFrameCount = document.get('outputFrames')
-			.value()
-			.length;
-
-		if (nextFrameIndex > outputFrameCount) {
-			nextFrameIndex = 0;
-		}
-
-		rendererRouter.appState.set_outputFrameIndex(nextFrameIndex);
+		this._jumpToFrame(nextFrameIndex);
 	}
 
 	stop() {
@@ -84,6 +95,44 @@ class Transport extends Functions {
 			icon.addClass("fa-play");
 			icon.removeClass("fa-pause");
 		}
+	}
+
+	_updateTimeStatus() {
+		this.timeStatusDiv.empty();
+		let outputFrameIndex = rendererRouter.appState.get_outputFrameIndex();
+		let outputFrameCount = document.get('outputFrames')
+			.value()
+			.length;
+
+		$(`<span class="Transport_timeStatus_frames">`)
+			.text(`${outputFrameIndex} / ${outputFrameCount} frames`)
+			.appendTo(this.timeStatusDiv);
+
+		$(`<span class="Transport_timeStatus_seconds">`)
+			.text(`${outputFrameIndex / Constants.frameRate} / ${outputFrameCount / Constants.frameRate}s`)
+			.appendTo(this.timeStatusDiv);
+
+
+		this.playCursor.attr("min", 0);
+		this.playCursor.attr("max", outputFrameCount - 1);
+		this.playCursor.val(outputFrameIndex);
+	}
+
+
+	_jumpToFrame(frameIndex) {
+		let outputFrameCount = document.get('outputFrames')
+			.value()
+			.length;
+
+		
+		if (frameIndex > outputFrameCount) {
+			frameIndex = 0;
+		}
+		else if(frameIndex < 0) {
+			frameIndex = outputFrameCount - 1;
+		}
+	
+		rendererRouter.appState.set_outputFrameIndex(frameIndex);
 	}
 }
 

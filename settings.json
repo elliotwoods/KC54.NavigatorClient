@@ -37,96 +37,44 @@
       },
       "content": [
         {
-          "type": "row",
+          "type": "column",
           "isClosable": true,
           "reorderEnabled": true,
           "title": "",
           "content": [
             {
-              "type": "column",
+              "type": "row",
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 58.64045864045864,
+              "height": 84.40748440748442,
               "content": [
                 {
-                  "type": "stack",
-                  "width": 52.5,
-                  "height": 75.14942827442829,
+                  "type": "column",
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "activeItemIndex": 0,
-                  "content": [
-                    {
-                      "type": "component",
-                      "componentName": "World",
-                      "height": 60,
-                      "componentState": {
-                        "camera": "perspective"
-                      },
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "World"
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
-                  "header": {},
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "height": 24.850571725571722,
-                  "width": 100,
-                  "content": [
-                    {
-                      "title": "top",
-                      "type": "component",
-                      "componentName": "World",
-                      "componentState": {
-                        "camera": "top"
-                      },
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "column",
-              "width": 41.35954135954136,
-              "isClosable": true,
-              "reorderEnabled": true,
-              "title": "",
-              "content": [
-                {
-                  "type": "row",
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "height": 17.107207251443945,
+                  "width": 58.64045864045864,
                   "content": [
                     {
                       "type": "stack",
-                      "height": 22.18750467439773,
+                      "width": 52.5,
+                      "height": 75.14942827442829,
                       "isClosable": true,
                       "reorderEnabled": true,
                       "title": "",
                       "activeItemIndex": 0,
-                      "width": 50,
                       "content": [
                         {
                           "type": "component",
-                          "componentName": "ImportExport",
+                          "componentName": "World",
+                          "height": 60,
                           "componentState": {
-                            "label": "ImportExport"
+                            "camera": "perspective"
                           },
                           "isClosable": true,
                           "reorderEnabled": true,
-                          "title": "ImportExport"
+                          "title": "World"
                         }
                       ]
                     },
@@ -137,58 +85,119 @@
                       "reorderEnabled": true,
                       "title": "",
                       "activeItemIndex": 0,
-                      "width": 50,
+                      "height": 24.850571725571722,
+                      "width": 100,
                       "content": [
                         {
+                          "title": "top",
                           "type": "component",
-                          "componentName": "ViewPalette",
-                          "componentState": {},
-                          "isClosable": false,
-                          "reorderEnabled": true,
-                          "title": "ViewPalette"
+                          "componentName": "World",
+                          "componentState": {
+                            "camera": "top"
+                          },
+                          "isClosable": true,
+                          "reorderEnabled": true
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "stack",
-                  "header": {},
+                  "type": "column",
+                  "width": 41.35954135954136,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "activeItemIndex": 0,
-                  "height": 20.801596162626307,
                   "content": [
                     {
-                      "title": "Transport",
-                      "type": "component",
-                      "componentName": "Transport",
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
-                  "height": 62.09119658592977,
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "width": 100,
-                  "content": [
-                    {
-                      "type": "component",
-                      "componentName": "AnglePlots",
-                      "componentState": {
-                        "label": "AnglePlots"
-                      },
+                      "type": "row",
                       "isClosable": true,
                       "reorderEnabled": true,
-                      "title": "AnglePlots"
+                      "title": "",
+                      "height": 27.5080053327571,
+                      "content": [
+                        {
+                          "type": "stack",
+                          "height": 22.18750467439773,
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "width": 50,
+                          "content": [
+                            {
+                              "type": "component",
+                              "componentName": "ImportExport",
+                              "componentState": {
+                                "label": "ImportExport"
+                              },
+                              "isClosable": true,
+                              "reorderEnabled": true,
+                              "title": "ImportExport"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "stack",
+                          "header": {},
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "width": 50,
+                          "content": [
+                            {
+                              "type": "component",
+                              "componentName": "ViewPalette",
+                              "componentState": {},
+                              "isClosable": false,
+                              "reorderEnabled": true,
+                              "title": "ViewPalette"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "stack",
+                      "height": 72.49199466724292,
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "activeItemIndex": 0,
+                      "width": 100,
+                      "content": [
+                        {
+                          "type": "component",
+                          "componentName": "AnglePlots",
+                          "componentState": {
+                            "label": "AnglePlots"
+                          },
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "AnglePlots"
+                        }
+                      ]
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "type": "stack",
+              "header": {},
+              "isClosable": true,
+              "reorderEnabled": true,
+              "title": "",
+              "activeItemIndex": 0,
+              "height": 15.592515592515587,
+              "content": [
+                {
+                  "title": "Transport",
+                  "type": "component",
+                  "componentName": "Transport",
+                  "isClosable": true,
+                  "reorderEnabled": true
                 }
               ]
             }
