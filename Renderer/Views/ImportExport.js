@@ -25,21 +25,7 @@ class ImportExport extends Functions {
 			},
 			exportStopperReport: {
 				icon: "fas fa-file-contract"
-			},
-			playPause: {
-				icon: "fas fa-play"
-			},
-			nextOutputFrame: {
-				icon: "fas fa-step-forward"
-			},
-			stop: {
-				icon: "fas fa-stop"
 			}
-		});
-
-		this._updatePlayState();
-		rendererRouter.onChange("playing", () => {
-			this._updatePlayState();
 		});
 	}
 
@@ -235,49 +221,6 @@ class ImportExport extends Functions {
 		let reportString = reportRows.join('\n');
 
 		fs.writeFileSync(saveResult, reportString);
-	}
-
-	playPause() {
-		if (!rendererRouter.appState.get_playing()) {
-			rendererRouter.appState.set_playing(true);
-		}
-		else {
-			rendererRouter.appState.set_playing(false);
-		}
-	}
-
-	nextOutputFrame() {
-		let nextFrameIndex = rendererRouter.appState.get_outputFrameIndex() + 1;
-		let outputFrameCount = document.get('outputFrames')
-			.value()
-			.length;
-
-		if (nextFrameIndex > outputFrameCount) {
-			nextFrameIndex = 0;
-		}
-
-		rendererRouter.appState.set_outputFrameIndex(nextFrameIndex);
-		console.log(rendererRouter.appState.get_outputFrameIndex());
-	}
-
-	stop() {
-		rendererRouter.appState.set_playing(false);
-		rendererRouter.appState.set_outputFrameIndex(0);
-	}
-
-	_updatePlayState() {
-		let button = this.buttons["playPause"];
-		let icon = button.find("i");
-		if (rendererRouter.appState.get_playing()) {
-			button.addClass("btn-play-pressed");
-			icon.removeClass("fa-play");
-			icon.addClass("fa-pause");
-		}
-		else {
-			button.removeClass("btn-play-pressed");
-			icon.addClass("fa-play");
-			icon.removeClass("fa-pause");
-		}
 	}
 }
 

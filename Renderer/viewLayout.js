@@ -1,8 +1,10 @@
 import { ImportExport } from './Views/ImportExport.js'
 import { Timeline } from './Views/Timeline.js'
+import { Transport } from './Views/Transport.js'
 import { AnglePlots } from './Views/AnglePlots.js'
 import { World } from './Views/World.js'
 import { settings } from './Database.js'
+import { GuiUtils } from './Utils/GuiUtils.js'
 
 let standardConfig = {
 	content: [{
@@ -78,9 +80,21 @@ let standardConfig = {
 
 let viewPalette = [
 	{
-		icon: `<i class="fas fa-eye"></i>`,
+		buttonPreferences : {
+			icon: `fas fa-file`
+		},
 		config: {
-			title: 'perspective',
+			title: 'Import/Export',
+			type: 'component',
+			componentName: 'ImportExport'
+		}
+	},
+	{
+		buttonPreferences : {
+			icon: `fas fa-eye`
+		},
+		config: {
+			title: 'Perspective',
 			type: 'component',
 			componentName: 'World',
 			componentState: {
@@ -89,9 +103,11 @@ let viewPalette = [
 		}
 	},
 	{
-		icon: `<i class="fas fa-arrow-down"></i>`,
+		buttonPreferences : {
+			icon: `fas fa-arrow-down`
+		},
 		config: {
-			title: 'top',
+			title: 'Top',
 			type: 'component',
 			componentName: 'World',
 			componentState: {
@@ -100,14 +116,36 @@ let viewPalette = [
 		}
 	},
 	{
-		icon: `<i class="fas fa-arrow-right"></i>`,
+		buttonPreferences : {
+			icon: `fas fa-arrow-right`
+		},
 		config: {
-			title: 'front',
+			title: 'Front',
 			type: 'component',
 			componentName: 'World',
 			componentState: {
 				"camera": "front"
 			}
+		}
+	},
+	{
+		buttonPreferences : {
+			icon: `fas fa-play-circle`
+		},
+		config: {
+			title: 'Transport',
+			type: 'component',
+			componentName: 'Transport'
+		}
+	},
+	{
+		buttonPreferences : {
+			icon: `fas fa-stream`
+		},
+		config: {
+			title: 'Timeline',
+			type: 'component',
+			componentName: 'Timeline'
 		}
 	}
 ]
@@ -132,6 +170,7 @@ function setup() {
 	Timeline.register(goldenLayout);
 	AnglePlots.register(goldenLayout);
 	World.register(goldenLayout);
+	Transport.register(goldenLayout);
 
 	goldenLayout.registerComponent('Placeholder', function (container, componentState) {
 		container.getElement().html('<h2>' + componentState.label + '</h2>');
@@ -139,9 +178,9 @@ function setup() {
 
 	goldenLayout.registerComponent('ViewPalette', function (container, componentState) {
 		for (let viewPaletteItem of viewPalette) {
-			let icon = $(viewPaletteItem.icon);
-			container.getElement().append(icon);
-			goldenLayout.createDragSource(icon, viewPaletteItem.config);
+			let button = GuiUtils.makeButton(viewPaletteItem.config.title, viewPaletteItem.buttonPreferences);
+			container.getElement().append(button);
+			goldenLayout.createDragSource(button, viewPaletteItem.config);
 		}
 	});
 

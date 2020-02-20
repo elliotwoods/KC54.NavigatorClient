@@ -1,4 +1,5 @@
 import { Base } from './Base.js'
+import { GuiUtils } from '../Utils/GuiUtils.js'
 
 class Functions extends Base {
 	constructor(container, state, childType, preferences) {
@@ -26,28 +27,8 @@ class Functions extends Base {
 					// uppercase the first character
 					.replace(/^./, function (str) { return str.toUpperCase(); })
 
-			let buttonContent = null;
-			let buttonPreferences = [];
-			let buttonClasses = [];
 
-			// customise based on preferences
-			{
-				let methodPreferences = preferences[methodName];
-				if(methodPreferences) {
-					if(methodPreferences.icon) {
-						buttonContent = `<i class="${methodPreferences.icon}" />`;
-						buttonPreferences.push(`data-toggle="tooltip" data-placement="left" data-original-title="${methodNameLong}"`);
-						buttonClasses.push("btn-icon");
-					}
-				}
-			}
-
-			if(!buttonContent) {
-				buttonContent = methodNameLong;
-			}
-			
-			let button = $(`<button type="button" class="btn btn-outline-secondary ${buttonClasses.join(" ")}" ${buttonPreferences.join(' ')}></button>`);
-			button.append(buttonContent);
+			let button = GuiUtils.makeButton(methodNameLong, preferences[methodName]);
 			button.click(() => {
 				this[methodName]();
 			});
