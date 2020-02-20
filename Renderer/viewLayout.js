@@ -3,6 +3,8 @@ import { Timeline } from './Views/Timeline.js'
 import { Transport } from './Views/Transport.js'
 import { AnglePlots } from './Views/AnglePlots.js'
 import { World } from './Views/World.js'
+import { Navigator } from './Views/Navigator.js'
+
 import { settings } from './Database.js'
 import { GuiUtils } from './Utils/GuiUtils.js'
 
@@ -147,6 +149,16 @@ let viewPalette = [
 			type: 'component',
 			componentName: 'Timeline'
 		}
+	},
+	{
+		buttonPreferences : {
+			icon: `fas fa-map-signs`
+		},
+		config: {
+			title: 'Navigator',
+			type: 'component',
+			componentName: 'Navigator'
+		}
 	}
 ]
 
@@ -171,6 +183,7 @@ function setup() {
 	AnglePlots.register(goldenLayout);
 	World.register(goldenLayout);
 	Transport.register(goldenLayout);
+	Navigator.register(goldenLayout);
 
 	goldenLayout.registerComponent('Placeholder', function (container, componentState) {
 		container.getElement().html('<h2>' + componentState.label + '</h2>');

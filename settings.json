@@ -114,7 +114,7 @@
                       "isClosable": true,
                       "reorderEnabled": true,
                       "title": "",
-                      "height": 27.5080053327571,
+                      "height": 34.57249070631971,
                       "content": [
                         {
                           "type": "stack",
@@ -122,7 +122,7 @@
                           "isClosable": true,
                           "reorderEnabled": true,
                           "title": "",
-                          "activeItemIndex": 0,
+                          "activeItemIndex": 1,
                           "width": 50,
                           "content": [
                             {
@@ -134,6 +134,13 @@
                               "isClosable": true,
                               "reorderEnabled": true,
                               "title": "ImportExport"
+                            },
+                            {
+                              "title": "Navigator",
+                              "type": "component",
+                              "componentName": "Navigator",
+                              "isClosable": true,
+                              "reorderEnabled": true
                             }
                           ]
                         },
@@ -145,6 +152,7 @@
                           "title": "",
                           "activeItemIndex": 0,
                           "width": 50,
+                          "height": 100,
                           "content": [
                             {
                               "type": "component",
@@ -160,7 +168,7 @@
                     },
                     {
                       "type": "stack",
-                      "height": 72.49199466724292,
+                      "height": 65.42750929368032,
                       "isClosable": true,
                       "reorderEnabled": true,
                       "title": "",

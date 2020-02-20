@@ -18,6 +18,7 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.12.1",
 		"@svgdotjs/svg.js": "^3.0.16",
+		"bent": "^7.1.0",
 		"bootstrap": "^4.4.1",
 		"golden-layout": "^1.5.9",
 		"jquery": "^3.4.1",

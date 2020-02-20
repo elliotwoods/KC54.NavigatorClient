@@ -80,6 +80,7 @@ class ImportExport extends Functions {
 					'id': shortid.generate(),
 					'content': content,
 					'importReport': {
+						'source' : 'importFolderAnimation',
 						'path': path.join(folder, fileName),
 						'date': Date.now()
 					}
@@ -95,6 +96,7 @@ class ImportExport extends Functions {
 
 
 			console.log(`Imported ${framesAdded} from ${folder}`);
+			rendererRouter.notifyChange('outputFrameData');
 		}
 	}
 
@@ -140,6 +142,7 @@ class ImportExport extends Functions {
 				'id': shortid.generate(),
 				'content': frame,
 				'importReport': {
+					'source' : 'importFileAnimation',
 					'path': filename,
 					'date': Date.now()
 				}
@@ -153,6 +156,7 @@ class ImportExport extends Functions {
 			.push(...contentToAdd)
 			.write();
 
+		rendererRouter.notifyChange('outputFrameData');
 		console.log(`Imported ${framesAdded} from ${filename}`);
 	}
 
