@@ -147,7 +147,10 @@ class Navigator extends Functions {
 		let frameCount = document.get('outputFrames').size().value();
 		if (frameCount > 0) {
 			let idOfLast = document.get(`outputFrames[${frameCount - 1}].id`).value();
-			console.log(idOfLast);
+			document.get('outputFrames')
+				.remove({ id: idOfLast })
+				.write()
+			rendererRouter.notifyChange('outputFrameData');
 		}
 	}
 	
