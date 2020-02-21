@@ -166,40 +166,62 @@
       },
       "content": [
         {
-          "type": "column",
+          "type": "row",
           "isClosable": true,
           "reorderEnabled": true,
           "title": "",
           "content": [
             {
-              "type": "row",
+              "type": "column",
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "height": 86.926461345066,
+              "width": 50,
               "content": [
                 {
-                  "type": "column",
+                  "type": "stack",
+                  "header": {},
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 100,
-                  "width": 58.11659192825112,
+                  "activeItemIndex": 0,
+                  "height": 60.69644164435681,
+                  "content": [
+                    {
+                      "title": "<i class=\"fas fa-eye\" /> Perspective",
+                      "type": "component",
+                      "componentName": "World",
+                      "componentState": {
+                        "camera": "perspective"
+                      },
+                      "isClosable": true,
+                      "reorderEnabled": true
+                    }
+                  ]
+                },
+                {
+                  "type": "row",
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "height": 21.10272153555951,
                   "content": [
                     {
                       "type": "stack",
-                      "height": 72.94455066921606,
+                      "header": {},
                       "isClosable": true,
                       "reorderEnabled": true,
                       "title": "",
-                      "activeItemIndex": 1,
+                      "activeItemIndex": 0,
+                      "height": 25,
+                      "width": 50,
                       "content": [
                         {
-                          "title": "<i class=\"fas fa-eye\" /> Perspective",
+                          "title": "<i class=\"fas fa-arrow-down\" /> Top",
                           "type": "component",
                           "componentName": "World",
                           "componentState": {
-                            "camera": "perspective"
+                            "camera": "top"
                           },
                           "isClosable": true,
                           "reorderEnabled": true
@@ -207,171 +229,145 @@
                       ]
                     },
                     {
-                      "type": "row",
+                      "type": "stack",
+                      "header": {},
                       "isClosable": true,
                       "reorderEnabled": true,
                       "title": "",
-                      "height": 27.055449330783944,
+                      "activeItemIndex": 0,
+                      "width": 50,
                       "content": [
                         {
-                          "type": "stack",
-                          "height": 27.055449330783944,
+                          "title": "<i class=\"fas fa-arrow-right\" /> Front",
+                          "type": "component",
+                          "componentName": "World",
+                          "componentState": {
+                            "camera": "front"
+                          },
                           "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "",
-                          "activeItemIndex": 1,
-                          "width": 50,
-                          "content": [
-                            {
-                              "title": "<i class=\"fas fa-arrow-down\" /> Top",
-                              "type": "component",
-                              "componentName": "World",
-                              "componentState": {
-                                "camera": "top"
-                              },
-                              "isClosable": true,
-                              "reorderEnabled": true
-                            }
-                          ]
-                        },
-                        {
-                          "type": "stack",
-                          "header": {},
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "",
-                          "activeItemIndex": 0,
-                          "width": 50,
-                          "content": [
-                            {
-                              "title": "<i class=\"fas fa-arrow-right\" /> Front",
-                              "type": "component",
-                              "componentName": "World",
-                              "componentState": {
-                                "camera": "front"
-                              },
-                              "isClosable": true,
-                              "reorderEnabled": true
-                            }
-                          ]
+                          "reorderEnabled": true
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "column",
-                  "width": 41.88340807174888,
+                  "type": "stack",
+                  "header": {},
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
+                  "activeItemIndex": 0,
+                  "width": 50,
+                  "height": 18.20083682008368,
                   "content": [
                     {
-                      "type": "row",
+                      "title": "<i class=\"fas fa-play-circle\" /> Transport",
+                      "type": "component",
+                      "componentName": "Transport",
                       "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "height": 22.222222222222225,
-                      "content": [
-                        {
-                          "type": "stack",
-                          "width": 50,
-                          "height": 22.222222222222225,
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "",
-                          "activeItemIndex": 0,
-                          "content": [
-                            {
-                              "title": "<i class=\"fas fa-file\" /> Import/Export",
-                              "type": "component",
-                              "componentName": "ImportExport",
-                              "isClosable": true,
-                              "reorderEnabled": true
-                            }
-                          ]
-                        },
-                        {
-                          "type": "stack",
-                          "header": {},
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "",
-                          "activeItemIndex": 0,
-                          "width": 50,
-                          "content": [
-                            {
-                              "title": "<i class=\"fas fa-map-signs\" /> Navigator",
-                              "type": "component",
-                              "componentName": "Navigator",
-                              "isClosable": true,
-                              "reorderEnabled": true
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "stack",
-                      "height": 64.52351227632127,
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "content": [
-                        {
-                          "title": "<i class=\"fas fa-user-secret\" /> Inspector",
-                          "type": "component",
-                          "componentName": "Inspector",
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        },
-                        {
-                          "title": "<i class=\"fas fa-weight\" /> AnglePlots",
-                          "type": "component",
-                          "componentName": "AnglePlots",
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "stack",
-                      "height": 13.254265501456512,
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "content": [
-                        {
-                          "type": "component",
-                          "componentName": "ViewPalette",
-                          "componentState": {},
-                          "isClosable": false,
-                          "reorderEnabled": true,
-                          "title": "ViewPalette"
-                        }
-                      ]
+                      "reorderEnabled": true
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "stack",
-              "header": {},
+              "type": "column",
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "activeItemIndex": 0,
-              "height": 13.073538654934003,
+              "width": 50,
               "content": [
                 {
-                  "title": "<i class=\"fas fa-play-circle\" /> Transport",
-                  "type": "component",
-                  "componentName": "Transport",
+                  "type": "row",
                   "isClosable": true,
-                  "reorderEnabled": true
+                  "reorderEnabled": true,
+                  "title": "",
+                  "height": 31.25,
+                  "content": [
+                    {
+                      "type": "stack",
+                      "header": {},
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "activeItemIndex": 0,
+                      "height": 31.25,
+                      "width": 50,
+                      "content": [
+                        {
+                          "title": "<i class=\"fas fa-file\" /> Import/Export",
+                          "type": "component",
+                          "componentName": "ImportExport",
+                          "isClosable": true,
+                          "reorderEnabled": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "stack",
+                      "header": {},
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "activeItemIndex": 0,
+                      "width": 50,
+                      "content": [
+                        {
+                          "title": "<i class=\"fas fa-map-signs\" /> Navigator",
+                          "type": "component",
+                          "componentName": "Navigator",
+                          "isClosable": true,
+                          "reorderEnabled": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "header": {},
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "height": 51.79794520547945,
+                  "content": [
+                    {
+                      "title": "<i class=\"fas fa-user-secret\" /> Inspector",
+                      "type": "component",
+                      "componentName": "Inspector",
+                      "isClosable": true,
+                      "reorderEnabled": true
+                    },
+                    {
+                      "title": "<i class=\"fas fa-weight\" /> AnglePlots",
+                      "type": "component",
+                      "componentName": "AnglePlots",
+                      "isClosable": true,
+                      "reorderEnabled": true
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "width": 50,
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "height": 16.952054794520546,
+                  "content": [
+                    {
+                      "type": "component",
+                      "componentName": "ViewPalette",
+                      "componentState": {},
+                      "isClosable": false,
+                      "reorderEnabled": true,
+                      "title": "ViewPalette"
+                    }
+                  ]
                 }
               ]
             }

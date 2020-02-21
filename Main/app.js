@@ -13,7 +13,8 @@ function createWindow() {
 		width: 1280,
 		height: 1024,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration : true,
+			webSecurity : false
 		}
 	});
 
@@ -23,7 +24,7 @@ function createWindow() {
 	})
 
 	// and load the index.html of the app.
-	win.loadFile('./Renderer/index.html')
+	win.loadFile(`./Renderer/index.html`);
 
 	// Open the DevTools.
 	//win.webContents.openDevTools()

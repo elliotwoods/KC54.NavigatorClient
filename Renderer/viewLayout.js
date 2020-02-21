@@ -10,80 +10,221 @@ import { settings } from './Database.js'
 import { GuiUtils } from './Utils/GuiUtils.js'
 
 let standardConfig = {
-	content: [{
-		type: "row",
-		content: [{
-			type: "column",
-			width : 70,
-			content: [{
-				type: 'column',
-				content: [{
-					type: 'component',
-					componentName: "World",
-					height : 60,
-					componentState: {
-						"camera": "perspective"
-					}
+	content: [
+		{
+			"type": "row",
+			"isClosable": true,
+			"reorderEnabled": true,
+			"title": "",
+			"content": [
+				{
+					"type": "column",
+					"isClosable": true,
+					"reorderEnabled": true,
+					"title": "",
+					"width": 50,
+					"content": [
+						{
+							"type": "stack",
+							"header": {},
+							"isClosable": true,
+							"reorderEnabled": true,
+							"title": "",
+							"activeItemIndex": 0,
+							"height": 60.69644164435681,
+							"content": [
+								{
+									"title": "<i class=\"fas fa-eye\" /> Perspective",
+									"type": "component",
+									"componentName": "World",
+									"componentState": {
+										"camera": "perspective"
+									},
+									"isClosable": true,
+									"reorderEnabled": true
+								}
+							]
+						},
+						{
+							"type": "row",
+							"isClosable": true,
+							"reorderEnabled": true,
+							"title": "",
+							"height": 21.10272153555951,
+							"content": [
+								{
+									"type": "stack",
+									"header": {},
+									"isClosable": true,
+									"reorderEnabled": true,
+									"title": "",
+									"activeItemIndex": 0,
+									"height": 25,
+									"width": 50,
+									"content": [
+										{
+											"title": "<i class=\"fas fa-arrow-down\" /> Top",
+											"type": "component",
+											"componentName": "World",
+											"componentState": {
+												"camera": "top"
+											},
+											"isClosable": true,
+											"reorderEnabled": true
+										}
+									]
+								},
+								{
+									"type": "stack",
+									"header": {},
+									"isClosable": true,
+									"reorderEnabled": true,
+									"title": "",
+									"activeItemIndex": 0,
+									"width": 50,
+									"content": [
+										{
+											"title": "<i class=\"fas fa-arrow-right\" /> Front",
+											"type": "component",
+											"componentName": "World",
+											"componentState": {
+												"camera": "front"
+											},
+											"isClosable": true,
+											"reorderEnabled": true
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "stack",
+							"header": {},
+							"isClosable": true,
+							"reorderEnabled": true,
+							"title": "",
+							"activeItemIndex": 0,
+							"width": 50,
+							"height": 18.20083682008368,
+							"content": [
+								{
+									"title": "<i class=\"fas fa-play-circle\" /> Transport",
+									"type": "component",
+									"componentName": "Transport",
+									"isClosable": true,
+									"reorderEnabled": true
+								}
+							]
+						}
+					]
 				},
 				{
-					type: 'component',
-					componentName: "World",
-					height : 20,
-					componentState: {
-						"camera": "top"
-					}
-				}]
-			},
-			{
-				type: 'component',
-				componentName: "Timeline",
-				height : 20,
-				componentState: {
-					"label": "Timeline"
+					"type": "column",
+					"isClosable": true,
+					"reorderEnabled": true,
+					"title": "",
+					"width": 50,
+					"content": [
+						{
+							"type": "row",
+							"isClosable": true,
+							"reorderEnabled": true,
+							"title": "",
+							"height": 31.25,
+							"content": [
+								{
+									"type": "stack",
+									"header": {},
+									"isClosable": true,
+									"reorderEnabled": true,
+									"title": "",
+									"activeItemIndex": 0,
+									"height": 31.25,
+									"width": 50,
+									"content": [
+										{
+											"title": "<i class=\"fas fa-file\" /> Import/Export",
+											"type": "component",
+											"componentName": "ImportExport",
+											"isClosable": true,
+											"reorderEnabled": true
+										}
+									]
+								},
+								{
+									"type": "stack",
+									"header": {},
+									"isClosable": true,
+									"reorderEnabled": true,
+									"title": "",
+									"activeItemIndex": 0,
+									"width": 50,
+									"content": [
+										{
+											"title": "<i class=\"fas fa-map-signs\" /> Navigator",
+											"type": "component",
+											"componentName": "Navigator",
+											"isClosable": true,
+											"reorderEnabled": true
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "stack",
+							"header": {},
+							"isClosable": true,
+							"reorderEnabled": true,
+							"title": "",
+							"activeItemIndex": 0,
+							"height": 51.79794520547945,
+							"content": [
+								{
+									"title": "<i class=\"fas fa-user-secret\" /> Inspector",
+									"type": "component",
+									"componentName": "Inspector",
+									"isClosable": true,
+									"reorderEnabled": true
+								},
+								{
+									"title": "<i class=\"fas fa-weight\" /> AnglePlots",
+									"type": "component",
+									"componentName": "AnglePlots",
+									"isClosable": true,
+									"reorderEnabled": true
+								}
+							]
+						},
+						{
+							"type": "stack",
+							"width": 50,
+							"isClosable": true,
+							"reorderEnabled": true,
+							"title": "",
+							"activeItemIndex": 0,
+							"height": 16.952054794520546,
+							"content": [
+								{
+									"type": "component",
+									"componentName": "ViewPalette",
+									"componentState": {},
+									"isClosable": false,
+									"reorderEnabled": true,
+									"title": "ViewPalette"
+								}
+							]
+						}
+					]
 				}
-			}]
-		},
-		{
-			type: "column",
-			width : 30,
-			content: [{
-				type: 'component',
-				componentName: "ImportExport"
-			},
-			{
-				type: 'component',
-				componentName: "Placeholder",
-				componentState: {
-					"label": "Parameters"
-				}
-			},
-			{
-				type: 'component',
-				componentName: "Placeholder",
-				componentState: {
-					"label": "Transport"
-				}
-			},
-			{
-				type: 'component',
-				componentName: "AnglePlots",
-				componentState: {
-					"label": "AnglePlots"
-				}
-			},
-			{
-				type : 'component',
-				componentName : "ViewPalette",
-				componentState : {},
-				isClosable : false
-			}]
-		}]
-	}]
+			]
+		}
+	]
 };
 
 let viewPalette = [
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-file`
 		},
 		config: {
@@ -93,7 +234,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-eye`
 		},
 		config: {
@@ -106,7 +247,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-arrow-down`
 		},
 		config: {
@@ -119,7 +260,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-arrow-right`
 		},
 		config: {
@@ -132,7 +273,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-play-circle`
 		},
 		config: {
@@ -142,7 +283,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-stream`
 		},
 		config: {
@@ -152,7 +293,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-weight`
 		},
 		config: {
@@ -162,7 +303,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-map-signs`
 		},
 		config: {
@@ -172,7 +313,7 @@ let viewPalette = [
 		}
 	},
 	{
-		buttonPreferences : {
+		buttonPreferences: {
 			icon: `fas fa-user-secret`
 		},
 		config: {
@@ -230,7 +371,7 @@ function setup() {
 			.write();
 	});
 
-	
+
 }
 
 export { goldenLayout, setup }
