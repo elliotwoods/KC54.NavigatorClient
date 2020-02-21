@@ -17,3 +17,9 @@
 	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
 	background: #d9eed7;
 }
+
+.btn-inspect-active {
+	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
+	background: #444;
+	color: #aaa;
+}

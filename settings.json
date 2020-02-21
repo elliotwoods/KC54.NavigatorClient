@@ -1,224 +1,5 @@
 {
   "documentPath": "document.json",
-  "viewLayout": {
-    "state": {
-      "settings": {
-        "hasHeaders": true,
-        "constrainDragToContainer": false,
-        "reorderEnabled": true,
-        "selectionEnabled": false,
-        "popoutWholeStack": false,
-        "blockedPopoutsThrowError": true,
-        "closePopoutsOnUnload": true,
-        "showPopoutIcon": true,
-        "showMaximiseIcon": true,
-        "showCloseIcon": true,
-        "responsiveMode": "onload",
-        "tabOverlapAllowance": 0,
-        "reorderOnTabMenuClick": true,
-        "tabControlOffset": 10
-      },
-      "dimensions": {
-        "borderWidth": 5,
-        "borderGrabWidth": 15,
-        "minItemHeight": 10,
-        "minItemWidth": 10,
-        "headerHeight": 20,
-        "dragProxyWidth": 300,
-        "dragProxyHeight": 200
-      },
-      "labels": {
-        "close": "close",
-        "maximise": "maximise",
-        "minimise": "minimise",
-        "popout": "open in new window",
-        "popin": "pop in",
-        "tabDropdown": "additional tabs"
-      },
-      "content": [
-        {
-          "type": "column",
-          "isClosable": true,
-          "reorderEnabled": true,
-          "title": "",
-          "content": [
-            {
-              "type": "row",
-              "isClosable": true,
-              "reorderEnabled": true,
-              "title": "",
-              "height": 84.40748440748442,
-              "content": [
-                {
-                  "type": "column",
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "width": 58.64045864045864,
-                  "content": [
-                    {
-                      "type": "stack",
-                      "width": 52.5,
-                      "height": 75.14942827442829,
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "content": [
-                        {
-                          "type": "component",
-                          "componentName": "World",
-                          "height": 60,
-                          "componentState": {
-                            "camera": "perspective"
-                          },
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "World"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "stack",
-                      "header": {},
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "height": 24.850571725571722,
-                      "width": 100,
-                      "content": [
-                        {
-                          "title": "top",
-                          "type": "component",
-                          "componentName": "World",
-                          "componentState": {
-                            "camera": "top"
-                          },
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "column",
-                  "width": 41.35954135954136,
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "content": [
-                    {
-                      "type": "row",
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "height": 34.57249070631971,
-                      "content": [
-                        {
-                          "type": "stack",
-                          "height": 22.18750467439773,
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "",
-                          "activeItemIndex": 1,
-                          "width": 50,
-                          "content": [
-                            {
-                              "type": "component",
-                              "componentName": "ImportExport",
-                              "componentState": {
-                                "label": "ImportExport"
-                              },
-                              "isClosable": true,
-                              "reorderEnabled": true,
-                              "title": "ImportExport"
-                            },
-                            {
-                              "title": "Navigator",
-                              "type": "component",
-                              "componentName": "Navigator",
-                              "isClosable": true,
-                              "reorderEnabled": true
-                            }
-                          ]
-                        },
-                        {
-                          "type": "stack",
-                          "header": {},
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "",
-                          "activeItemIndex": 0,
-                          "width": 50,
-                          "height": 100,
-                          "content": [
-                            {
-                              "type": "component",
-                              "componentName": "ViewPalette",
-                              "componentState": {},
-                              "isClosable": false,
-                              "reorderEnabled": true,
-                              "title": "ViewPalette"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "stack",
-                      "height": 65.42750929368032,
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "width": 100,
-                      "content": [
-                        {
-                          "type": "component",
-                          "componentName": "AnglePlots",
-                          "componentState": {
-                            "label": "AnglePlots"
-                          },
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "AnglePlots"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "stack",
-              "header": {},
-              "isClosable": true,
-              "reorderEnabled": true,
-              "title": "",
-              "activeItemIndex": 0,
-              "height": 15.592515592515587,
-              "content": [
-                {
-                  "title": "Transport",
-                  "type": "component",
-                  "componentName": "Transport",
-                  "isClosable": true,
-                  "reorderEnabled": true
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "isClosable": true,
-      "reorderEnabled": true,
-      "title": "",
-      "openPopouts": [],
-      "maximisedItemId": null
-    }
-  },
   "system": {
     "stopperSettings": {
       "stopperOffsetDegrees": 5,
@@ -346,6 +127,262 @@
         "mapSize": 2048,
         "shadowBias": -0.00001
       }
+    }
+  },
+  "viewLayout": {
+    "state": {
+      "settings": {
+        "hasHeaders": true,
+        "constrainDragToContainer": false,
+        "reorderEnabled": true,
+        "selectionEnabled": false,
+        "popoutWholeStack": false,
+        "blockedPopoutsThrowError": true,
+        "closePopoutsOnUnload": true,
+        "showPopoutIcon": true,
+        "showMaximiseIcon": true,
+        "showCloseIcon": true,
+        "responsiveMode": "onload",
+        "tabOverlapAllowance": 0,
+        "reorderOnTabMenuClick": true,
+        "tabControlOffset": 10
+      },
+      "dimensions": {
+        "borderWidth": 5,
+        "borderGrabWidth": 15,
+        "minItemHeight": 10,
+        "minItemWidth": 10,
+        "headerHeight": 20,
+        "dragProxyWidth": 300,
+        "dragProxyHeight": 200
+      },
+      "labels": {
+        "close": "close",
+        "maximise": "maximise",
+        "minimise": "minimise",
+        "popout": "open in new window",
+        "popin": "pop in",
+        "tabDropdown": "additional tabs"
+      },
+      "content": [
+        {
+          "type": "column",
+          "isClosable": true,
+          "reorderEnabled": true,
+          "title": "",
+          "content": [
+            {
+              "type": "row",
+              "isClosable": true,
+              "reorderEnabled": true,
+              "title": "",
+              "height": 86.926461345066,
+              "content": [
+                {
+                  "type": "column",
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "height": 100,
+                  "width": 58.11659192825112,
+                  "content": [
+                    {
+                      "type": "stack",
+                      "height": 72.94455066921606,
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "activeItemIndex": 1,
+                      "content": [
+                        {
+                          "title": "<i class=\"fas fa-eye\" /> Perspective",
+                          "type": "component",
+                          "componentName": "World",
+                          "componentState": {
+                            "camera": "perspective"
+                          },
+                          "isClosable": true,
+                          "reorderEnabled": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "row",
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "height": 27.055449330783944,
+                      "content": [
+                        {
+                          "type": "stack",
+                          "height": 27.055449330783944,
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 1,
+                          "width": 50,
+                          "content": [
+                            {
+                              "title": "<i class=\"fas fa-arrow-down\" /> Top",
+                              "type": "component",
+                              "componentName": "World",
+                              "componentState": {
+                                "camera": "top"
+                              },
+                              "isClosable": true,
+                              "reorderEnabled": true
+                            }
+                          ]
+                        },
+                        {
+                          "type": "stack",
+                          "header": {},
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "width": 50,
+                          "content": [
+                            {
+                              "title": "<i class=\"fas fa-arrow-right\" /> Front",
+                              "type": "component",
+                              "componentName": "World",
+                              "componentState": {
+                                "camera": "front"
+                              },
+                              "isClosable": true,
+                              "reorderEnabled": true
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "column",
+                  "width": 41.88340807174888,
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "content": [
+                    {
+                      "type": "row",
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "height": 22.222222222222225,
+                      "content": [
+                        {
+                          "type": "stack",
+                          "width": 50,
+                          "height": 22.222222222222225,
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "content": [
+                            {
+                              "title": "<i class=\"fas fa-file\" /> Import/Export",
+                              "type": "component",
+                              "componentName": "ImportExport",
+                              "isClosable": true,
+                              "reorderEnabled": true
+                            }
+                          ]
+                        },
+                        {
+                          "type": "stack",
+                          "header": {},
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "width": 50,
+                          "content": [
+                            {
+                              "title": "<i class=\"fas fa-map-signs\" /> Navigator",
+                              "type": "component",
+                              "componentName": "Navigator",
+                              "isClosable": true,
+                              "reorderEnabled": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "stack",
+                      "height": 64.52351227632127,
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "activeItemIndex": 0,
+                      "content": [
+                        {
+                          "title": "<i class=\"fas fa-user-secret\" /> Inspector",
+                          "type": "component",
+                          "componentName": "Inspector",
+                          "isClosable": true,
+                          "reorderEnabled": true
+                        },
+                        {
+                          "title": "<i class=\"fas fa-weight\" /> AnglePlots",
+                          "type": "component",
+                          "componentName": "AnglePlots",
+                          "isClosable": true,
+                          "reorderEnabled": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "stack",
+                      "height": 13.254265501456512,
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "activeItemIndex": 0,
+                      "content": [
+                        {
+                          "type": "component",
+                          "componentName": "ViewPalette",
+                          "componentState": {},
+                          "isClosable": false,
+                          "reorderEnabled": true,
+                          "title": "ViewPalette"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "stack",
+              "header": {},
+              "isClosable": true,
+              "reorderEnabled": true,
+              "title": "",
+              "activeItemIndex": 0,
+              "height": 13.073538654934003,
+              "content": [
+                {
+                  "title": "<i class=\"fas fa-play-circle\" /> Transport",
+                  "type": "component",
+                  "componentName": "Transport",
+                  "isClosable": true,
+                  "reorderEnabled": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "isClosable": true,
+      "reorderEnabled": true,
+      "title": "",
+      "openPopouts": [],
+      "maximisedItemId": null
     }
   }
 }

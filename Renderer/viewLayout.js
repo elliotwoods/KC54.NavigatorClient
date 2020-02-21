@@ -4,6 +4,7 @@ import { Transport } from './Views/Transport.js'
 import { AnglePlots } from './Views/AnglePlots.js'
 import { World } from './Views/World.js'
 import { Navigator } from './Views/Navigator.js'
+import { Inspector } from './Views/Inspector.js'
 
 import { settings } from './Database.js'
 import { GuiUtils } from './Utils/GuiUtils.js'
@@ -152,6 +153,16 @@ let viewPalette = [
 	},
 	{
 		buttonPreferences : {
+			icon: `fas fa-weight`
+		},
+		config: {
+			title: 'AnglePlots',
+			type: 'component',
+			componentName: 'AnglePlots'
+		}
+	},
+	{
+		buttonPreferences : {
 			icon: `fas fa-map-signs`
 		},
 		config: {
@@ -159,8 +170,18 @@ let viewPalette = [
 			type: 'component',
 			componentName: 'Navigator'
 		}
+	},
+	{
+		buttonPreferences : {
+			icon: `fas fa-user-secret`
+		},
+		config: {
+			title: 'Inspector',
+			type: 'component',
+			componentName: 'Inspector'
+		}
 	}
-]
+];
 
 let goldenLayout = null;
 
@@ -184,6 +205,7 @@ function setup() {
 	World.register(goldenLayout);
 	Transport.register(goldenLayout);
 	Navigator.register(goldenLayout);
+	Inspector.register(goldenLayout);
 
 	goldenLayout.registerComponent('Placeholder', function (container, componentState) {
 		container.getElement().html('<h2>' + componentState.label + '</h2>');
@@ -193,6 +215,8 @@ function setup() {
 		for (let viewPaletteItem of viewPalette) {
 			let button = GuiUtils.makeButton(viewPaletteItem.config.title, viewPaletteItem.buttonPreferences);
 			container.getElement().append(button);
+			let config = viewPaletteItem.config;
+			config.title = `<i class="${viewPaletteItem.buttonPreferences.icon}" /> ` + config.title;
 			goldenLayout.createDragSource(button, viewPaletteItem.config);
 		}
 	});

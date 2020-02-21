@@ -4,7 +4,8 @@ const { ipcRenderer } = require('electron')
 let channelNames = [
 	'stoppers',
 	'outputFrameData',
-	'outputFrame'
+	'outputFrame',
+	'inspectorTargetChange'
 ];
 
 class RendererRouter {

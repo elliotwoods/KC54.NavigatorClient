@@ -39,7 +39,7 @@ document.getCurrentOutputFrame = () => {
 	}
 };
 
-class SettingNamespace{
+class SettingNamespace {
 	constructor(outerSettingNameSpace) {
 		this.outerSettingNameSpace = outerSettingNameSpace;
 	}

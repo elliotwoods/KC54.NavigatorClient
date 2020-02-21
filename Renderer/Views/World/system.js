@@ -88,50 +88,61 @@ function makeMoments(forcesItem) {
 
 let system = new THREE.Object3D();
 
-// Build the blocks
-initBlockMaterial();
-let frameData = document.getCurrentOutputFrame();
+function makeSystem() {
+	// Build the blocks
+	initBlockMaterial();
+	let frameData = document.getCurrentOutputFrame();
 
-let blocks = [];
-for (let blockData of frameData.configuration) {
-	let block = makeBlock();
-	system.add(block);
-	blocks.push(block);
-}
-
-function setBlockTransforms(frameData) {
-	for (let i = 0; i < blocks.length; i++) {
-		let block = blocks[i];
-		let blockData = frameData.configuration[i];
-		block.position.set(blockData.start.x, blockData.start.y, blockData.start.z);
-		block.rotation.z = blockData.angleToX;
+	let blocks = [];
+	for (let blockData of frameData.configuration) {
+		let block = makeBlock();
+		system.add(block);
+		blocks.push(block);
 	}
-}
 
-setBlockTransforms(frameData)
-
-// Build the forces
-let showForces = settingsNamespace.get("showForces", false);
-
-if (showForces && frameData.forces) {
-	system.updateMatrixWorld();
-	for (let i = 0; i < frameData.forces.length; i++) {
-		let positionInBlock = i % 2 == 0
-			? new THREE.Vector3(0, 0, 0)
-			: new THREE.Vector3(1.0, 0, 0.0);
-		let block = blocks[Math.floor(i / 2)];
-
-		let positionInWorld = block.localToWorld(positionInBlock);
-
-		let momentHelper = makeMoments(frameData.forces[i]);
-		momentHelper.position.copy(positionInWorld);
-		system.add(momentHelper);
+	function setBlockTransforms(frameData) {
+		for (let i = 0; i < blocks.length; i++) {
+			let block = blocks[i];
+			let blockData = frameData.configuration[i];
+			block.position.set(blockData.start.x, blockData.start.y, blockData.start.z);
+			block.rotation.z = blockData.angleToX;
+		}
 	}
+
+	setBlockTransforms(frameData)
+
+	// Build the forces
+	let showForces = settingsNamespace.get("showForces", false);
+
+	if (showForces && frameData.forces) {
+		system.updateMatrixWorld();
+		for (let i = 0; i < frameData.forces.length; i++) {
+			let positionInBlock = i % 2 == 0
+				? new THREE.Vector3(0, 0, 0)
+				: new THREE.Vector3(1.0, 0, 0.0);
+			let block = blocks[Math.floor(i / 2)];
+
+			let positionInWorld = block.localToWorld(positionInBlock);
+
+			let momentHelper = makeMoments(frameData.forces[i]);
+			momentHelper.position.copy(positionInWorld);
+			system.add(momentHelper);
+		}
+	}
+
+	// listen for changes
+	let callback = () => {
+		setBlockTransforms(document.getCurrentOutputFrame());
+	}
+	rendererRouter.onChange('outputFrame', callback);
+	rendererRouter.onChange('outputFrameData', callback);
 }
 
-// listen for changes
-rendererRouter.onChange('outputFrame', () => {
-	setBlockTransforms(document.getCurrentOutputFrame());
-})
+try {
+	makeSystem();
+}
+catch(error) {
+	console.error(error);
+}
 
 export { system }

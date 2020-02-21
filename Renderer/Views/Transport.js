@@ -23,6 +23,12 @@ class Transport extends Functions {
 			},
 			stop: {
 				icon: "fas fa-stop"
+			},
+			skipToBeginning : {
+				icon: "fas fa-fast-backward"
+			},
+			skipToEnd : {
+				icon: "fas fa-fast-forward"
 			}
 		});
 
@@ -50,17 +56,13 @@ class Transport extends Functions {
 		});
 	}
 
+	skipToBeginning() {
+		this._jumpToFrame(0);
+	}
+
 	previousOutputFrame() {
 		let nextFrameIndex = rendererRouter.appState.get_outputFrameIndex() - 1;
-		let outputFrameCount = document.get('outputFrames')
-			.value()
-			.length;
-
-		if (nextFrameIndex < 0) {
-			nextFrameIndex = outputFrameCount - 1;
-		}
-
-		rendererRouter.appState.set_outputFrameIndex(nextFrameIndex);
+		this._jumpToFrame(nextFrameIndex);
 	}
 
 	playPause() {
@@ -77,6 +79,10 @@ class Transport extends Functions {
 		this._jumpToFrame(nextFrameIndex);
 	}
 
+	skipToEnd() {
+		this._jumpToFrame(-1);
+	}
+
 	stop() {
 		rendererRouter.appState.set_playing(false);
 		rendererRouter.appState.set_outputFrameIndex(0);
@@ -84,7 +90,7 @@ class Transport extends Functions {
 
 	_updatePlayState() {
 		let button = this.buttons["playPause"];
-		let icon = button.find("i");
+		let icon = button.find("svg"); // other font awesome versions keep the i tag, but ours changes it to an svg
 		if (rendererRouter.appState.get_playing()) {
 			button.addClass("btn-play-pressed");
 			icon.removeClass("fa-play");

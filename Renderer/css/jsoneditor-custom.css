@@ -1,0 +1,92 @@
+/* dark styling of the editor */
+div.jsoneditor,
+div.jsoneditor-menu {
+  border-color: rgb(239, 238, 238);
+  color: 
+}
+div.jsoneditor-menu {
+  background-color: rgb(239, 238, 238);
+}
+div.jsoneditor-tree,
+div.jsoneditor textarea.jsoneditor-text {
+  background-color: #fff;
+  color: #000;
+}
+div.jsoneditor-field,
+div.jsoneditor-value {
+  color: #000000;
+}
+table.jsoneditor-search div.jsoneditor-frame {
+  background: #fff;
+}
+
+tr.jsoneditor-highlight,
+tr.jsoneditor-selected {
+  background-color: #adadad;
+}
+
+div.jsoneditor-field[contenteditable=true]:focus,
+div.jsoneditor-field[contenteditable=true]:hover,
+div.jsoneditor-value[contenteditable=true]:focus,
+div.jsoneditor-value[contenteditable=true]:hover,
+div.jsoneditor-field.jsoneditor-highlight,
+div.jsoneditor-value.jsoneditor-highlight {
+  background-color: #a7a7a7;
+  border-color: #a7a7a7;
+}
+
+div.jsoneditor-field.highlight-active,
+div.jsoneditor-field.highlight-active:focus,
+div.jsoneditor-field.highlight-active:hover,
+div.jsoneditor-value.highlight-active,
+div.jsoneditor-value.highlight-active:focus,
+div.jsoneditor-value.highlight-active:hover {
+  background-color: #4d4d4d;
+  border-color: #4d4d4d;
+}
+
+div.jsoneditor-tree button:focus {
+  background-color: #707070;
+}
+
+/* coloring of JSON in tree mode */
+div.jsoneditor-readonly {
+  color: #5a5a5a;
+}
+div.jsoneditor td.jsoneditor-separator {
+  color: #525252;
+}
+div.jsoneditor-value.jsoneditor-string {
+  color: #00c569;
+}
+div.jsoneditor-value.jsoneditor-object,
+div.jsoneditor-value.jsoneditor-array {
+  color: #8d8d8d;
+}
+div.jsoneditor-value.jsoneditor-number {
+  color: #ff4040;
+}
+div.jsoneditor-value.jsoneditor-boolean {
+  color: #ff8048;
+}
+div.jsoneditor-value.jsoneditor-null {
+  color: #49a7fc;
+}
+div.jsoneditor-value.jsoneditor-invalid {
+  color: rgb(255, 0, 0);
+}
+
+.jsoneditor-menu > button,
+.jsoneditor-menu > .jsoneditor-modes > button {
+  color: black;
+}
+
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected,
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected:hover,
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected:focus {
+  background-color: #adadad;
+}
+
+.jsoneditor-treepath {
+  background: none;
+}

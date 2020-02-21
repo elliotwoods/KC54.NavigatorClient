@@ -1,3 +1,11 @@
 .lm_content {
 	background: #efeeee;
 }
+
+.lm_header.lm_tab {
+	background: rgb(225, 225, 225);
+}
+
+.lm_tab.lm_active {
+	background: rgb(239, 238, 238);
+}
