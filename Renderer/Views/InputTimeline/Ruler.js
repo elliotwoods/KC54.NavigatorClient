@@ -8,6 +8,38 @@ class Ruler extends Element {
 
 		this.draw.x(layout.trackCaptionAreaWidth);
 
+		this.draggingCursor = false;
+
+		// Background (for events)
+		this.children.background = new Element(this.draw.group()
+		, (element) => {
+			let onMouse = (args) => {
+				if(this.draggingCursor) {
+					this.parent.setFrameIndex(this.parent.pixelToFrameIndex(args.x - layout.trackCaptionAreaWidth));
+				}
+			};
+			element.rect = element.draw.rect(100, layout.frameNumbersAreaHeight)
+				.attr({
+					fill : '#efeeee'
+				})
+				.mousedown((args) => {
+					this.draggingCursor = true;
+					args.preventDefault();
+					onMouse(args);
+				})
+				.mousemove(onMouse);
+		}
+		, (element) => {
+			element.rect.width(this.viewWidth - layout.trackCaptionAreaWidth);
+		}
+		, true);
+
+		$(window).mouseup((args) => {
+			this.draggingCursor = false;
+		});
+
+		
+
 		// Frame labels
 		this.children.frameLabels = new Element(this.draw.group()
 		, null

@@ -99,10 +99,15 @@ class InputTimeline extends Base {
 		return (frameIndex - this.visibleRangeStart) * this.pixelsPerFrame;
 	}
 
+	pixelToFrameIndex(pixel) {
+		return (pixel / this.pixelsPerFrame) + this.visibleRangeStart;
+	}
+
 	build() {
 		this.draw.clear();
 
 		this.tracks = settingsNamespace.get("tracks");
+
 		this.element.children.ruler = new Ruler(this);
 		this.element.children.trackHeaders = new TrackHeaders(this);
 		this.element.children.keyframes = new Keyframes(this);
@@ -125,6 +130,12 @@ class InputTimeline extends Base {
 
 	refresh() {
 		this.element.refresh();
+	}
+
+	setFrameIndex(frameIndex) {
+		this.currentFrameIndex = Math.round(frameIndex);
+		this.element.children.ruler.children.currentFrame.dirty = true;
+		this.refresh();
 	}
 }
 
