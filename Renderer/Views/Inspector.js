@@ -12,17 +12,29 @@ class Inspector extends Base {
 
 		this.title = $(`<h4 class="Inspector_title"></h4>`);
 		this.container.getElement().append(this.title);
-		this.div = $(`<div class="container Inspector_container"/>`);
-		this.container.getElement().append(this.div);
-		let options = {
-			modes : ['tree', 'form', 'code'],
-			onChange : () => {
-				if(currentTarget != null) {
-					currentTarget.set(this.editor.get());
+		
+		let options;
+		{
+			this.editorDiv = $(`<div class="container Inspector_container"/>`);
+			this.container.getElement().append(this.editorDiv);
+			options = {
+				modes : ['tree', 'form', 'code'],
+				onChange : () => {
+					if(currentTarget != null) {
+						currentTarget.set(this.editor.get());
+					}
 				}
-			}
-		};
-		this.editor = new JSONEditor(this.div[0], options);
+			};
+			this.editor = new JSONEditor(this.editorDiv[0], options);
+		}
+		
+		{
+			this.viewerDiv = $(`<div class="container Inspector_container"/>`);
+			this.container.getElement().append(this.viewerDiv);
+			let viewOnlyOptions = {...options};
+			viewOnlyOptions.modes = ['view'];
+			this.viewer = new JSONEditor(this.viewerDiv[0], viewOnlyOptions);
+		}
 
 		inspectors.push(this);
 
@@ -33,18 +45,33 @@ class Inspector extends Base {
 		//this doesn't seem to be called
 		inspectors = array.filter(inspector => inspector !== this);
 		this.editor.destroy();
+		this.viewer.destroy();
 	}
 
 	refresh() {
 		let editorContainer = $(this.editor.container);
+		let viewerContainer = $(this.viewer.container);
+
 		if(currentTarget == null) {
 			editorContainer.hide();
+			viewerContainer.hide();
 			this.title.text("")
 		}
 		else {
-			editorContainer.show();
-			this.editor.set(currentTarget.get());
 			this.title.text(currentTarget.name)
+
+			if(currentTarget.set) {
+				// EDIT
+				this.editor.set(currentTarget.get());
+				editorContainer.show();
+				viewerContainer.hide();
+			}
+			else {
+				// VIEW ONLY
+				this.viewer.set(currentTarget.get());
+				viewerContainer.show();
+				editorContainer.hide();
+			}
 		}
 	}
 }

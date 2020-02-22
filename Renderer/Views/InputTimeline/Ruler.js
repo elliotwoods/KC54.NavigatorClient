@@ -21,7 +21,7 @@ class Ruler extends Element {
 			};
 			element.rect = element.draw.rect(100, layout.frameNumbersAreaHeight)
 				.attr({
-					fill : '#efeeee'
+					fill : layout.backgroundColor
 				})
 				.mousedown((args) => {
 					this.draggingCursor = true;

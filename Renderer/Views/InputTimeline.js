@@ -33,7 +33,7 @@ settingsNamespace.set("tracks", [
 				}
 			},
 			{
-				frameIndex : 1,
+				frameIndex : 50,
 				id : shortid.generate(),
 				content : {
 					value : 0.5

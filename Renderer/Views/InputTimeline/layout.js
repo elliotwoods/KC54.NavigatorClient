@@ -9,7 +9,8 @@ let layout = settingsNamespace.set("layout", {
 	frameTicks : {
 		height : 5,
 		color : '#aaa'
-	}
+	},
+	backgroundColor : '#efeeee'
 });
 layout = settingsNamespace.get("layout");
 
