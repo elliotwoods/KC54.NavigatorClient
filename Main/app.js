@@ -8,6 +8,9 @@ require('./appState.js')
 let win
 
 function createWindow() {
+	delete process.env.ELECTRON_ENABLE_SECURITY_WARNINGS;
+	process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+
 	// Create the browser window.
 	win = new BrowserWindow({
 		width: 1280,

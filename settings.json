@@ -172,18 +172,18 @@
       "tracks": [
         {
           "name": "Track 1",
-          "id": "jcutTirz",
+          "id": "Vfpt9WBD",
           "keyframes": [
             {
               "frameIndex": 0,
-              "id": "_QGSuq5sC",
+              "id": "s5RmlQJiX",
               "content": {
                 "value": 0
               }
             },
             {
               "frameIndex": 99,
-              "id": "1XAEjSQkJ",
+              "id": "DJyMszay5",
               "content": {
                 "value": 1
               }
@@ -192,18 +192,18 @@
         },
         {
           "name": "Track 2",
-          "id": "h9tBpea0F",
+          "id": "QvYvD6kKg",
           "keyframes": [
             {
               "frameIndex": 50,
-              "id": "0yDsCr8vZ",
+              "id": "UjD71Hifk",
               "content": {
                 "value": 0
               }
             },
             {
               "frameIndex": 99,
-              "id": "xKMugohJ_",
+              "id": "xb01ZumIs",
               "content": {
                 "value": 1
               }
@@ -212,6 +212,16 @@
         }
       ],
       "viewLayout": {
+        "trackCaptionAreaWidth": 100,
+        "trackHeight": 30,
+        "frameNumbersAreaHeight": 30,
+        "keyFrameSize": 9,
+        "frameTicks": {
+          "height": 5,
+          "color": "#aaa"
+        }
+      },
+      "layout": {
         "trackCaptionAreaWidth": 100,
         "trackHeight": 30,
         "frameNumbersAreaHeight": 30,
@@ -445,6 +455,7 @@
                   "title": "",
                   "activeItemIndex": 0,
                   "height": 33.01025243387611,
+                  "id": "__glMaximised",
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
@@ -490,7 +501,7 @@
       "reorderEnabled": true,
       "title": "",
       "openPopouts": [],
-      "maximisedItemId": null
+      "maximisedItemId": "__glMaximised"
     }
   },
   "InputTimeline": {
