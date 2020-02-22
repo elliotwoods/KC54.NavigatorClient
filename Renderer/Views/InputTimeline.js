@@ -28,7 +28,15 @@ settingsNamespace.set("tracks", [
 				frameIndex : 0,
 				id : shortid.generate(),
 				content : {
-					value : 0
+					value : 0,
+					constant : 1
+				}
+			},
+			{
+				frameIndex : 1,
+				id : shortid.generate(),
+				content : {
+					value : 0.5
 				}
 			},
 			{

@@ -39,7 +39,7 @@ class Inspector extends Base {
 		let editorContainer = $(this.editor.container);
 		if(currentTarget == null) {
 			editorContainer.hide();
-			this.title.text("Inspector")
+			this.title.text("")
 		}
 		else {
 			editorContainer.show();
@@ -55,11 +55,12 @@ function inspect(target) {
 		return;
 	}
 
+	let oldTarget = currentTarget;
 	currentTarget = target;
 
-	if(currentTarget) {
-		currentTarget.notifyDeInspect();
-		currentTarget.notifyInspectChange();
+	if(oldTarget) {
+		oldTarget.notifyDeInspect();
+		oldTarget.notifyInspectChange();
 	}
 
 	if(target) {
