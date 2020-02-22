@@ -284,7 +284,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 31.25,
+                  "height": 17.027440337727235,
                   "content": [
                     {
                       "type": "stack",
@@ -332,7 +332,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 51.79794520547945,
+                  "height": 66.02050486775222,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-user-secret\" /> Inspector",

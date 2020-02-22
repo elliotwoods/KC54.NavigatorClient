@@ -8,8 +8,8 @@
 
 	<link type="text/css" rel="stylesheet" href="./css/bootstrap.min.css" />
 	<link type="text/css" rel="stylesheet" href="./css/bootstrap-custom.css" />
-	<link type="text/css" rel="stylesheet" href="../node_modules/golden-layout/src/css/goldenlayout-base.css"/>
-	<link type="text/css" rel="stylesheet" href="../node_modules/golden-layout/src/css/goldenlayout-light-theme.css"/>
+	<link type="text/css" rel="stylesheet" href="../node_modules/golden-layout/src/css/goldenlayout-base.css" />
+	<link type="text/css" rel="stylesheet" href="../node_modules/golden-layout/src/css/goldenlayout-light-theme.css" />
 	<link type="text/css" rel="stylesheet" href="./css/goldenlayout-custom.css" />
 	<link type="text/css" rel="stylesheet" href="../node_modules/jsoneditor/dist/jsoneditor.css" />
 	<link type="text/css" rel="stylesheet" href="./css/jsoneditor-custom.css" />
@@ -23,7 +23,9 @@
 	<script>window.$ = window.jQuery = require('../node_modules/jquery/dist/jquery.js');</script>
 
 	<script src="thirdparty/popper.min.js"></script>
-	<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
 
 	<script src="../node_modules/golden-layout/dist/goldenlayout.js"></script>
 	<script src="thirdparty/plotly-latest.min.js"></script>
@@ -31,6 +33,27 @@
 	<script src="../node_modules/jsoneditor/dist/jsoneditor.js"></script>
 
 	<script src="./index.js" type="module"></script>
+
+	<div id="modal" class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div id="modal_dialog" class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 id="modal_title" class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div id="modal_body" class="modal-body">
+					Modal body
+				</div>
+				<div id="modal_footer" class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

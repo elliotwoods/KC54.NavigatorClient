@@ -2,6 +2,7 @@ import { Base } from './Base.js'
 import { GuiUtils } from '../Utils/GuiUtils.js'
 import { toggleInspect, isBeingInspected } from '../Views/Inspector.js'
 import { rendererRouter } from '../rendererRouter.js'
+import { ErrorHandler } from '../Utils/ErrorHandler.js'
 
 class Functions extends Base {
 	constructor(container, state, childType, preferences) {
@@ -29,22 +30,19 @@ class Functions extends Base {
 				isAnInspectable = true;
 			}
 
-			caption =
-				//https://stackoverflow.com/questions/4149276/how-to-convert-camelcase-to-camel-case
-				// insert a space before all caps
-				caption.replace(/([A-Z])/g, ' $1')
-					// uppercase the first character
-					.replace(/^./, function (str) { return str.toUpperCase(); })
+			caption = GuiUtils.camelCapsToLong(caption);
 
-
-			// we might want to clean this out
 			let button;
+
+			// we might want to clean out inspectables from here?
 			if(isAnInspectable) {
 				button = GuiUtils.makeButton(caption, preferences[methodName]);
 				button.click(() => {
 					let inspectable = this[methodName]();
 					toggleInspect(inspectable);
 				});
+
+				// create an action to be called when button state needs updating
 				let refreshButton =  () => {
 					let inspectable = this[methodName]();
 					if(isBeingInspected(inspectable)) {
@@ -58,9 +56,10 @@ class Functions extends Base {
 				refreshButton();
 			}
 			else {
+
 				button = GuiUtils.makeButton(caption, preferences[methodName]);
 				button.click(() => {
-					this[methodName]();
+					ErrorHandler.do(this[methodName]);
 				});
 			}
 

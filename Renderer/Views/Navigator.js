@@ -125,40 +125,34 @@ class Navigator extends Functions {
 	async optimise() {
 		let currentOutputFrame = document.getCurrentOutputFrame();
 
-		try {
-			const response = await post('optimise', {
-				initialGuess : currentOutputFrame.configuration,
-				objective : testObjective
-			});
+		const response = await post('optimise', {
+			initialGuess : currentOutputFrame.configuration,
+			objective : testObjective
+		});
 
-			let frameData = {
-				id: shortid.generate(),
-				content: {
-					configuration: response
-				},
-				importReport: {
-					source: 'Navigator',
-					data: Date.now()
-				}
-			};
-			document.get('outputFrames')
-				.push(frameData)
-				.write();
-
-			rendererRouter.notifyChange('outputFrameData');
-			console.log(response);
-
-			// jump to last frame
-			{
-				let outputFrameCount = document.get('outputFrames')
-					.size()
-					.value();
-				rendererRouter.appState.set_outputFrameIndex(outputFrameCount - 1);
+		let frameData = {
+			id: shortid.generate(),
+			content: {
+				configuration: response
+			},
+			importReport: {
+				source: 'Navigator',
+				data: Date.now()
 			}
-			
-		}
-		catch (error) {
-			console.log(error);
+		};
+		document.get('outputFrames')
+			.push(frameData)
+			.write();
+
+		rendererRouter.notifyChange('outputFrameData');
+		console.log(response);
+
+		// jump to last frame
+		{
+			let outputFrameCount = document.get('outputFrames')
+				.size()
+				.value();
+			rendererRouter.appState.set_outputFrameIndex(outputFrameCount - 1);
 		}
 	}
 

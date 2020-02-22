@@ -27,6 +27,7 @@
 		"npm": "^6.13.7",
 		"popper.js": "^1.16.1",
 		"shortid": "^2.2.15",
+		"stack-trace": "0.0.10",
 		"three": "^0.113.2"
 	},
 	"files": [

@@ -10,5 +10,4 @@ An application for operating the [Attractor to Balance Navigator](https://github
 git pull https://github.com/elliotwoods/KC54.NavigatorClient
 cd KC54.NavigatorClient
 npm install
-npm start
 ```

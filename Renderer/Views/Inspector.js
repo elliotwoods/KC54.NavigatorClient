@@ -14,9 +14,9 @@ class Inspector extends Base {
 		this.container.getElement().append(this.div);
 		let options = {
 			modes : ['tree', 'form', 'code'],
-			onChangeJSON : (newValue) => {
+			onChange : () => {
 				if(currentTarget != null) {
-					currentTarget.set(newValue);
+					currentTarget.set(this.editor.get());
 				}
 			}
 		};

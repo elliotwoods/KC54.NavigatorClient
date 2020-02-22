@@ -7,6 +7,8 @@ const shortid = require('shortid')
 import { document, settings } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
+import { GuiUtils } from '../Utils/GuiUtils.js'
+import { ErrorHandler } from '../Utils/ErrorHandler.js'
 
 class ImportExport extends Functions {
 	constructor(container, state, childType) {
@@ -225,6 +227,26 @@ class ImportExport extends Functions {
 		let reportString = reportRows.join('\n');
 
 		fs.writeFileSync(saveResult, reportString);
+	}
+
+	testModal() {
+		GuiUtils.modalDialog("Test modal huh", "HEre is some stuff I've heard", {
+			doThis : () => {
+				console.log("this");
+			},
+			doThat : () => {
+				console.log("that")
+			}
+		});
+	}
+
+	testError() {
+		throw(Error("Fucking error all right"));
+	}
+
+	async testErrorAsync() {
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		throw(Error("Fucking error all right"));
 	}
 }
 

@@ -15,11 +15,24 @@
 
 .btn-play-pressed {
 	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
-	background: #d9eed7;
+	background: #8a9989;
 }
 
 .btn-inspect-active {
 	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
 	background: #444;
 	color: #aaa;
+}
+
+.btn-secondary {
+	color : #373a3c;
+}
+
+.btn-primary {
+	color : #373a3c;
+}
+
+
+.modal-footer { 
+	background: #efeeee;
 }
