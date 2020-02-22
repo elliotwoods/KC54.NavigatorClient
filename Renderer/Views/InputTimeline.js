@@ -12,7 +12,7 @@ let viewLayout = settingsNamespace.set("viewLayout", {
 	trackCaptionAreaWidth : 100,
 	trackHeight : 30,
 	frameNumbersAreaHeight : 30,
-	keyFrameSize : 8,
+	keyFrameSize : 9,
 	frameTicks : {
 		height : 5,
 		color : '#aaa'
@@ -182,7 +182,9 @@ class InputTimeline extends Base {
 			let keyFrameSymbol = keyFramesGroup.symbol();
 			{
 				let s = viewLayout.keyFrameSize / 2;
-				keyFrameSymbol.polygon(`${-s},0 0,${s} ${s},0 0,${-s}`).center(pixelsPerFrame / 2, viewLayout.trackHeight / 2)
+				keyFrameSymbol.circle(s)
+				//keyFrameSymbol.polygon(`${-s},0 0,${s} ${s},0 0,${-s}`)
+					.center(pixelsPerFrame / 2, viewLayout.trackHeight / 2)
 			}
 
 			// background
