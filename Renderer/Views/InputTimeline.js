@@ -144,6 +144,11 @@ class InputTimeline extends Base {
 		this.currentFrameIndex = Math.floor(frameIndex);
 		this.element.children.ruler.children.currentFrame.dirty = true;
 		this.refresh();
+		
+		// Announce to inspsector that rendered values might have changed
+		for(let trackID in this.element.children.trackHeaders.inspectables) {
+			this.element.children.trackHeaders.inspectables[trackID].notifyValueChange();
+		}
 	}
 }
 

@@ -10,6 +10,7 @@ class Inspector extends Base {
 		this.container = container;
 		this.state = state;
 
+		this.target = null;
 		this.title = $(`<h4 class="Inspector_title"></h4>`);
 		this.container.getElement().append(this.title);
 		
@@ -49,6 +50,9 @@ class Inspector extends Base {
 	}
 
 	refresh() {
+		// unless we can lock an inspector
+		this.target = currentTarget;
+
 		let editorContainer = $(this.editor.container);
 		let viewerContainer = $(this.viewer.container);
 
@@ -173,6 +177,14 @@ class Inspectable {
 	notifyInspectChange() {
 		for(let callback of this._onInspectChangeCallbacks) {
 			callback();
+		}
+	}
+
+	notifyValueChange() {
+		for(let inspector of inspectors) {
+			if(inspector.target == this) {
+				inspector.refresh();
+			}
 		}
 	}
 

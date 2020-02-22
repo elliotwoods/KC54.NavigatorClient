@@ -172,11 +172,11 @@
       "tracks": [
         {
           "name": "Track 1",
-          "id": "9uPlXexV",
+          "id": "wyuIDOxH",
           "keyFrames": [
             {
               "frameIndex": 0,
-              "id": "JeqA4OxtV",
+              "id": "Bo35IeYnn",
               "content": {
                 "value": 0,
                 "constant": 1
@@ -184,14 +184,14 @@
             },
             {
               "frameIndex": 50,
-              "id": "bPYuzJ3g8",
+              "id": "mdltnVukv",
               "content": {
                 "value": 0.5
               }
             },
             {
               "frameIndex": 99,
-              "id": "Fkjg8pOlD",
+              "id": "y2wYkJ5Eb",
               "content": {
                 "value": 1
               }
@@ -200,18 +200,18 @@
         },
         {
           "name": "Track 2",
-          "id": "2b85z553z",
+          "id": "gsH-HkNQi",
           "keyFrames": [
             {
               "frameIndex": 50,
-              "id": "RkCogzCV5",
+              "id": "jTGbWmwL3",
               "content": {
                 "value": 0
               }
             },
             {
               "frameIndex": 99,
-              "id": "1oADnI-ix",
+              "id": "QodTXG3FF",
               "content": {
                 "value": 1
               }

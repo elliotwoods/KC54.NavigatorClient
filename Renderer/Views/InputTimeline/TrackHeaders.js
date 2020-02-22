@@ -50,16 +50,18 @@ class TrackHeaders extends Element {
 			
 			let y = 0;
 			for(let track of this.parent.tracks) {
+				let inspectable = this.inspectables[track.id];
 				element.draw.rect(layout.trackCaptionAreaWidth, layout.trackHeight)
 					.move(0, y)
 					.attr({
 						fill : layout.backgroundColor
 					})
 					.mousedown(() => {
-						this.inspectables[track.id].inspect();
+						inspectable.toggleInspect();
 					});
 				element.draw.text(track.name)
-					.move(10, y);
+					.move(10, y)
+					.font({ weight : inspectable.isBeingInspected() ? 400 : 200 });
 				y += layout.trackHeight;
 			}
 		});
