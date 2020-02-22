@@ -8,7 +8,7 @@ import { layout } from './InputTimeline/layout.js'
 import { Element } from './InputTimeline/Element.js'
 import { Ruler } from './InputTimeline/Ruler.js'
 import { TrackHeaders } from './InputTimeline/TrackHeaders.js'
-import { Keyframes } from './InputTimeline/Keyframes.js'
+import { KeyFrames } from './InputTimeline/KeyFrames.js'
 
 const shortid = require('shortid');
 
@@ -23,7 +23,7 @@ settingsNamespace.set("tracks", [
 	{
 		name : "Track 1",
 		id : shortid.generate(),
-		keyframes : [
+		keyFrames : [
 			{
 				frameIndex : 0,
 				id : shortid.generate(),
@@ -43,7 +43,7 @@ settingsNamespace.set("tracks", [
 	{
 		name : "Track 2",
 		id : shortid.generate(),
-		keyframes : [
+		keyFrames : [
 			{
 				frameIndex : 50,
 				id : shortid.generate(),
@@ -110,7 +110,7 @@ class InputTimeline extends Base {
 
 		this.element.children.ruler = new Ruler(this);
 		this.element.children.trackHeaders = new TrackHeaders(this);
-		this.element.children.keyframes = new Keyframes(this);
+		this.element.children.keyFrames = new KeyFrames(this);
 	}
 
 	resize() {
@@ -133,7 +133,7 @@ class InputTimeline extends Base {
 	}
 
 	setFrameIndex(frameIndex) {
-		this.currentFrameIndex = Math.round(frameIndex);
+		this.currentFrameIndex = Math.floor(frameIndex);
 		this.element.children.ruler.children.currentFrame.dirty = true;
 		this.refresh();
 	}

@@ -10,6 +10,8 @@ class Inspector extends Base {
 		this.container = container;
 		this.state = state;
 
+		this.title = $(`<h4 class="Inspector_title"></h4>`);
+		this.container.getElement().append(this.title);
 		this.div = $(`<div class="container Inspector_container"/>`);
 		this.container.getElement().append(this.div);
 		let options = {
@@ -37,10 +39,12 @@ class Inspector extends Base {
 		let editorContainer = $(this.editor.container);
 		if(currentTarget == null) {
 			editorContainer.hide();
+			this.title.text("Inspector")
 		}
 		else {
 			editorContainer.show();
 			this.editor.set(currentTarget.get());
+			this.title.text(currentTarget.name)
 		}
 	}
 }
@@ -52,10 +56,27 @@ function inspect(target) {
 	}
 
 	currentTarget = target;
+
+	if(currentTarget) {
+		currentTarget.notifyDeInspect();
+		currentTarget.notifyInspectChange();
+	}
+
+	if(target) {
+		target.notifyInspect();
+		target.notifyInspectChange();
+	}
+
 	for(let inspector of inspectors) {
 		inspector.refresh();
 	}
 	rendererRouter.notifyChange('inspectTargetChange');
+}
+
+function deInspect(target) {
+	if(currentTarget == target) {
+		inspect(null);
+	}
 }
 
 function toggleInspect(target) {
@@ -76,12 +97,21 @@ class Inspectable {
 		this.get = get;
 		this.set = set;
 		this.name = name;
-		this.onInspectCallbacks = [];
-		this.onDeInspectCallbacks = [];
+		this._onInspectCallbacks = [];
+		this._onDeInspectCallbacks = [];
+		this._onInspectChangeCallbacks = [];
 	}
 
 	inspect() {
 		inspect(this);
+	}
+
+	deInspect() {
+		deInspect(this);
+	}
+
+	toggleInspect() {
+		toggleInspect(this);
 	}
 
 	isBeingInspected() {
@@ -89,11 +119,37 @@ class Inspectable {
 	}
 
 	onInspect(callback) {
-		this.onInspectCallbacks.push(callback);
+		this._onInspectCallbacks.push(callback);
 	}
 
 	onDeInspect(callback) {
-		this.onDeInspectCallbacks.push(callback);
+		this._onDeInspectCallbacks.push(callback);
+	}
+
+	onInspectChange(callback) {
+		this._onInspectChangeCallbacks.push(callback);
+	}
+
+	notifyInspect() {
+		for(let callback of this._onInspectCallbacks) {
+			callback();
+		}
+	}
+
+	notifyDeInspect() {
+		for(let callback of this._onDeInspectCallbacks) {
+			callback();
+		}
+	}
+
+	notifyInspectChange() {
+		for(let callback of this._onInspectChangeCallbacks) {
+			callback();
+		}
+	}
+
+	destroy() {
+		this.deInspect();
 	}
 }
 

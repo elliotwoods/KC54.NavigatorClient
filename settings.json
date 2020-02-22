@@ -172,18 +172,18 @@
       "tracks": [
         {
           "name": "Track 1",
-          "id": "TnowVA5Z",
-          "keyframes": [
+          "id": "N5uq8y3Q",
+          "keyFrames": [
             {
               "frameIndex": 0,
-              "id": "Qv-J_i9sd",
+              "id": "f1C59p0z3",
               "content": {
                 "value": 0
               }
             },
             {
               "frameIndex": 99,
-              "id": "y4f9CMSoC",
+              "id": "2WybHCx5P",
               "content": {
                 "value": 1
               }
@@ -192,18 +192,18 @@
         },
         {
           "name": "Track 2",
-          "id": "7rESYwxnk",
-          "keyframes": [
+          "id": "fmpcbAyjO",
+          "keyFrames": [
             {
               "frameIndex": 50,
-              "id": "Z1654R55c",
+              "id": "deqVWzPYm",
               "content": {
                 "value": 0
               }
             },
             {
               "frameIndex": 99,
-              "id": "HsRMWpu4O",
+              "id": "RgDan23_S",
               "content": {
                 "value": 1
               }
@@ -436,7 +436,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 33.01025243387611,
+                  "height": 31.392531453672913,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-user-secret\" /> Inspector",
@@ -454,8 +454,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 33.01025243387611,
-                  "id": "__glMaximised",
+                  "height": 34.627973414079314,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
@@ -501,36 +500,7 @@
       "reorderEnabled": true,
       "title": "",
       "openPopouts": [],
-      "maximisedItemId": "__glMaximised"
+      "maximisedItemId": null
     }
-  },
-  "InputTimeline": {
-    "viewLayout": {
-      "trackCaptionAreaWidth": 100,
-      "trackHeight": 30,
-      "frameNuberAreaHeight": 30
-    },
-    "tracks": [
-      {
-        "name": "Track 1",
-        "id": "mTruOt4F",
-        "keyframes": [
-          {
-            "frameIndex": 0,
-            "id": "lAgH4SIgW",
-            "content": {
-              "value": 0
-            }
-          },
-          {
-            "frameIndex": 99,
-            "id": "G601bsdGo",
-            "content": {
-              "value": 1
-            }
-          }
-        ]
-      }
-    ]
   }
 }

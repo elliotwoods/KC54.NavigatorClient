@@ -66,6 +66,10 @@
 	height: 100%;
 }
 
+.Inspector_title {
+	margin : 5px;
+}
+
 svg text {
 	pointer-events: none;
 }

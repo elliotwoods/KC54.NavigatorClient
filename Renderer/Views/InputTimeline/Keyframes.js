@@ -1,12 +1,15 @@
 import { Element } from './Element.js'
 import { layout } from './layout.js'
+import { Inspectable, toggleInspect } from '../Inspector.js'
 
-class Keyframes extends Element {
+class KeyFrames extends Element {
 	constructor(parent) {
 		super(parent.draw.nested());
 		this.parent = parent;
 
 		this.draw.move(layout.trackCaptionAreaWidth, layout.frameNumbersAreaHeight);
+
+		this.inspectables = {};
 
 		// define the keyFrame symbol
 		this.keyFrameSymbol = this.draw.symbol();
@@ -28,25 +31,61 @@ class Keyframes extends Element {
 			}
 			, true);
 
-		// tracks with keyframes
+		// tracks with keyFrames
 		this.children.tracks = new Element(this.draw.group()
 		, null
 		, (element) => {
 			element.draw.clear();
 
+			// build inspectables
+			{
+				let newInspectables = {};
+				for(let track of this.parent.tracks) {
+					for(let keyFrame of track.keyFrames) {
+						// check if we already have
+						if(keyFrame.id in this.inspectables) {
+							// move it into new
+							newInspectables[keyFrame.id] = this.inspectables[keyFrame.id];
+							delete(this.inspectables[keyFrame.id]);
+						}
+						else {
+							// make a new one
+							let inspectable = new Inspectable(() => {
+								return keyFrame.content;
+							}
+							, (value) => {
+								keyFrame.content = value;
+							}
+							, `${track.name} : ${keyFrame.frameIndex}`);
+							inspectable.onInspectChange(() => {
+								element.dirty = true;
+								element.refresh();
+							});
+							newInspectables[keyFrame.id] = inspectable;
+						}
+					}
+				}
+				// flush old inspectables
+				for(let inspectableID in this.inspectables) {
+					this.inspectables[inspectableID].destroy();
+				}
+				this.inspectables = newInspectables;
+			}
+
 			let y = 0;
 			for(let track of this.parent.tracks) {
-				if(track.keyframes.length == 0) {
+				if(track.keyFrames.length == 0) {
 					continue;
 				}
 
 				let trackGroup = element.draw.nested().y(y);
-				// draw the frame backgrounds
-				for(let keyFrameIndex = 0; keyFrameIndex < track.keyframes.length; keyFrameIndex++) {
-					let keyFrame = track.keyframes[keyFrameIndex];
+
+				// draw the frames
+				for(let keyFrameIndex = 0; keyFrameIndex < track.keyFrames.length; keyFrameIndex++) {
+					let keyFrame = track.keyFrames[keyFrameIndex];
 					let nextKeyFrame;
-					if(keyFrameIndex + 1 < track.keyframes.length) {
-						nextKeyFrame = track.keyframes[keyFrameIndex + 1];
+					if(keyFrameIndex + 1 < track.keyFrames.length) {
+						nextKeyFrame = track.keyFrames[keyFrameIndex + 1];
 					}
 					else {
 						nextKeyFrame = keyFrame;
@@ -60,22 +99,23 @@ class Keyframes extends Element {
 						continue;
 					}
 
+					let inspectable = this.inspectables[keyFrame.id];
+
 					trackGroup.rect(this.parent.frameIndexToPixel(nextKeyFrame.frameIndex + 1), layout.trackHeight)
 						.move(this.parent.frameIndexToPixel(keyFrame.frameIndex), 0)
 						.attr({
-							'fill': '#fff',
+							'fill': inspectable.isBeingInspected() ? '#eef' : '#fff',
 							'stroke' : '#000',
 							'stroke-width' : 0.5
+						})
+						.mousedown(() => {
+							inspectable.toggleInspect();
 						});
-				}
 
-				// draw the frames
-				for(let keyFrame of track.keyframes) {
-					if(keyFrame.frameIndex < this.visibleRangeStart || keyFrame.frameIndex > this.visibleRangeEnd) {
-						continue;
+					// draw the marker for the frame
+					if(keyFrame.frameIndex >= this.parent.visibleRangeStart && keyFrame.frameIndex <= this.parent.visibleRangeEnd) {
+						trackGroup.use(this.keyFrameSymbol).center(this.parent.frameIndexToPixel(keyFrame.frameIndex + 0.5), layout.trackHeight / 2);
 					}
-
-					trackGroup.use(this.keyFrameSymbol).center(this.parent.frameIndexToPixel(keyFrame.frameIndex + 0.5), layout.trackHeight / 2);
 				}
 
 				y += layout.trackHeight;
@@ -85,4 +125,4 @@ class Keyframes extends Element {
 	}
 }
 
-export { Keyframes }
+export { KeyFrames }

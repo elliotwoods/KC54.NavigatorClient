@@ -15,7 +15,8 @@ class Ruler extends Element {
 		, (element) => {
 			let onMouse = (args) => {
 				if(this.draggingCursor) {
-					this.parent.setFrameIndex(this.parent.pixelToFrameIndex(args.x - layout.trackCaptionAreaWidth));
+					let newFrameIndex = Math.floor(this.parent.pixelToFrameIndex(args.offsetX - layout.trackCaptionAreaWidth));
+					this.parent.setFrameIndex(newFrameIndex);
 				}
 			};
 			element.rect = element.draw.rect(100, layout.frameNumbersAreaHeight)
