@@ -39,17 +39,17 @@ document.getCurrentOutputFrame = () => {
 	}
 };
 
-class SettingNamespace {
-	constructor(outerSettingNameSpace) {
-		this.outerSettingNameSpace = outerSettingNameSpace;
+class SettingsNamespace {
+	constructor(outerSettingsNameSpace) {
+		this.outerSettingsNameSpace = outerSettingsNameSpace;
 	}
 
-	totalNamespace(innerSettingNameSpace) {
-		return this.outerSettingNameSpace.concat(innerSettingNameSpace);
+	totalNamespace(innerSettingsNameSpace) {
+		return this.outerSettingsNameSpace.concat(innerSettingsNameSpace);
 	}
 
-	get(innerSettingNameSpace, defaultValue) {
-		let namespace = this.totalNamespace(innerSettingNameSpace);
+	get(innerSettingsNameSpace, defaultValue) {
+		let namespace = this.totalNamespace(innerSettingsNameSpace);
 		
 		let setting = settings;
 		for(let level of namespace) {
@@ -61,13 +61,13 @@ class SettingNamespace {
 			return value;
 		}
 		else if(defaultValue !== undefined) {
-			this.set(innerSettingNameSpace, defaultValue);
+			this.set(innerSettingsNameSpace, defaultValue);
 			return defaultValue;
 		}
 	}
 
-	set(innerSettingNameSpace, value) {
-		let namespace = this.totalNamespace(innerSettingNameSpace);
+	set(innerSettingsNameSpace, value) {
+		let namespace = this.totalNamespace(innerSettingsNameSpace);
 		
 		let setting = settings;
 		for(let levelIndex = 0; levelIndex < namespace.length -1; levelIndex++) {
@@ -90,4 +90,4 @@ window.db = {};
 window.db.document = document;
 window.db.settings = settings;
 
-export { settings, document, SettingNamespace }
+export { settings, document, SettingsNamespace }

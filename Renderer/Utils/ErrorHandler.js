@@ -5,8 +5,8 @@ class ErrorHandler {
 	static async do(action) {
 		try {
 			action.constructor.name == "AsyncFunction"
-			 ? await action(arguments)
-			 : action(arguments);
+			 ? await action(...arguments)
+			 : action(...arguments);
 		}
 		catch(error) {
 			let report = $("<span />");

@@ -11,8 +11,8 @@ import { SSAOPass } from '../../node_modules/three/examples/jsm/postprocessing/S
 import { scene } from './World/scene.js'
 
 import { Constants } from '../Utils/Constants.js'
-import { settings, SettingNamespace } from '../Database.js'
-let settingsNamespace = new SettingNamespace(["Views", "World"]);
+import { settings, SettingsNamespace as SettingsNamespace } from '../Database.js'
+let settingsNamespace = new SettingsNamespace(["Views", "World"]);
 
 let worlds = [];
 

@@ -1,9 +1,9 @@
 import * as THREE from '../../../node_modules/three/build/three.module.js';
 
-import { document, SettingNamespace } from '../../Database.js'
+import { document, SettingsNamespace } from '../../Database.js'
 import { rendererRouter } from '../../rendererRouter.js'
 
-let settingsNamespace = new SettingNamespace(["Views", "World"])
+let settingsNamespace = new SettingsNamespace(["Views", "World"])
 let blockMaterial = null;
 
 function initBlockMaterial() {

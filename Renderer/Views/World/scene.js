@@ -2,12 +2,12 @@ import * as THREE from '../../../node_modules/three/build/three.module.js';
 import { RGBELoader } from '../../../node_modules/three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
-import { SettingNamespace } from '../../Database.js'
+import { SettingsNamespace } from '../../Database.js'
 import { RoomGrid } from './roomGrid.js';
 import { system } from './system.js'
 
 import { Constants } from '../../Utils/Constants.js'
-let settingsNamespace = new SettingNamespace(["Views", "World"]);
+let settingsNamespace = new SettingsNamespace(["Views", "World"]);
 
 
 const useHDR = false;

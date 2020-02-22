@@ -1,12 +1,12 @@
 import { Base } from './Base.js'
 import { outputTimeline } from '../Data/outputTimeline.js'
-import { document, settings, SettingNamespace } from '../Database.js'
+import { document, settings, SettingsNamespace } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { rendererRouter } from '../rendererRouter.js'
 
 const radialDomainScale = 8;
-const settingNamespace = new SettingNamespace(["Views", "AnglePlots"]);
+const settingsNamespace = new SettingsNamespace(["Views", "AnglePlots"]);
 
 class AnglePlots extends Base {
 	constructor(container, state) {
@@ -37,13 +37,13 @@ class AnglePlots extends Base {
 					let checkBox = $(`<input type="checkbox" class="custom-control-input" id="AnglePlots_${settingName}_switch" checked="">`);
 					optionDiv.append(checkBox);
 
-					let value = settingNamespace.get(settingName, defaultValue);
+					let value = settingsNamespace.get(settingName, defaultValue);
 					if(!value) {
 						checkBox.removeAttr("checked");
 					}
 
 					checkBox.change((value) => {
-						settingNamespace.set(settingName, value.target.checked);
+						settingsNamespace.set(settingName, value.target.checked);
 					});
 
 					let label = $(`<label class="custom-control-label" for="AnglePlots_${settingName}_switch">${caption}</label>`);
@@ -250,7 +250,7 @@ class AnglePlots extends Base {
 			}
 		}
 
-		if(settingNamespace.get('showDebugText', false)) {
+		if(settingsNamespace.get('showDebugText', false)) {
 			{
 				let angleToXArray = outputFrames[currentFrameIndex].content.configuration.map(config => config.angleToX * (180 / Math.PI));
 				let angleToXReport = [];
@@ -325,7 +325,7 @@ class AnglePlots extends Base {
 	}
 
 	async updateShaftCursors() {
-		if (this.needsUpdateTraces && settingNamespace.get('liveUpdate')) {
+		if (this.needsUpdateTraces && settingsNamespace.get('liveUpdate')) {
 			let frame = document.getCurrentOutputFrame();
 			let anglesToX = frame.configuration.map(block => block.angleToX);
 			let shaftAngles = AxisMath.anglesToXToShaftAngles(anglesToX);

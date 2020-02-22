@@ -228,7 +228,7 @@ class ImportExport extends Functions {
 
 		fs.writeFileSync(saveResult, reportString);
 	}
-
+/*
 	testModal() {
 		GuiUtils.modalDialog("Test modal huh", "HEre is some stuff I've heard", {
 			doThis : () => {
@@ -248,6 +248,7 @@ class ImportExport extends Functions {
 		await new Promise(resolve => setTimeout(resolve, 1000));
 		throw(Error("Fucking error all right"));
 	}
+*/
 }
 
 export { ImportExport }

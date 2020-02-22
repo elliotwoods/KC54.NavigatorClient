@@ -4,7 +4,7 @@ import { rendererRouter } from '../rendererRouter.js'
 const fs = require('fs')
 const path = require('path')
 const shortid = require('shortid')
-import { document, settings } from '../Database.js'
+import { document, SettingsNamespace } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { Inspectable } from './Inspector.js'
@@ -12,8 +12,10 @@ import { Inspectable } from './Inspector.js'
 const bent = require('bent')
 const getJSON = bent('json')
 const post = bent('http://localhost:8080/', 'POST', 'json');
+let settingsNamespace = new SettingsNamespace(["Views", "Navigator"]);
 
-let testObjective = [
+//set defaults for testObjective
+settingsNamespace.get("testObjective", [
 	{
 		"objective": {
 			"type": "BeSpringLike"
@@ -42,12 +44,12 @@ let testObjective = [
 		},
 		"weight": 1
 	}
-];
+]);
 
 let testObjectiveInspectable = new Inspectable(() => {
-	return testObjective;
+	return settingsNamespace.get("testObjective");
 }, (value) => {
-	testObjective = value;
+	settingsNamespace.set("testObjective", value);
 }, "Test objectives");
 
 class Navigator extends Functions {
@@ -127,7 +129,7 @@ class Navigator extends Functions {
 
 		const response = await post('optimise', {
 			initialGuess : currentOutputFrame.configuration,
-			objective : testObjective
+			objective : settingsNamespace.get("testObjective")
 		});
 
 		let frameData = {

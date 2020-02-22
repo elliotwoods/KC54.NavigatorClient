@@ -1,3 +1,5 @@
+import { ErrorHandler } from '../Utils/ErrorHandler.js'
+
 class Base {
 	Base(container, state) {
 		this.container = container;
@@ -5,12 +7,9 @@ class Base {
 	}
 
 	tryRefresh() {
-		try {
+		ErrorHandler.do(() => {
 			this.refresh();
-		}
-		catch(exception) {
-			// print error to container
-		}
+		});
 	}
 	
 	static register(goldenLayout) {

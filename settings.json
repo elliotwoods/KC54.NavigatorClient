@@ -127,6 +127,100 @@
         "mapSize": 2048,
         "shadowBias": -0.00001
       }
+    },
+    "Navigator": {
+      "testObjective": [
+        {
+          "objective": {
+            "type": "BeSpringLike"
+          },
+          "weight": 1.234
+        },
+        {
+          "objective": {
+            "scale": 20,
+            "type": "StayInTheGarden"
+          },
+          "weight": 2.345
+        },
+        {
+          "objective": {
+            "firstBeam": 15,
+            "secondBeam": 17,
+            "type": "HoldHands"
+          },
+          "weight": 0.1
+        },
+        {
+          "objective": {
+            "standardDeviation": 0.3,
+            "type": "DoNotCollide"
+          }
+        },
+        {
+          "objective": {
+            "type": "PreferBeamAngles",
+            "desiredAngles": {
+              "0": -1.44547
+            },
+            "weight": 500
+          }
+        }
+      ]
+    },
+    "InputTimeline": {
+      "tracks": [
+        {
+          "name": "Track 1",
+          "id": "hrAKiLJB",
+          "keyframes": [
+            {
+              "frameIndex": 0,
+              "id": "4s568NOPf",
+              "content": {
+                "value": 0
+              }
+            },
+            {
+              "frameIndex": 99,
+              "id": "PXgYtapR5",
+              "content": {
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Track 2",
+          "id": "4eegToeIU",
+          "keyframes": [
+            {
+              "frameIndex": 50,
+              "id": "fYFr7qE9N",
+              "content": {
+                "value": 0
+              }
+            },
+            {
+              "frameIndex": 99,
+              "id": "hCg3FAboW",
+              "content": {
+                "value": 1
+              }
+            }
+          ]
+        }
+      ],
+      "viewLayout": {
+        "trackCaptionAreaWidth": 100,
+        "trackHeight": 30,
+        "frameNumbersAreaHeight": 30,
+        "keyFrameSize": 8,
+        "frameTicks": {
+          "height": 5,
+          "color": "#aaa"
+        }
+      }
     }
   },
   "viewLayout": {
@@ -176,7 +270,7 @@
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 50,
+              "width": 50.09887936717205,
               "content": [
                 {
                   "type": "stack",
@@ -277,7 +371,7 @@
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 50,
+              "width": 49.90112063282795,
               "content": [
                 {
                   "type": "row",
@@ -332,7 +426,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 66.02050486775222,
+                  "height": 33.01025243387611,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-user-secret\" /> Inspector",
@@ -340,11 +434,30 @@
                       "componentName": "Inspector",
                       "isClosable": true,
                       "reorderEnabled": true
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "header": {},
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "height": 33.01025243387611,
+                  "id": "__glMaximised",
+                  "content": [
+                    {
+                      "title": "<i class=\"fas fa-indent\" /> InputTimeline",
+                      "type": "component",
+                      "componentName": "InputTimeline",
+                      "isClosable": true,
+                      "reorderEnabled": true
                     },
                     {
-                      "title": "<i class=\"fas fa-weight\" /> AnglePlots",
+                      "title": "<i class=\"fas fa-chart-area\" /> Output Timeline",
                       "type": "component",
-                      "componentName": "AnglePlots",
+                      "componentName": "OutputTimeline",
                       "isClosable": true,
                       "reorderEnabled": true
                     }
@@ -378,7 +491,36 @@
       "reorderEnabled": true,
       "title": "",
       "openPopouts": [],
-      "maximisedItemId": null
+      "maximisedItemId": "__glMaximised"
     }
+  },
+  "InputTimeline": {
+    "viewLayout": {
+      "trackCaptionAreaWidth": 100,
+      "trackHeight": 30,
+      "frameNuberAreaHeight": 30
+    },
+    "tracks": [
+      {
+        "name": "Track 1",
+        "id": "mTruOt4F",
+        "keyframes": [
+          {
+            "frameIndex": 0,
+            "id": "lAgH4SIgW",
+            "content": {
+              "value": 0
+            }
+          },
+          {
+            "frameIndex": 99,
+            "id": "G601bsdGo",
+            "content": {
+              "value": 1
+            }
+          }
+        ]
+      }
+    ]
   }
 }

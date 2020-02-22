@@ -8,7 +8,7 @@ const heightPerTrack = 25;
 const widthPerFrame = 10;
 const trackSpacing = 5;
 
-class Timeline extends Base {
+class OutputTimeline extends Base {
 	constructor(container, state) {
 		super(container, state);
 		this.container = container;
@@ -184,4 +184,4 @@ class Timeline extends Base {
 	}
 }
 
-export { Timeline }
+export { OutputTimeline }

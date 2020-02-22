@@ -1,5 +1,6 @@
 import { ImportExport } from './Views/ImportExport.js'
-import { Timeline } from './Views/Timeline.js'
+import { OutputTimeline } from './Views/OutputTimeline.js'
+import { InputTimeline } from './Views/InputTimeline.js'
 import { Transport } from './Views/Transport.js'
 import { AnglePlots } from './Views/AnglePlots.js'
 import { World } from './Views/World.js'
@@ -284,12 +285,22 @@ let viewPalette = [
 	},
 	{
 		buttonPreferences: {
-			icon: `fas fa-stream`
+			icon: `fas fa-chart-area`
 		},
 		config: {
-			title: 'Timeline',
+			title: 'OutputTimeline',
 			type: 'component',
-			componentName: 'Timeline'
+			componentName: 'OutputTimeline'
+		}
+	},
+	{
+		buttonPreferences: {
+			icon: `fas fa-indent`
+		},
+		config: {
+			title: 'InputTimeline',
+			type: 'component',
+			componentName: 'InputTimeline'
 		}
 	},
 	{
@@ -341,7 +352,8 @@ function setup() {
 	}
 
 	ImportExport.register(goldenLayout);
-	Timeline.register(goldenLayout);
+	OutputTimeline.register(goldenLayout);
+	InputTimeline.register(goldenLayout);
 	AnglePlots.register(goldenLayout);
 	World.register(goldenLayout);
 	Transport.register(goldenLayout);
