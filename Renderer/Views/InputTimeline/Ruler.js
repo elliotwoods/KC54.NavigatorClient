@@ -85,12 +85,12 @@ class Ruler extends Element {
 		, true);
 
 		// Current frame cursor
-		this.children.currentFrame = new Element(this.draw.group()
+		this.children.frameCursor = new Element(this.draw.group()
 		, (element) => {
 			element.rectangle = element.draw.rect(this.parent.pixelsPerFrame, layout.frameNumbersAreaHeight)
 				.attr({
 					'fill': 'none',
-					'stroke' : '#000',
+					'stroke' : layout.frameCursor.color,
 					'stroke-width' : 0.5
 				});
 		}

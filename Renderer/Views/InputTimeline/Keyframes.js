@@ -56,11 +56,13 @@ class KeyFrames extends Element {
 							, (value) => {
 								keyFrame.content = value;
 							}
-							, `${track.name} : ${keyFrame.frameIndex}`);
+							, `${track.name} : Keyframe ${keyFrame.frameIndex}`);
 							inspectable.onInspectChange(() => {
 								element.dirty = true;
 								element.refresh();
 							});
+							inspectable.keyFrame = keyFrame;
+							inspectable.track = track;
 							newInspectables[keyFrame.id] = inspectable;
 						}
 					}
@@ -101,25 +103,44 @@ class KeyFrames extends Element {
 
 					let inspectable = this.inspectables[keyFrame.id];
 
-					trackGroup.rect(this.parent.frameIndexToPixel(nextKeyFrame.frameIndex + 1), layout.trackHeight)
+					// background
+					let rect = trackGroup.rect(this.parent.frameIndexToPixel(nextKeyFrame.frameIndex + 1), layout.trackHeight)
 						.move(this.parent.frameIndexToPixel(keyFrame.frameIndex), 0)
 						.attr({
 							'fill': inspectable.isBeingInspected() ? '#eef' : '#fff',
 							'stroke' : '#000',
-							'stroke-width' : 0.5
+							'stroke-width' : 0.5,
+							'keyFrameID' : keyFrame.id
 						})
 						.mousedown(() => {
 							inspectable.toggleInspect();
 						});
 
+					// We tried to popover on it but failed
+					//let rectSelector = $(`rect[keyFrameID=${keyFrame.id}]`);
+					
+
 					// draw the marker for the frame
 					if(keyFrame.frameIndex >= this.parent.visibleRangeStart && keyFrame.frameIndex <= this.parent.visibleRangeEnd) {
-						trackGroup.use(this.keyFrameSymbol).center(this.parent.frameIndexToPixel(keyFrame.frameIndex + 0.5), layout.trackHeight / 2);
+						trackGroup.use(this.keyFrameSymbol)
+							.center(this.parent.frameIndexToPixel(keyFrame.frameIndex + 0.5), layout.trackHeight / 2)
+							.dx(-layout.keyFrameSize / 4); // somehow it's offset
 					}
 				}
 
 				y += layout.trackHeight;
 			}
+		}
+		, true);
+
+		this.children.frameCursor = new Element(this.draw.group()
+		, (element) => {
+			element.line = element.draw.line(0, 0, 0, 0)
+			.stroke({ color : layout.frameCursor.color, width : 1});
+		}
+		, (element) => {
+			let x = this.parent.frameIndexToPixel(this.parent.currentFrameIndex + 0.5);
+			element.line.plot(x, 0, x, layout.trackHeight * this.parent.tracks.length)
 		}
 		, true);
 	}

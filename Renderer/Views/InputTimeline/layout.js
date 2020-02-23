@@ -10,6 +10,9 @@ let layout = settingsNamespace.set("layout", {
 		height : 5,
 		color : '#aaa'
 	},
+	frameCursor : {
+		color : '#333'
+	},
 	backgroundColor : '#efeeee'
 });
 layout = settingsNamespace.get("layout");

@@ -38,6 +38,7 @@ class TrackHeaders extends Element {
 							element.dirty = true;
 							element.refresh();
 						});
+						inspectable.track = track;
 						newInspectables[track.id] = inspectable;
 					}
 				}

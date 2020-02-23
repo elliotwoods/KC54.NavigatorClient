@@ -172,11 +172,11 @@
       "tracks": [
         {
           "name": "Track 1",
-          "id": "wyuIDOxH",
+          "id": "SCxy-gY9",
           "keyFrames": [
             {
               "frameIndex": 0,
-              "id": "Bo35IeYnn",
+              "id": "veCQKQZba",
               "content": {
                 "value": 0,
                 "constant": 1
@@ -184,14 +184,14 @@
             },
             {
               "frameIndex": 50,
-              "id": "mdltnVukv",
+              "id": "m-WuzdMFH",
               "content": {
                 "value": 0.5
               }
             },
             {
               "frameIndex": 99,
-              "id": "y2wYkJ5Eb",
+              "id": "NznxY_DPF",
               "content": {
                 "value": 1
               }
@@ -200,18 +200,18 @@
         },
         {
           "name": "Track 2",
-          "id": "gsH-HkNQi",
+          "id": "CrtTjL-eJ",
           "keyFrames": [
             {
               "frameIndex": 50,
-              "id": "jTGbWmwL3",
+              "id": "Jy4rl8IuM",
               "content": {
                 "value": 0
               }
             },
             {
               "frameIndex": 99,
-              "id": "QodTXG3FF",
+              "id": "w3uHtYx1O",
               "content": {
                 "value": 1
               }
@@ -237,6 +237,9 @@
         "frameTicks": {
           "height": 5,
           "color": "#aaa"
+        },
+        "frameCursor": {
+          "color": "#333"
         },
         "backgroundColor": "#efeeee"
       }
@@ -397,7 +400,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 21.35593701448715,
+                  "height": 26.766557860437043,
                   "content": [
                     {
                       "type": "stack",
@@ -445,7 +448,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 35.72102813043283,
+                  "height": 23.271134911166307,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-user-secret\" /> Inspector",
@@ -463,19 +466,12 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 21.642483383799572,
+                  "height": 23.271134911166307,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
                       "type": "component",
                       "componentName": "InputTimeline",
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    },
-                    {
-                      "title": "<i class=\"fas fa-chart-area\" /> Output Timeline",
-                      "type": "component",
-                      "componentName": "OutputTimeline",
                       "isClosable": true,
                       "reorderEnabled": true
                     }
@@ -488,7 +484,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 21.28055147128046,
+                  "height": 26.691172317230354,
                   "content": [
                     {
                       "type": "component",
