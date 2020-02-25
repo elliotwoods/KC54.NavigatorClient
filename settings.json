@@ -172,11 +172,11 @@
       "tracks": [
         {
           "name": "Track 1",
-          "id": "SCxy-gY9",
+          "id": "u8NKadz-",
           "keyFrames": [
             {
               "frameIndex": 0,
-              "id": "veCQKQZba",
+              "id": "FqtrD1At4",
               "content": {
                 "value": 0,
                 "constant": 1
@@ -184,14 +184,14 @@
             },
             {
               "frameIndex": 50,
-              "id": "m-WuzdMFH",
+              "id": "UqaVGkxlB",
               "content": {
                 "value": 0.5
               }
             },
             {
               "frameIndex": 99,
-              "id": "NznxY_DPF",
+              "id": "nz5EnF--2",
               "content": {
                 "value": 1
               }
@@ -200,18 +200,18 @@
         },
         {
           "name": "Track 2",
-          "id": "CrtTjL-eJ",
+          "id": "Xg4k4sbPa",
           "keyFrames": [
             {
               "frameIndex": 50,
-              "id": "Jy4rl8IuM",
+              "id": "7ocwk6gVb",
               "content": {
                 "value": 0
               }
             },
             {
               "frameIndex": 99,
-              "id": "w3uHtYx1O",
+              "id": "STw6q3Yv3",
               "content": {
                 "value": 1
               }
@@ -292,7 +292,7 @@
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 50.09887936717205,
+              "width": 48.95397489539749,
               "content": [
                 {
                   "type": "stack",
@@ -393,7 +393,7 @@
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 49.90112063282795,
+              "width": 51.04602510460251,
               "content": [
                 {
                   "type": "row",
@@ -449,6 +449,7 @@
                   "title": "",
                   "activeItemIndex": 0,
                   "height": 23.271134911166307,
+                  "width": 100,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-user-secret\" /> Inspector",
@@ -466,7 +467,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 23.271134911166307,
+                  "height": 23.66635605555631,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
@@ -484,7 +485,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 26.691172317230354,
+                  "height": 26.29595117284035,
                   "content": [
                     {
                       "type": "component",

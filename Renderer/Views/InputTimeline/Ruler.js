@@ -8,38 +8,32 @@ class Ruler extends Element {
 
 		this.draw.x(layout.trackCaptionAreaWidth);
 
-		this.draggingCursor = false;
-
 		// Background (for events)
 		this.children.background = new Element(this.draw.group()
 		, (element) => {
-			let onMouse = (args) => {
-				if(this.draggingCursor) {
-					let newFrameIndex = Math.floor(this.parent.pixelToFrameIndex(args.offsetX - layout.trackCaptionAreaWidth));
-					this.parent.setFrameIndex(newFrameIndex);
-				}
-			};
+			element.draggingCursor = false;
 			element.rect = element.draw.rect(100, layout.frameNumbersAreaHeight)
 				.attr({
 					fill : layout.backgroundColor
 				})
 				.mousedown((args) => {
-					this.draggingCursor = true;
+					element.draggingCursor = true;
 					args.preventDefault();
-					onMouse(args);
-				})
-				.mousemove(onMouse);
+					let newFrameIndex = Math.floor(this.parent.pixelToFrameIndex(args.offsetX - layout.trackCaptionAreaWidth));
+					this.parent.setFrameIndex(newFrameIndex);
+
+					this.mouseDragStart = {
+						x : args.pageX,
+						y : args.pageY,
+						frameIndex : newFrameIndex,
+						target : element
+					};
+				});
 		}
 		, (element) => {
 			element.rect.width(this.viewWidth - layout.trackCaptionAreaWidth);
 		}
-		, true);
-
-		$(window).mouseup((args) => {
-			this.draggingCursor = false;
-		});
-
-		
+		, true);		
 
 		// Frame labels
 		this.children.frameLabels = new Element(this.draw.group()
@@ -100,6 +94,25 @@ class Ruler extends Element {
 				.x(this.parent.frameIndexToPixel(this.parent.currentFrameIndex));
 		}
 		, true);
+
+		// mouse drag (this should be moved to a universal / handled by Element)
+		this.mouseDragStart = null;
+		$(window).mouseup((args) => {
+			this.mouseDragStart = null;
+		});
+		$(window).mousemove((args) => {
+			if(!this.mouseDragStart) {
+				return;
+			}
+
+			switch(this.mouseDragStart.target) {
+			case this.children.background:
+				let frameIndex = this.mouseDragStart.frameIndex + (args.pageX - this.mouseDragStart.x) / parent.pixelsPerFrame;
+				this.parent.setFrameIndex(frameIndex);
+				break;
+			default:
+			}
+		});
 	}
 }
 

@@ -104,7 +104,7 @@ class KeyFrames extends Element {
 					let inspectable = this.inspectables[keyFrame.id];
 
 					// background
-					let rect = trackGroup.rect(this.parent.frameIndexToPixel(nextKeyFrame.frameIndex + 1), layout.trackHeight)
+					trackGroup.rect(this.parent.frameIndexToPixel(nextKeyFrame.frameIndex + 1), layout.trackHeight)
 						.move(this.parent.frameIndexToPixel(keyFrame.frameIndex), 0)
 						.attr({
 							'fill': inspectable.isBeingInspected() ? '#eef' : '#fff',
@@ -118,8 +118,27 @@ class KeyFrames extends Element {
 
 					// We tried to popover on it but failed
 					//let rectSelector = $(`rect[keyFrameID=${keyFrame.id}]`);
-					
 
+					// draggable region (first frame)
+					trackGroup.rect(this.parent.pixelsPerFrame, layout.trackHeight)
+						.move(this.parent.frameIndexToPixel(keyFrame.frameIndex), 0)
+						.attr({
+							'fill' : '#fff',
+							'fill-opacity' : 0,
+							'keyFrameID' : keyFrame.id,
+							'cursor' : 'col-resize'
+						})
+						.mousedown((args) => {
+							this.mouseDragStart = {
+								x : args.pageX,
+								y : args.pageY,
+								frameIndex : keyFrame.frameIndex,
+								keyFrame : keyFrame,
+								target : element
+							};
+							args.preventDefault();
+						});
+					
 					// draw the marker for the frame
 					if(keyFrame.frameIndex >= this.parent.visibleRangeStart && keyFrame.frameIndex <= this.parent.visibleRangeEnd) {
 						trackGroup.use(this.keyFrameSymbol)
@@ -143,6 +162,26 @@ class KeyFrames extends Element {
 			element.line.plot(x, 0, x, layout.trackHeight * this.parent.tracks.length)
 		}
 		, true);
+
+		// mouse drag (this should be moved to a universal / handled by Element)
+		this.mouseDragStart = null;
+		$(window).mouseup((args) => {
+			this.mouseDragStart = null;
+		});
+		$(window).mousemove((args) => {
+			if(!this.mouseDragStart) {
+				return;
+			}
+
+			switch(this.mouseDragStart.target) {
+			case this.children.tracks:
+				this.mouseDragStart.keyFrame.frameIndex = parent.validateFrameIndex(parent.pixelToFrameIndex(args.offsetX, false));
+				this.children.tracks.dirty = true;
+				this.refresh();
+				break;
+			default:
+			}
+		});
 	}
 }
 

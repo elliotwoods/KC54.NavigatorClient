@@ -110,6 +110,9 @@ class ImportExport extends Functions {
 			],
 			message: "Open Json animation"
 		});
+		if(!result) {
+			return;
+		}
 		if (result.length != 1) {
 			return;
 		}

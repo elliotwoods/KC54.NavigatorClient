@@ -82,7 +82,7 @@ class InputTimeline extends Base {
 	}
 
 	init() {
-		this.scrollDiv = $(`<div class="scrollContainerX" />`);
+		this.scrollDiv = $(`<div class="scrollContainerY" />`);
 
 		this.toolBar = $(`<div class="toolBar"/>`);
 		this.scrollDiv.append(this.toolBar);
@@ -156,12 +156,15 @@ class InputTimeline extends Base {
 		return (frameIndex - this.visibleRangeStart) * this.pixelsPerFrame;
 	}
 
-	pixelToFrameIndex(pixel) {
+	pixelToFrameIndex(pixel, ignoreCaptionArea = true) {
+		if(!ignoreCaptionArea) {
+			pixel -= layout.trackCaptionAreaWidth;
+		}
 		return (pixel / this.pixelsPerFrame) + this.visibleRangeStart;
 	}
 
 	resize() {
-		let width = this.scrollDiv.width();
+		let width = this.scrollDiv.width() - 30;
 		if(width == 0) {
 			return;
 		}
@@ -179,8 +182,19 @@ class InputTimeline extends Base {
 		this.element.refresh();
 	}
 
+	validateFrameIndex(frameIndex) {
+		frameIndex = Math.floor(frameIndex);
+		if(frameIndex < 0) {
+			frameIndex = 0;
+		}
+
+		// also we need to clamp to max, but we dont have this yet
+		return frameIndex;
+	}
+
 	setFrameIndex(frameIndex) {
-		this.currentFrameIndex = Math.floor(frameIndex);
+		this.currentFrameIndex = this.validateFrameIndex(frameIndex);
+		
 		this.element.children.ruler.children.frameCursor.dirty = true;
 		this.element.children.keyFrames.children.frameCursor.dirty = true;
 		this.refresh();
