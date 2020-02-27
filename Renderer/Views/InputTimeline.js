@@ -11,6 +11,8 @@ import { TrackHeaders } from './InputTimeline/TrackHeaders.js'
 import { KeyFrames } from './InputTimeline/KeyFrames.js'
 import { GuiUtils } from '../Utils/GuiUtils.js';
 import { InputTimelineUtils } from '../Utils/InputTimelineUtils.js';
+import { outputTimeline } from '../Data/outputTimeline.js'
+import { NavigatorServer } from '../Utils/NavigatorServer.js';
 
 const shortid = require('shortid');
 
@@ -104,6 +106,23 @@ class InputTimeline extends Base {
 				buttonPreferences : {
 					icon : "fas fa-circle"
 				}
+			},
+			deleteKeyFrame : {
+				do : () => {
+					this.deleteKeyFrame();
+				},
+				isEnabled : () => this.getSelectedKeyframe() != null,
+				buttonPreferences : {
+					icon : "fas fa-trash"
+				}
+			},
+			renderOneFrame : {
+				do : async () => { 
+					await this.renderOneFrame();
+				},
+				buttonPreferences : {
+					icon : "fas fa-paint-brush"
+				}
 			}
 		};
 
@@ -114,9 +133,6 @@ class InputTimeline extends Base {
 		});
 
 		this.container.on("resize", () => {
-			this.resize();
-		});
-		ErrorHandler.do(() => {
 			this.resize();
 		});
 	}
@@ -139,16 +155,12 @@ class InputTimeline extends Base {
 					action.do();
 				});
 			});
-			button.prop("disabled", !action.isEnabled());
 			action.button = button;
 			this.toolBar.append(button);
 		}
+
 		rendererRouter.onChange('inspectTargetChange', () => {
-			// When the selection changes, update states of buttons
-			for(let actionName in this.actions) {
-				let action = this.actions[actionName];
-				action.button.prop("disabled", !action.isEnabled());
-			}
+			this.refresh();
 		});
 	}
 
@@ -180,6 +192,17 @@ class InputTimeline extends Base {
 
 	refresh() {
 		this.element.refresh();
+
+		// When the selection changes, update states of buttons
+		for(let actionName in this.actions) {
+			let action = this.actions[actionName];
+
+			let actionEnabled = true;
+			if(action.isEnabled) {
+				actionEnabled = action.isEnabled();
+			}
+			action.button.prop("disabled", !actionEnabled);
+		}
 	}
 
 	validateFrameIndex(frameIndex) {
@@ -222,6 +245,17 @@ class InputTimeline extends Base {
 		return null;
 	}
 
+	getSelectedKeyframe() {
+		for(let keyFrameID in this.element.children.keyFrames.inspectables) {
+			let inspectable = this.element.children.keyFrames.inspectables[keyFrameID];
+			if(inspectable.isBeingInspected()) {
+				return inspectable.keyFrame;
+			}
+		}
+
+		return null;
+	}
+
 	insertKeyFrame() {
 		let selectedTrack = this.getSelectedTrack();
 		if(!selectedTrack) {
@@ -244,6 +278,37 @@ class InputTimeline extends Base {
 		// select this keyFrame
 		this.element.children.keyFrames.inspectables[keyFrame.id].inspect();
 		return keyFrame;
+	}
+
+	deleteKeyFrame() {
+		let selectedKeyframe = this.getSelectedKeyframe();
+		if(!selectedKeyframe) {
+			throw(new Error("No key frame selected"));
+		}
+		
+		let selectedTrack = this.getSelectedTrack();
+		if(!selectedTrack) {
+			throw(new Error("No track selected"));
+		}
+
+		// delete it
+		selectedTrack.keyFrames = selectedTrack.keyFrames.filter(keyFrame => keyFrame.id != selectedKeyframe.id);
+
+		// refresh the view (and the inspectables)
+		this.element.children.keyFrames.children.tracks.dirty = true;
+		this.refresh();
+	}
+
+	async renderOneFrame() {
+		let configuration;
+		if(outputTimeline.getFrameCount() != 0) {
+			// use last frame as starting pose
+			configuration = outputTimeline.getLastFrame().content.configuration;
+		}
+		else {
+			// use spiral pose as starting pose
+			configuration = NavigatorServer.getSpiralPose();
+		}
 	}
 }
 

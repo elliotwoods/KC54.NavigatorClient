@@ -59,8 +59,8 @@ class Functions extends Base {
 
 				button = GuiUtils.makeButton(caption, preferences[methodName]);
 				button.click(() => {
-					ErrorHandler.do(() => {
-						this[methodName]();
+					ErrorHandler.do(async () => {
+						await this[methodName]();
 					});
 				});
 			}

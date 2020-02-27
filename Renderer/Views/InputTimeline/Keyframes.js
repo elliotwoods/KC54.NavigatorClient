@@ -137,6 +137,7 @@ class KeyFrames extends Element {
 								target : element
 							};
 							args.preventDefault();
+							inspectable.toggleInspect();
 						});
 					
 					// draw the marker for the frame

@@ -1,5 +1,6 @@
 import { document, settings } from '../Database.js'
 import { rendererRouter } from '../rendererRouter.js'
+const shortid = require('shortid')
 
 class OutputTimeline {
 	constructor() {
@@ -18,23 +19,55 @@ class OutputTimeline {
 			["moment", "z"]
 		];
 	}
+
 	getTracks() {
 		this.buildTracks();
 		return this._cache.tracks;
 	}
 
 	getFrameCount() {
-		this.buildTracks();
-		return this._cache.frameCount;
+		return document.get("outputFrames").size().value();
 	}
 
 	getCurrentFrameIndex() {
 		return rendererRouter.appState.get_outputFrameIndex();
 	}
 
+	getFrame(frameIndex) {
+		return document.get("outputFrames").nth(frameIndex).value();
+	}
+
 	getCurrentFrame() {
 		let outputFrameIndex = this.getCurrentFrameIndex();
-		return document.get("outputFrames").nth(outputFrameIndex).value();
+		return this.getFrame(outputFrameIndex);
+	}
+
+	getLastFrame() {
+		let frameCount = this.getFrameCount();
+		if(frameCount == 0) {
+			throw(new Error("No last frame available"));
+		}
+		return this.getFrame(frameCount - 1);
+	}
+
+	// Add a frame to the end of the sequence
+	addFrame(pose, sourceName) {
+		let frameData = {
+			id: shortid.generate(),
+			content: {
+				configuration: pose
+			},
+			importReport: {
+				source: sourceName,
+				date: Date.now()
+			}
+		};
+
+		document.get('outputFrames')
+		.push(frameData)
+		.write();
+
+		rendererRouter.notifyChange('outputFrameData');
 	}
 
 	buildTracks() {

@@ -3,15 +3,13 @@ import { Functions } from './Functions.js'
 import { rendererRouter } from '../rendererRouter.js'
 const fs = require('fs')
 const path = require('path')
-const shortid = require('shortid')
 import { document, SettingsNamespace } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { Inspectable } from './Inspector.js'
+import { NavigatorServer } from '../Utils/NavigatorServer.js'
+import { outputTimeline } from '../Data/outputTimeline.js'
 
-const bent = require('bent')
-const getJSON = bent('json')
-const post = bent('http://localhost:8080/', 'POST', 'json');
 let settingsNamespace = new SettingsNamespace(["Views", "Navigator"]);
 
 //set defaults for testObjective
@@ -74,50 +72,18 @@ class Navigator extends Functions {
 	}
 
 	async ping() {
-		let response = await getJSON('http://localhost:8080/ping', { json: true });
+		let response = await post('Ping');
 		console.log(response);
 	}
 
 	async parkingPose() {
-		const response = await post('parkingPose', {});
-
-		let frameData = {
-			id: shortid.generate(),
-			content: {
-				configuration: response
-			},
-			importReport: {
-				source: 'Navigator',
-				data: Date.now()
-			}
-		};
-		document.get('outputFrames')
-			.push(frameData)
-			.write();
-
-		rendererRouter.notifyChange('outputFrameData');
-		console.log(response);
+		let pose = await NavigatorServer.getParkingPose();
+		outputTimeline.addFrame(pose, "Navigator::parkingPose");
 	}
 
 	async spiralPose() {
-		const response = await post('spiralPose', {});
-
-		let frameData = {
-			id: shortid.generate(),
-			content: {
-				configuration: response
-			},
-			importReport: {
-				source: 'Navigator',
-				data: Date.now()
-			}
-		};
-		document.get('outputFrames')
-			.push(frameData)
-			.write();
-
-		rendererRouter.notifyChange('outputFrameData');
-		console.log(response);
+		let pose = await NavigatorServer.getSpiralPose();
+		outputTimeline.addFrame(pose, "Navigator::spiralPose");
 	}
 
 	inspect_testObjectives() {

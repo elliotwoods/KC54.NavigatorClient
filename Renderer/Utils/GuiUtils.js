@@ -9,7 +9,7 @@ class GuiUtils {
 			if(preferences) {
 				if(preferences.icon) {
 					buttonContent = `<i class="${preferences.icon}" />`;
-					buttonPreferences.push(`data-toggle="tooltip" data-placement="top" data-original-title="${toolTip}"`);
+					buttonPreferences.push(`data-toggle="tooltip" data-placement="bottom" data-original-title="${toolTip}"`);
 					buttonClasses.push("btn-icon");
 				}
 			}
