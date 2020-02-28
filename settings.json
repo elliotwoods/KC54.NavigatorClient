@@ -127,7 +127,8 @@
         "size": 20,
         "mapSize": 2048,
         "shadowBias": -0.00001
-      }
+      },
+      "renderDirtyTime": 3
     },
     "Navigator": {
       "testObjective": [

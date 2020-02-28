@@ -14,6 +14,7 @@ import { scene } from './World/scene.js'
 
 import { Constants } from '../Utils/Constants.js'
 import { settings, SettingsNamespace as SettingsNamespace } from '../Database.js'
+import { rendererRouter } from '../rendererRouter.js';
 let settingsNamespace = new SettingsNamespace(["Views", "World"]);
 
 let worlds = [];
@@ -24,7 +25,14 @@ class World extends Base {
 		this.container = container;
 		this.state = state;
 
+		this.markRenderDirty();
 		this.init();
+		rendererRouter.onChange('outputFrame', () => {
+			this.markRenderDirty();
+		});
+		this.container.getElement().mousemove(() => {
+			this.markRenderDirty();
+		});
 	}
 
 	init() {
@@ -163,6 +171,10 @@ class World extends Base {
 		animate();
 	}
 
+	markRenderDirty() {
+		this.lastActionTime = new Date();
+	}
+
 	onResize() {
 		var w = this.div.width();
 		var h = this.div.height();
@@ -186,15 +198,24 @@ class World extends Base {
 		if (this.composer) {
 			this.composer.setSize(w, h);
 		}
+
+		this.markRenderDirty();
 	}
 
 	render() {
+		let renderDirtyTime = settingsNamespace.get("renderDirtyTime", 3);
+		let timeSinceLastAction = new Date() - this.lastActionTime;
+		if(timeSinceLastAction > renderDirtyTime * 1000) {
+			return;
+		}
+
 		if (this.composer) {
 			this.composer.render();
 		}
 		else {
 			this.renderer.render(scene, this.camera);
 		}
+		
 	}
 
 	refresh() {

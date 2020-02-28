@@ -153,6 +153,14 @@ class InputTimeline extends Base {
 					icon : "fas fa-running"
 				}
 			},
+			markDirtyFromHere : {
+				do : () => {
+					this.markDirtyFromHere();
+				},
+				buttonPreferences : {
+					icon : "fas fa-toilet-paper"
+				}
+			},
 			save : {
 				do : () => { 
 					this.save();
@@ -266,6 +274,7 @@ class InputTimeline extends Base {
 				if(action.button.hasClass("btn-waiting")) {
 					// don't update the state
 				}
+
 				else {
 					actionEnabled = action.isEnabled();
 				}
@@ -441,20 +450,24 @@ class InputTimeline extends Base {
 		return false;
 	}
 
+	markDirtyFrame(frameIndex) {
+		let frameData = outputTimeline.getFrame(frameIndex);
+		if(frameData.renderData) {
+			frameData.renderData.dirty = true;
+		}
+		else {
+			frameData.renderData = {
+				dirty : true
+			};
+		}
+	}
+
 	markDirtyFrames() {
 		let frameCount= this.getFrameCount();
 		for(let frameIndex=0; frameIndex<frameCount; frameIndex++) {
 			let dirty = this.isFrameDirty(frameIndex);
 			if(dirty) {
-				let frameData = outputTimeline.getFrame(frameIndex);
-				if(frameData.renderData) {
-					frameData.renderData.dirty = true;
-				}
-				else {
-					frameData.renderData = {
-						dirty : true
-					};
-				}
+				this.markDirtyFrame(frameIndex);
 			}
 		}
 	}
@@ -521,6 +534,17 @@ class InputTimeline extends Base {
 			await this.renderAndStoreFrame(frameIndex, true);
 			transport.skipToFrame(frameIndex);
 		}
+	}
+
+	markDirtyFromHere() {
+		let outputFrames = document.get("outputFrames").value();
+		outputFrames.map((outputFrame, index) => {
+			if (index >= this.currentFrameIndex) {
+				this.markDirtyFrame(index);
+			}
+		});
+		this.element.children.ruler.children.background.markDirty();
+		this.refresh();
 	}
 
 	save() {
