@@ -1,3 +1,5 @@
+import { ErrorHandler } from './ErrorHandler.js'
+
 function isPromise(p) {
 	return p && Object.prototype.toString.call(p) === "[object Promise]";
 }
@@ -29,12 +31,12 @@ class GuiUtils {
 			button.tooltip("hide");
 
 			if (action) {
-				let maybePromise = action();
-				if (isPromise(maybePromise)) {
+				let actionIsAync = action.__proto__.constructor.name == "AsyncFunction";
+				if (actionIsAync) {
 					button.prop('disabled', true);
 					button.addClass("btn-waiting");
 
-					let busyIcon = $(`<span><i class="fas fa-spinner fa-pulse busy-icon" /></span>`);
+					let busyIcon = $(`<span><i class="fas fa-spinner fa-pulse fa-xs" /></span>`);
 					button.append(busyIcon);
 
 					let cleanButton = () => {
@@ -44,15 +46,11 @@ class GuiUtils {
 						button.prop('disabled', false);
 					}
 
-					try {
-						await maybePromise;
-						cleanButton();
-					}
-					catch (error) {
-						cleanButton();
-						throw (error);
-					}
-					
+					await ErrorHandler.doAsync(action);
+					cleanButton();
+				}
+				else {
+					ErrorHandler.do(action);
 				}
 			}
 		});

@@ -90,7 +90,7 @@
         "envMapIntensity": 1
       },
       "showForces": false,
-      "showPerson": false,
+      "showPerson": true,
       "postProcessing": {
         "enabled": true,
         "ambientOcclusion": {
@@ -289,7 +289,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 57.4826090304695,
+                  "height": 48.18273348538512,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-eye\" /> Perspective",
@@ -308,7 +308,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 22.117206906463046,
+                  "height": 25.526096007622055,
                   "content": [
                     {
                       "type": "stack",
@@ -362,7 +362,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 10.496136918992491,
+                  "height": 12.953678899430772,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
@@ -381,7 +381,7 @@
                   "title": "",
                   "activeItemIndex": 0,
                   "width": 50,
-                  "height": 9.904047144074966,
+                  "height": 13.337491607562052,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-play-circle\" /> Transport",

@@ -173,7 +173,7 @@ class InputTimeline extends Base {
 				do : () => {
 					this.syncToOutputFrameIndex = !this.syncToOutputFrameIndex;
 					if(this.syncToOutputFrameIndex) {
-						outputTimeline.skipToFrame(this.currentFrameIndex);
+						transport.skipToFrame(this.currentFrameIndex);
 					}
 					settingsNamespace.set("syncToOutputFrameIndex", this.syncToOutputFrameIndex);
 					this.refresh();
@@ -269,17 +269,15 @@ class InputTimeline extends Base {
 		for(let actionName in this.actions) {
 			let action = this.actions[actionName];
 
-			let actionEnabled = true;
 			if(action.isEnabled) {
 				if(action.button.hasClass("btn-waiting")) {
 					// don't update the state
 				}
-
 				else {
-					actionEnabled = action.isEnabled();
+					let actionEnabled = action.isEnabled();
+					action.button.prop("disabled", !actionEnabled);
 				}
 			}
-			action.button.prop("disabled", !actionEnabled);
 
 			if(action.isDown) {
 				if(action.isDown()) {
@@ -530,7 +528,6 @@ class InputTimeline extends Base {
 
 	async renderAllFrames() {
 		for(let frameIndex=0; frameIndex<this.getFrameCount(); frameIndex++) {
-			console.log(`Rendering frame ${frameIndex}`);
 			await this.renderAndStoreFrame(frameIndex, true);
 			transport.skipToFrame(frameIndex);
 		}
