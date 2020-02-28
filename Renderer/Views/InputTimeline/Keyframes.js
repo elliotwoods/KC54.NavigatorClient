@@ -55,6 +55,7 @@ class KeyFrames extends Element {
 							}
 							, (value) => {
 								keyFrame.content = value;
+								this.parent.timelineDataChange();
 							}
 							, `${track.name} : Keyframe ${keyFrame.frameIndex}`);
 							inspectable.onInspectChange(() => {

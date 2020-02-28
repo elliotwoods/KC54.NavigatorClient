@@ -43,6 +43,15 @@ class Element {
 		}
 		this.dirty = false;
 	}
+
+	markDirty(recursive) {
+		this.dirty = true;
+		if(recursive) {
+			for(let childName in this.children) {
+				this.children[childName].markDirty(true);
+			}
+		}
+	}
 }
 
 export { Element }

@@ -13,7 +13,8 @@ let layout = settingsNamespace.set("layout", {
 	frameCursor : {
 		color : '#333'
 	},
-	backgroundColor : '#efeeee'
+	backgroundColor : '#efeeee',
+	freshFramesColor : '#efffee'
 });
 layout = settingsNamespace.get("layout");
 

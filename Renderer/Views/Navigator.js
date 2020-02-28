@@ -68,6 +68,9 @@ class Navigator extends Functions {
 			deleteLastFrame: {
 				icon: "fas fa-backspace"
 			},
+			stopwatchTest : {
+				icon : "fas fa-stopwatch"
+			}
 		});
 	}
 
@@ -88,6 +91,10 @@ class Navigator extends Functions {
 
 	inspect_testObjectives() {
 		return testObjectiveInspectable;
+	}
+
+	async stopwatchTest() {
+		await new Promise(resolve => setTimeout(resolve, 3000));
 	}
 
 	async optimise() {
@@ -112,7 +119,7 @@ class Navigator extends Functions {
 			.push(frameData)
 			.write();
 
-		rendererRouter.notifyChange('outputFrameData');
+		rendererRouter.notifyChange('outputTimeline');
 		console.log(response);
 
 		// jump to last frame
@@ -131,7 +138,7 @@ class Navigator extends Functions {
 			document.get('outputFrames')
 				.remove({ id: idOfLast })
 				.write()
-			rendererRouter.notifyChange('outputFrameData');
+			rendererRouter.notifyChange('outputTimeline');
 		}
 	}
 

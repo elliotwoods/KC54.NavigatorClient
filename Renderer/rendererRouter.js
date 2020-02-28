@@ -2,8 +2,9 @@ const { ipcRenderer } = require('electron')
 
 // for reference
 let channelNames = [
+	'playing',
 	'stoppers',
-	'outputFrameData',
+	'outputTimeline',
 	'outputFrame',
 	'inspectorTargetChange'
 ];

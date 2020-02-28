@@ -18,9 +18,8 @@ class NavigatorServer {
 
 	static async getParkingPose() {
 		const spiralPose = await NavigatorServer.getSpiralPose();
-		const parkingPose = await NavigatorServer.call('Optimise', {
-			initialGuessPose: spiralPose,
-			objectives: [
+		const parkingPose = NavigatorServer.optimise(spiralPose
+			, [
 				{
 					objective: {
 						type: "MinimiseMoments",
@@ -32,10 +31,17 @@ class NavigatorServer {
 					},
 					weight: 1
 				}
-			]
-		});
+			]);
 
 		return parkingPose;
+	}
+
+	static async optimise(priorPose, objectives) {
+		// do we need to await here since we already return a Promise
+		return await NavigatorServer.call("Optimise", {
+			initialGuessPose : priorPose,
+			objectives : objectives
+		});
 	}
 }
 

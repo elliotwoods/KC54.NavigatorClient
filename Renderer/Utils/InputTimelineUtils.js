@@ -89,7 +89,7 @@ class InputTimelineUtils {
 			object[path[0]] = value;
 		}
 		else {
-			if(!path[0] in object) {
+			if(!(path[0] in object)) {
 				object[path[0]] = {};
 			}
 			InputTimelineUtils.setObjectAtPath(object[path[0]], path.slice(1), value);
@@ -176,7 +176,7 @@ class InputTimelineUtils {
 				}
 			}
 		}
-		return InputTimelineUtils.flattenPathObject(result)
+		return InputTimelineUtils.flattenPathObject(result);
 	}
 }
 

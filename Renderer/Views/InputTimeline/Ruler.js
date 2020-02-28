@@ -12,28 +12,46 @@ class Ruler extends Element {
 		this.children.background = new Element(this.draw.group()
 		, (element) => {
 			element.draggingCursor = false;
-			element.rect = element.draw.rect(100, layout.frameNumbersAreaHeight)
+			element.background = element.draw.rect(100, layout.frameNumbersAreaHeight)
 				.attr({
 					fill : layout.backgroundColor
-				})
-				.mousedown((args) => {
-					element.draggingCursor = true;
-					args.preventDefault();
-					let newFrameIndex = Math.floor(this.parent.pixelToFrameIndex(args.offsetX - layout.trackCaptionAreaWidth));
-					this.parent.setFrameIndex(newFrameIndex);
-
-					this.mouseDragStart = {
-						x : args.pageX,
-						y : args.pageY,
-						frameIndex : newFrameIndex,
-						target : element
-					};
 				});
+			element.freshRegion = element.draw.rect(100, layout.frameNumbersAreaHeight)
+				.attr({
+					fill : layout.freshFramesColor
+				});
+			//apply mouse event to the element's draw group
+			element.draw.mousedown((args) => {
+				element.draggingCursor = true;
+				args.preventDefault();
+				let newFrameIndex = Math.floor(this.parent.pixelToFrameIndex(args.offsetX - layout.trackCaptionAreaWidth));
+				this.parent.setFrameIndex(newFrameIndex);
+
+				this.mouseDragStart = {
+					x : args.pageX,
+					y : args.pageY,
+					frameIndex : newFrameIndex,
+					target : element
+				};
+			});
 		}
 		, (element) => {
-			element.rect.width(this.viewWidth - layout.trackCaptionAreaWidth);
+			element.background.width(this.viewWidth - layout.trackCaptionAreaWidth);
+
+			let freshFrameCount = this.parent.getIndexOfFirstDirtyFrame();
+			if(freshFrameCount <= this.parent.visibleRangeStart) {
+				element.freshRegion.hide();
+			}
+			else {
+				element.freshRegion.show();
+				let width = Math.min(freshFrameCount, this.parent.visibleRangeEnd) - this.parent.visibleRangeStart;
+				width *= this.parent.pixelsPerFrame;
+				element.freshRegion.width(width);
+			}
 		}
-		, true);		
+		, true);
+
+		// 
 
 		// Frame labels
 		this.children.frameLabels = new Element(this.draw.group()

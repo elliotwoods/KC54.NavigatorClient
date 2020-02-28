@@ -7,6 +7,7 @@ const shortid = require('shortid')
 import { document, settings } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
+import { transport } from '../Data/transport.js'
 
 class Transport extends Functions {
 	constructor(container, state, childType) {
@@ -38,7 +39,7 @@ class Transport extends Functions {
 
 			this.playCursor = $(`<input type="range" class="custom-slider Transport_playCursor">`);
 			this.playCursor.on('input', (args) => {
-				this._jumpToFrame(parseInt(this.playCursor.val()));
+				transport.skipToFrame(parseInt(this.playCursor.val()));
 			});
 			this.div.append(this.playCursor);
 
@@ -46,7 +47,7 @@ class Transport extends Functions {
 				this._updateTimeStatus();
 			};
 			rendererRouter.onChange('outputFrame', redraw);
-			rendererRouter.onChange('outputFrameData', redraw);
+			rendererRouter.onChange('outputTimeline', redraw);
 			redraw();
 		}
 
@@ -54,15 +55,17 @@ class Transport extends Functions {
 		rendererRouter.onChange("playing", () => {
 			this._updatePlayState();
 		});
+		rendererRouter.onChange("outputFrame", () => {
+			this._updateTimeStatus();
+		});
 	}
 
 	skipToBeginning() {
-		this._jumpToFrame(0);
+		transport.skipToBeginning();
 	}
 
 	previousOutputFrame() {
-		let nextFrameIndex = rendererRouter.appState.get_outputFrameIndex() - 1;
-		this._jumpToFrame(nextFrameIndex);
+		transport.previousFrame();
 	}
 
 	playPause() {
@@ -75,12 +78,11 @@ class Transport extends Functions {
 	}
 
 	nextOutputFrame() {
-		let nextFrameIndex = rendererRouter.appState.get_outputFrameIndex() + 1;
-		this._jumpToFrame(nextFrameIndex);
+		transport.nextFrame();
 	}
 
 	skipToEnd() {
-		this._jumpToFrame(-1);
+		transport.skipToEnd();
 	}
 
 	stop() {
@@ -92,12 +94,12 @@ class Transport extends Functions {
 		let button = this.buttons["playPause"];
 		let icon = button.find("svg"); // other font awesome versions keep the i tag, but ours changes it to an svg
 		if (rendererRouter.appState.get_playing()) {
-			button.addClass("btn-play-pressed");
+			button.addClass("btn-toggle-active");
 			icon.removeClass("fa-play");
 			icon.addClass("fa-pause");
 		}
 		else {
-			button.removeClass("btn-play-pressed");
+			button.removeClass("btn-toggle-active");
 			icon.addClass("fa-play");
 			icon.removeClass("fa-pause");
 		}
@@ -122,23 +124,6 @@ class Transport extends Functions {
 		this.playCursor.attr("min", 0);
 		this.playCursor.attr("max", outputFrameCount - 1);
 		this.playCursor.val(outputFrameIndex);
-	}
-
-
-	_jumpToFrame(frameIndex) {
-		let outputFrameCount = document.get('outputFrames')
-			.value()
-			.length;
-
-		
-		if (frameIndex > outputFrameCount) {
-			frameIndex = 0;
-		}
-		else if(frameIndex < 0) {
-			frameIndex = outputFrameCount - 1;
-		}
-	
-		rendererRouter.appState.set_outputFrameIndex(frameIndex);
 	}
 }
 

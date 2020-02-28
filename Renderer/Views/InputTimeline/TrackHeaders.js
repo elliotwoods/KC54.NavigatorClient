@@ -2,6 +2,7 @@ import { Element } from './Element.js'
 import { layout } from './layout.js'
 import { InputTimelineUtils} from '../../Utils/InputTimelineUtils.js'
 import { Inspectable } from '../Inspector.js'
+import { ErrorHandler } from '../../Utils/ErrorHandler.js'
 
 class TrackHeaders extends Element {
 	constructor(parent) {
@@ -30,7 +31,10 @@ class TrackHeaders extends Element {
 					else {
 						// make a new one
 						let inspectable = new Inspectable(() => {
-							return InputTimelineUtils.calculateTrackFrame(track, parent.currentFrameIndex);
+							let result = ErrorHandler.do(() => {
+								return InputTimelineUtils.calculateTrackFrame(track, parent.currentFrameIndex);
+							});
+							return result;
 						}
 						, null // no set function
 						, `${track.name}`);

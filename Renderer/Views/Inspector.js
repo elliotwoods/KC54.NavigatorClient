@@ -67,12 +67,14 @@ class Inspector extends Base {
 			if(currentTarget.set) {
 				// EDIT
 				this.editor.set(currentTarget.get());
+				this.editor.expandAll();
 				editorContainer.show();
 				viewerContainer.hide();
 			}
 			else {
 				// VIEW ONLY
 				this.viewer.set(currentTarget.get());
+				this.viewer.expandAll();
 				viewerContainer.show();
 				editorContainer.hide();
 			}

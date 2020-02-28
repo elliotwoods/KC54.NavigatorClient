@@ -135,7 +135,7 @@ function makeSystem() {
 		setBlockTransforms(document.getCurrentOutputFrame());
 	}
 	rendererRouter.onChange('outputFrame', callback);
-	rendererRouter.onChange('outputFrameData', callback);
+	rendererRouter.onChange('outputTimeline', callback);
 }
 
 try {

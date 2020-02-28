@@ -98,7 +98,7 @@ class ImportExport extends Functions {
 
 
 			console.log(`Imported ${framesAdded} from ${folder}`);
-			rendererRouter.notifyChange('outputFrameData');
+			rendererRouter.notifyChange('outputTimeline');
 		}
 	}
 
@@ -161,7 +161,7 @@ class ImportExport extends Functions {
 			.push(...contentToAdd)
 			.write();
 
-		rendererRouter.notifyChange('outputFrameData');
+		rendererRouter.notifyChange('outputTimeline');
 		console.log(`Imported ${framesAdded} from ${filename}`);
 	}
 

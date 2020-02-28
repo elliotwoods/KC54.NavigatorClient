@@ -36,8 +36,7 @@ class Functions extends Base {
 
 			// we might want to clean out inspectables from here?
 			if(isAnInspectable) {
-				button = GuiUtils.makeButton(caption, preferences[methodName]);
-				button.click(() => {
+				button = GuiUtils.makeButton(caption, preferences[methodName], () => {
 					let inspectable = this[methodName]();
 					toggleInspect(inspectable);
 				});
@@ -57,11 +56,8 @@ class Functions extends Base {
 			}
 			else {
 
-				button = GuiUtils.makeButton(caption, preferences[methodName]);
-				button.click(() => {
-					ErrorHandler.do(async () => {
-						await this[methodName]();
-					});
+				button = GuiUtils.makeButton(caption, preferences[methodName], async () => {
+					await this[methodName]();
 				});
 			}
 

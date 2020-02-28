@@ -1,26 +1,63 @@
+function isPromise(p) {
+	return p && Object.prototype.toString.call(p) === "[object Promise]";
+}
+
 class GuiUtils {
-	static makeButton(toolTip, preferences) {
+	static makeButton(toolTip, preferences, action) {
 		let buttonContent = null;
 		let buttonPreferences = [];
 		let buttonClasses = [];
-	
+
 		// customise based on preferences
 		{
-			if(preferences) {
-				if(preferences.icon) {
-					buttonContent = `<i class="${preferences.icon}" />`;
+			if (preferences) {
+				if (preferences.icon) {
+					buttonContent = $(`<i class="${preferences.icon}" />`);
 					buttonPreferences.push(`data-toggle="tooltip" data-placement="bottom" data-original-title="${toolTip}"`);
 					buttonClasses.push("btn-icon");
 				}
 			}
 		}
-	
-		if(!buttonContent) {
-			buttonContent = toolTip;
+
+		if (!buttonContent) {
+			buttonContent = $(`<span>${toolTip}</span>`);
 		}
-		
+
 		let button = $(`<button type="button" class="btn btn-outline-secondary ${buttonClasses.join(" ")}" ${buttonPreferences.join(' ')}></button>`);
 		button.append(buttonContent);
+		button.click(async () => {
+			button.tooltip("hide");
+
+			if (action) {
+				let maybePromise = action();
+				if (isPromise(maybePromise)) {
+					button.prop('disabled', true);
+					button.addClass("btn-waiting");
+					button.waiting = true;
+
+					let busyIcon = $(`<span><i class="fas fa-spinner fa-pulse busy-icon" /></span>`);
+					button.append(busyIcon);
+
+					let cleanButton = () => {
+						busyIcon.remove();
+
+						button.waiting = false;
+						button.removeClass("btn-waiting");
+						button.prop('disabled', false);
+					}
+
+					try {
+						await maybePromise;
+						cleanButton();
+					}
+					catch (error) {
+						cleanButton();
+						throw (error);
+					}
+					
+				}
+			}
+		});
 
 		return button;
 	}
@@ -39,8 +76,8 @@ class GuiUtils {
 		$("#modal_body").append(body);
 
 		$("#modal_footer").empty();
-		if(actions) {
-			for(let actionName in actions) {
+		if (actions) {
+			for (let actionName in actions) {
 				let methodNameLong = GuiUtils.camelCapsToLong(actionName);
 				let button = $(`<button type="button" class="btn" data-dismiss="modal">${methodNameLong}</button>`);
 				button.click(actions[actionName]);
@@ -55,11 +92,11 @@ class GuiUtils {
 		}
 
 		// make it big if we've been passed a jquery html object
-		if(typeof(body) == "object") {
-			$("#modal_dialog").addClass("modal-lg");	
+		if (typeof (body) == "object") {
+			$("#modal_dialog").addClass("modal-lg");
 		}
 		else {
-			$("#modal_dialog").removeClass("modal-lg");	
+			$("#modal_dialog").removeClass("modal-lg");
 		}
 
 		$("#modal").modal();

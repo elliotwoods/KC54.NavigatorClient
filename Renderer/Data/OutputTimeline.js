@@ -1,5 +1,7 @@
 import { document, settings } from '../Database.js'
 import { rendererRouter } from '../rendererRouter.js'
+import { transport } from './transport.js'
+
 const shortid = require('shortid')
 
 class OutputTimeline {
@@ -44,19 +46,20 @@ class OutputTimeline {
 
 	getLastFrame() {
 		let frameCount = this.getFrameCount();
-		if(frameCount == 0) {
-			throw(new Error("No last frame available"));
+		if (frameCount == 0) {
+			throw (new Error("No last frame available"));
 		}
 		return this.getFrame(frameCount - 1);
 	}
 
 	// Add a frame to the end of the sequence
-	addFrame(pose, sourceName) {
+	addFrame(pose, sourceName, renderData) {
 		let frameData = {
 			id: shortid.generate(),
 			content: {
 				configuration: pose
 			},
+			renderData: renderData,
 			importReport: {
 				source: sourceName,
 				date: Date.now()
@@ -64,10 +67,47 @@ class OutputTimeline {
 		};
 
 		document.get('outputFrames')
-		.push(frameData)
-		.write();
+			.push(frameData)
+			.write();
 
-		rendererRouter.notifyChange('outputFrameData');
+		rendererRouter.notifyChange('outputTimeline');
+	}
+
+	setFrame(frameIndex, pose, sourceName, renderData) {
+		let priorFrameCount = this.getFrameCount();
+		if (frameIndex == priorFrameCount) {
+			// append frame
+			this.addFrame(pose);
+		}
+		else if (frameIndex > priorFrameCount) {
+			throw (new Error(`Cannot add new frame at ${frameIndex} since current frame count is ${priorFrameCount}`));
+		}
+		else {
+			let frameData = {
+				id: shortid.generate(),
+				content: {
+					configuration: pose
+				},
+				renderData: renderData,
+				importReport: {
+					source: sourceName,
+					date: Date.now()
+				}
+			};
+
+			document.get("outputFrames")
+				.nth(frameIndex)
+				.assign(frameData)
+				.write();
+
+			rendererRouter.notifyChange('outputTimeline');
+		}
+	}
+
+	getFrame(frameIndex) {
+		return document.get("outputFrames")
+			.nth(frameIndex)
+			.value();
 	}
 
 	buildTracks() {

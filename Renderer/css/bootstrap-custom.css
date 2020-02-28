@@ -13,9 +13,15 @@
 	height : 40px;
 }
 
-.btn-play-pressed {
+.btn-toggle-active {
 	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
 	background: #8a9989;
+}
+
+.btn-waiting {
+	filter: drop-shadow(-3px -3px 4px #D1CDC7) drop-shadow(3px 3px 4px white);
+	background: #a3a3a3;
+	border : 2px;
 }
 
 .btn-inspect-active {

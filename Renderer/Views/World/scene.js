@@ -2,7 +2,7 @@ import * as THREE from '../../../node_modules/three/build/three.module.js';
 import { RGBELoader } from '../../../node_modules/three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
-import { SettingsNamespace } from '../../Database.js'
+import { SettingsNamespace, settings } from '../../Database.js'
 import { RoomGrid } from './roomGrid.js';
 import { system } from './system.js'
 
@@ -118,7 +118,7 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 }
 
 // Human
-{
+if(settingsNamespace.get("showPerson", true)) {
 	let loader = new GLTFLoader();
 	loader.load('models/full_body_scan_with_peel_3d/scene.gltf', (gltf) => {
 		gltf.scene.scale.set(0.001, 0.001, 0.001);
