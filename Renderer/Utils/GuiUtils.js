@@ -33,7 +33,6 @@ class GuiUtils {
 				if (isPromise(maybePromise)) {
 					button.prop('disabled', true);
 					button.addClass("btn-waiting");
-					button.waiting = true;
 
 					let busyIcon = $(`<span><i class="fas fa-spinner fa-pulse busy-icon" /></span>`);
 					button.append(busyIcon);
@@ -41,7 +40,6 @@ class GuiUtils {
 					let cleanButton = () => {
 						busyIcon.remove();
 
-						button.waiting = false;
 						button.removeClass("btn-waiting");
 						button.prop('disabled', false);
 					}

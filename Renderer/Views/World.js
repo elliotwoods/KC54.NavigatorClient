@@ -7,6 +7,8 @@ import { EffectComposer } from '../../node_modules/three/examples/jsm/postproces
 import { RenderPass } from '../../node_modules/three/examples/jsm/postprocessing/RenderPass.js';
 import { SAOPass } from '../../node_modules/three/examples/jsm/postprocessing/SAOPass.js';
 import { SSAOPass } from '../../node_modules/three/examples/jsm/postprocessing/SSAOPass.js';
+import { FXAAShader } from '../../node_modules/three/examples/jsm/shaders/FXAAShader.js';
+import { ShaderPass } from '../../node_modules/three/examples/jsm/postprocessing/ShaderPass.js';
 
 import { scene } from './World/scene.js'
 
@@ -116,6 +118,9 @@ class World extends Base {
 				let renderPass = new RenderPass(scene, this.camera);
 				this.composer.addPass(renderPass);
 
+				this.fxaaPass = new ShaderPass( FXAAShader );
+				this.composer.addPass(this.fxaaPass);
+
 				let ambientOcclusionSettings = postProcessingSettings.ambientOcclusion
 				switch (ambientOcclusionSettings.type) {
 					case "SAO":
@@ -163,6 +168,8 @@ class World extends Base {
 		var h = this.div.height();
 
 		this.renderer.setSize(w, h);
+		this.fxaaPass.material.uniforms['resolution'].value.x = 1 / (w * this.renderer.getPixelRatio());
+		this.fxaaPass.material.uniforms['resolution'].value.y = 1 / (h * this.renderer.getPixelRatio());
 
 		let aspect = w / h;
 		if (this.camera instanceof THREE.PerspectiveCamera) {

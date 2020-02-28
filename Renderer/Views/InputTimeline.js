@@ -263,7 +263,7 @@ class InputTimeline extends Base {
 
 			let actionEnabled = true;
 			if(action.isEnabled) {
-				if(action.button.waiting) {
+				if(action.button.hasClass("btn-waiting")) {
 					// don't update the state
 				}
 				else {
