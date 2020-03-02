@@ -3,6 +3,7 @@ import { rendererRouter } from '../rendererRouter.js'
 
 let inspectors = [];
 let currentTarget = null;
+let defaultTarget = null;
 
 class Inspector extends Base {
 	constructor(container, state) {
@@ -21,8 +22,8 @@ class Inspector extends Base {
 			options = {
 				modes : ['tree', 'form', 'code'],
 				onChange : () => {
-					if(currentTarget != null) {
-						currentTarget.set(this.editor.get());
+					if(this.target != null) {
+						this.target.set(this.editor.get());
 					}
 				}
 			};
@@ -53,27 +54,32 @@ class Inspector extends Base {
 		// unless we can lock an inspector
 		this.target = currentTarget;
 
+		// if there is no target, look at the default inspectable
+		if(!this.target) {
+			this.target = defaultTarget;
+		}
+
 		let editorContainer = $(this.editor.container);
 		let viewerContainer = $(this.viewer.container);
 
-		if(currentTarget == null) {
+		if(this.target == null) {
 			editorContainer.hide();
 			viewerContainer.hide();
 			this.title.text("")
 		}
 		else {
-			this.title.text(currentTarget.name)
+			this.title.text(this.target.name)
 
-			if(currentTarget.set) {
+			if(this.target.set) {
 				// EDIT
-				this.editor.set(currentTarget.get());
+				this.editor.set(this.target.get());
 				this.editor.expandAll();
 				editorContainer.show();
 				viewerContainer.hide();
 			}
 			else {
 				// VIEW ONLY
-				this.viewer.set(currentTarget.get());
+				this.viewer.set(this.target.get());
 				this.viewer.expandAll();
 				viewerContainer.show();
 				editorContainer.hide();
@@ -122,6 +128,10 @@ function toggleInspect(target) {
 	}
 }
 
+function setDefaultInspectable(inspectable) {
+	defaultTarget = inspectable;
+}
+
 function isBeingInspected(target) {
 	return target == currentTarget;
 }
@@ -134,6 +144,7 @@ class Inspectable {
 		this._onInspectCallbacks = [];
 		this._onDeInspectCallbacks = [];
 		this._onInspectChangeCallbacks = [];
+		this._onInspectorChangeValueCallbacks = [];
 	}
 
 	inspect() {
@@ -164,6 +175,10 @@ class Inspectable {
 		this._onInspectChangeCallbacks.push(callback);
 	}
 
+	onInspectorChangeValue(callback) {
+		this._onInspectorChangeValueCallbacks.push(callback);
+	}
+
 	notifyInspect() {
 		for(let callback of this._onInspectCallbacks) {
 			callback();
@@ -182,6 +197,13 @@ class Inspectable {
 		}
 	}
 
+	notifyInspectorChangeValue() {
+		for(let callback of this._onInspectorChangeValueCallbacks) {
+			callback();
+		}
+	}
+	
+
 	notifyValueChange() {
 		for(let inspector of inspectors) {
 			if(inspector.target == this) {
@@ -196,4 +218,4 @@ class Inspectable {
 }
 
 
-export { Inspector, Inspectable, inspect, toggleInspect, isBeingInspected }
+export { Inspector, Inspectable, inspect, toggleInspect, isBeingInspected, setDefaultInspectable }

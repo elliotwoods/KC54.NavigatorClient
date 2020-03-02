@@ -6,7 +6,8 @@ let channelNames = [
 	'stoppers',
 	'outputTimeline',
 	'outputFrame',
-	'inspectorTargetChange'
+	'inspectorTargetChange',
+	'renderView'
 ];
 
 class RendererRouter {

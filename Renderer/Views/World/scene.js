@@ -2,11 +2,14 @@ import * as THREE from '../../../node_modules/three/build/three.module.js';
 import { RGBELoader } from '../../../node_modules/three/examples/jsm/loaders/RGBELoader.js';
 import { GLTFLoader } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
-import { SettingsNamespace, settings } from '../../Database.js'
+import { SettingsNamespace } from '../../Database.js'
 import { RoomGrid } from './roomGrid.js';
 import { system } from './system.js'
 
 import { Constants } from '../../Utils/Constants.js'
+import { appSettings } from '../../Data/appSettings.js'
+import { rendererRouter } from '../../rendererRouter.js';
+
 let settingsNamespace = new SettingsNamespace(["Views", "World"]);
 
 
@@ -118,20 +121,51 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 }
 
 // Human
-if(settingsNamespace.get("showPerson", true)) {
-	let loader = new GLTFLoader();
-	loader.load('models/full_body_scan_with_peel_3d/scene.gltf', (gltf) => {
-		gltf.scene.scale.set(0.001, 0.001, 0.001);
-		gltf.scene.rotateX(Math.PI / 2);
-		gltf.scene.rotateY(Math.PI);
-		gltf.scene.position.set(Constants.footDistance / 2, -5, 0.5);
-		scene.add(gltf.scene);
-	}
+let person = null;
+let personIsLoading = false;
+function showPerson() {
+	if(!personIsLoading) {
+		personIsLoading = true;
+
+		let loader = new GLTFLoader();
+		loader.load('models/full_body_scan_with_peel_3d/scene.gltf', (gltf) => {
+			gltf.scene.scale.set(0.001, 0.001, 0.001);
+			gltf.scene.rotateX(Math.PI / 2);
+			gltf.scene.rotateY(Math.PI);
+			gltf.scene.position.set(Constants.footDistance / 2, -5, 0.5);
+			person = gltf.scene;
+			scene.add(person);
+		}
 		, undefined
 		, (error) => {
 			console.log(error);
 		});
+	}
+	else {
+		if(person) {
+			person.visible = true;
+		}
+	}
 }
+function hidePerson() {
+	if(person) {
+		person.visible = false;
+	}
+}
+appSettings.defaults({
+	Render : {
+		showPerson : true
+	}
+});
+appSettings.onChange(["Render", "showPerson"], (value) => {
+	if(value) {
+		showPerson();
+	}
+	else {
+		hidePerson();
+	}
+	rendererRouter.notifyChange('renderView');
+})();
 
 // System
 scene.add(system);

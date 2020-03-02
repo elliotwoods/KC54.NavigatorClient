@@ -30,6 +30,9 @@ class World extends Base {
 		rendererRouter.onChange('outputFrame', () => {
 			this.markRenderDirty();
 		});
+		rendererRouter.onChange('renderView', () => {
+			this.markRenderDirty();
+		});
 		this.container.getElement().mousemove(() => {
 			this.markRenderDirty();
 		});

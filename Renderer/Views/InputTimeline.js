@@ -480,6 +480,14 @@ class InputTimeline extends Base {
 		return frameCount;
 	}
 
+	/**
+	 *
+	 *
+	 * @param {*} frameIndex
+	 * @param {*} skipNonDirty
+	 * @returns {bool} frameSkipped - Frame was skipped because it is non-dirty
+	 * @memberof InputTimeline
+	 */
 	async renderAndStoreFrame(frameIndex, skipNonDirty) {
 		let priorFrameCount = outputTimeline.getFrameCount();
 
@@ -507,7 +515,7 @@ class InputTimeline extends Base {
 		// skip non dirty frames
 		if(skipNonDirty) {
 			if(!this.isFrameDirty(frameIndex, objectives)) {
-				return;
+				return false;
 			}
 		}
 
@@ -520,6 +528,8 @@ class InputTimeline extends Base {
 			objectives : objectives,
 			renderTime : (callEnd - callStart) / 1000
 		});
+
+		return true;
 	}
 
 	async renderOneFrame() {
@@ -528,8 +538,15 @@ class InputTimeline extends Base {
 
 	async renderAllFrames() {
 		for(let frameIndex=0; frameIndex<this.getFrameCount(); frameIndex++) {
-			await this.renderAndStoreFrame(frameIndex, true);
-			transport.skipToFrame(frameIndex);
+			console.log(`Rendering frame ${frameIndex}...`);
+			if (await this.renderAndStoreFrame(frameIndex, true)) {
+				transport.skipToFrame(frameIndex);
+				console.log(`Done rendering frame ${frameIndex} in ${outputTimeline.getFrame(frameIndex).renderData.renderTime} seconds.`);
+			}
+			else {
+				// Frame was skipped
+			}
+			
 		}
 	}
 
