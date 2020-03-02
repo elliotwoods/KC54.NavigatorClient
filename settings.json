@@ -79,10 +79,27 @@
   },
   "Views": {
     "AnglePlots": {
-      "liveUpdate": false,
-      "showDebugText": false
+      "showDebugText": false,
+      "liveUpdate": false
     },
     "World": {
+      "renderDirtyTime": 3,
+      "showPerson": true,
+      "sunLight": {
+        "intensity": 0.5,
+        "castShadow": true,
+        "showHelper": false,
+        "nearClip": 50,
+        "farClip": 200,
+        "position": [
+          0,
+          0,
+          100
+        ],
+        "size": 20,
+        "mapSize": 2048,
+        "shadowBias": -0.00001
+      },
       "blockMaterial": {
         "color": 11184810,
         "metalness": 0.8,
@@ -90,7 +107,6 @@
         "envMapIntensity": 1
       },
       "showForces": false,
-      "showPerson": true,
       "postProcessing": {
         "enabled": true,
         "ambientOcclusion": {
@@ -110,175 +126,6 @@
             "kernelRadius": 8,
             "minDistance": 0.01,
             "maxDistance": 1
-          }
-        }
-      },
-      "sunLight": {
-        "intensity": 0.3,
-        "castShadow": true,
-        "showHelper": false,
-        "nearClip": 50,
-        "farClip": 200,
-        "position": [
-          0,
-          0,
-          100
-        ],
-        "size": 20,
-        "mapSize": 2048,
-        "shadowBias": -0.00001
-      },
-      "renderDirtyTime": 3,
-      "b": {
-        "l": {
-          "o": {
-            "c": {
-              "k": {
-                "M": {
-                  "a": {
-                    "t": {
-                      "e": {
-                        "r": {
-                          "i": {
-                            "a": {
-                              "l": {
-                                "color": 11184810,
-                                "metalness": 0.8,
-                                "roughness": 0.1,
-                                "envMapIntensity": 1
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "s": {
-        "h": {
-          "o": {
-            "w": {
-              "F": {
-                "o": {
-                  "r": {
-                    "c": {
-                      "e": {
-                        "s": false
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "u": {
-          "n": {
-            "L": {
-              "i": {
-                "g": {
-                  "h": {
-                    "t": {
-                      "intensity": 0.3,
-                      "castShadow": true,
-                      "showHelper": false,
-                      "nearClip": 50,
-                      "farClip": 200,
-                      "position": [
-                        0,
-                        0,
-                        100
-                      ],
-                      "size": 20,
-                      "mapSize": 2048,
-                      "shadowBias": -0.00001
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "p": {
-        "o": {
-          "s": {
-            "t": {
-              "P": {
-                "r": {
-                  "o": {
-                    "c": {
-                      "e": {
-                        "s": {
-                          "s": {
-                            "i": {
-                              "n": {
-                                "g": {
-                                  "enabled": true,
-                                  "ambientOcclusion": {
-                                    "type": "SAO",
-                                    "SAO": {
-                                      "saoBias": 0.5,
-                                      "saoIntensity": 0.001,
-                                      "saoScale": 10,
-                                      "saoKernelRadius": 16,
-                                      "saoMinResolution": 0,
-                                      "saoBlur": true,
-                                      "saoBlurRadius": 50,
-                                      "saoBlurStdDev": 2,
-                                      "saoBlurDepthCutOff": 0.1
-                                    },
-                                    "SSAO": {
-                                      "kernelRadius": 8,
-                                      "minDistance": 0.01,
-                                      "maxDistance": 1
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "r": {
-        "e": {
-          "n": {
-            "d": {
-              "e": {
-                "r": {
-                  "D": {
-                    "i": {
-                      "r": {
-                        "t": {
-                          "y": {
-                            "T": {
-                              "i": {
-                                "m": {
-                                  "e": 3
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -321,63 +168,24 @@
             "weight": 500
           }
         }
-      ],
-      "t": {
-        "e": {
-          "s": {
-            "t": {
-              "O": {
-                "b": {
-                  "j": {
-                    "e": {
-                      "c": {
-                        "t": {
-                          "i": {
-                            "v": {
-                              "e": [
-                                {
-                                  "objective": {
-                                    "type": "BeSpringLike"
-                                  },
-                                  "weight": 1.234
-                                },
-                                {
-                                  "objective": {
-                                    "scale": 20,
-                                    "type": "StayInTheGarden"
-                                  },
-                                  "weight": 2.345
-                                },
-                                {
-                                  "objective": {
-                                    "firstBeam": 15,
-                                    "secondBeam": 17,
-                                    "type": "HoldHands"
-                                  },
-                                  "weight": 0.1
-                                },
-                                {
-                                  "objective": {
-                                    "standardDeviation": 0.3,
-                                    "type": "DoNotCollide"
-                                  },
-                                  "weight": 1
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      ]
     },
     "InputTimeline": {
+      "layout": {
+        "trackCaptionAreaWidth": 150,
+        "trackHeight": 30,
+        "frameNumbersAreaHeight": 30,
+        "keyFrameSize": 9,
+        "frameTicks": {
+          "height": 5,
+          "color": "#aaa"
+        },
+        "frameCursor": {
+          "color": "#333"
+        },
+        "backgroundColor": "#efeeee",
+        "freshFramesColor": "#efffee"
+      },
       "tracks": [
         {
           "name": "Track 1",
@@ -412,117 +220,7 @@
           ]
         }
       ],
-      "viewLayout": {
-        "trackCaptionAreaWidth": 100,
-        "trackHeight": 30,
-        "frameNumbersAreaHeight": 30,
-        "keyFrameSize": 9,
-        "frameTicks": {
-          "height": 5,
-          "color": "#aaa"
-        }
-      },
-      "layout": {
-        "trackCaptionAreaWidth": 100,
-        "trackHeight": 30,
-        "frameNumbersAreaHeight": 30,
-        "keyFrameSize": 9,
-        "frameTicks": {
-          "height": 5,
-          "color": "#aaa"
-        },
-        "frameCursor": {
-          "color": "#333"
-        },
-        "backgroundColor": "#efeeee",
-        "freshFramesColor": "#efffee"
-      },
-      "syncToOutputFrameIndex": true,
-      "l": {
-        "a": {
-          "y": {
-            "o": {
-              "u": {
-                "t": {
-                  "trackCaptionAreaWidth": 100,
-                  "trackHeight": 30,
-                  "frameNumbersAreaHeight": 30,
-                  "keyFrameSize": 9,
-                  "frameTicks": {
-                    "height": 5,
-                    "color": "#aaa"
-                  },
-                  "frameCursor": {
-                    "color": "#333"
-                  },
-                  "backgroundColor": "#efeeee",
-                  "freshFramesColor": "#efffee"
-                }
-              }
-            }
-          }
-        }
-      },
-      "t": {
-        "r": {
-          "a": {
-            "c": {
-              "k": {
-                "s": [
-                  {
-                    "name": "Track 1",
-                    "id": "-HfXGhce",
-                    "keyFrames": [
-                      {
-                        "frameIndex": 0,
-                        "id": "WHEGuxiHi",
-                        "content": {
-                          "value": 0,
-                          "constant": 1
-                        }
-                      },
-                      {
-                        "frameIndex": 50,
-                        "id": "qbcEK_5FX",
-                        "content": {
-                          "value": 0.5
-                        }
-                      },
-                      {
-                        "frameIndex": 99,
-                        "id": "GlLtsZmvC",
-                        "content": {
-                          "value": 1
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "name": "Track 2",
-                    "id": "qfKtJpRXy",
-                    "keyFrames": [
-                      {
-                        "frameIndex": 50,
-                        "id": "KsheHtig0",
-                        "content": {
-                          "value": 0
-                        }
-                      },
-                      {
-                        "frameIndex": 99,
-                        "id": "FoD3_xqTP",
-                        "content": {
-                          "value": 1
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          }
-        }
-      }
+      "syncToOutputFrameIndex": true
     },
     "RenderSettings": {
       "renderPerson": false,
@@ -604,7 +302,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 25.526096007622055,
+                  "height": 25.593105558789233,
                   "content": [
                     {
                       "type": "stack",
@@ -658,7 +356,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 12.953678899430772,
+                  "height": 12.886669348263595,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
@@ -702,7 +400,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 25.70463821355021,
+                  "height": 31.958249084905606,
                   "content": [
                     {
                       "type": "stack",
@@ -750,7 +448,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 18.76083261406619,
+                  "height": 31.824252002807928,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-user-secret\" /> Inspector",
@@ -763,30 +461,12 @@
                 },
                 {
                   "type": "stack",
-                  "header": {},
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "height": 18.76083261406619,
-                  "content": [
-                    {
-                      "title": "<i class=\"fas fa-indent\" /> InputTimeline",
-                      "type": "component",
-                      "componentName": "InputTimeline",
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
                   "width": 50,
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 36.77369655831741,
+                  "height": 36.21749891228647,
                   "content": [
                     {
                       "type": "component",
@@ -810,29 +490,10 @@
       "maximisedItemId": null
     }
   },
-  "A": {
-    "p": {
-      "p": {
-        "l": {
-          "i": {
-            "c": {
-              "a": {
-                "t": {
-                  "i": {
-                    "o": {
-                      "n": {
-                        "Render": {
-                          "showPerson": true
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+  "Application": {
+    "draw": {
+      "person": true,
+      "forces": true
     }
   }
 }

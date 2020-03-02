@@ -6,13 +6,19 @@ import { rendererRouter } from '../../rendererRouter.js'
 let settingsNamespace = new SettingsNamespace(["Views", "World"])
 let blockMaterial = null;
 
-function initBlockMaterial() {
-	let materialSettings = settingsNamespace.get("blockMaterial", {
+settingsNamespace.defaults({
+	blockMaterial : {
 		color: 11184810,
 		metalness: 0.8,
 		roughness: 0.1,
 		envMapIntensity: 1
-	});
+	},
+	showForces : false
+});
+
+function initBlockMaterial() {
+
+	let materialSettings = settingsNamespace.get("blockMaterial");
 
 	blockMaterial = new THREE.MeshPhysicalMaterial(materialSettings);
 }
@@ -112,7 +118,7 @@ function makeSystem() {
 	setBlockTransforms(frameData)
 
 	// Build the forces
-	let showForces = settingsNamespace.get("showForces", false);
+	let showForces = settingsNamespace.get("showForces");
 
 	if (showForces && frameData.forces) {
 		system.updateMatrixWorld();

@@ -7,11 +7,27 @@ import { RoomGrid } from './roomGrid.js';
 import { system } from './system.js'
 
 import { Constants } from '../../Utils/Constants.js'
-import { appSettings } from '../../Data/appSettings.js'
 import { rendererRouter } from '../../rendererRouter.js';
 
 let settingsNamespace = new SettingsNamespace(["Views", "World"]);
-
+settingsNamespace.defaults({
+	showPerson : true,
+	sunLight : {
+		intensity: 0.3,
+		castShadow: true,
+		showHelper: false,
+		nearClip: 50,
+		farClip: 200,
+		position: [
+			0,
+			0,
+			100
+		],
+		size: 20,
+		mapSize: 2048,
+		shadowBias: -0.00001
+	}
+});
 
 const useHDR = false;
 
@@ -39,7 +55,6 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 				scene.background = hdrCubeRenderTarget.texture;
 
 				hdrEquirect.dispose();
-
 			});
 	}
 	else {
@@ -77,41 +92,27 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 
 // Shadow casting light
 {
-	let sunLightSettings = settingsNamespace.get("sunLight", {
-		intensity: 0.3,
-		castShadow: true,
-		showHelper: false,
-		nearClip: 50,
-		farClip: 200,
-		position: [
-			0,
-			0,
-			100
-		],
-		size: 20,
-		mapSize: 2048,
-		shadowBias: -0.00001
-	});
+	let sunLight = new THREE.DirectionalLight(0xffffff, 0.5);
+	let shadowCameraHelper = new THREE.CameraHelper(sunLight.shadow.camera);
 
-	let sunLight = new THREE.DirectionalLight(0xffffff, sunLightSettings.intensity);
-	sunLight.position.set(sunLightSettings.position[0], sunLightSettings.position[1], sunLightSettings.position[2]);
-	sunLight.castShadow = sunLightSettings.castShadow;
-	sunLight.shadow.camera.top = sunLightSettings.size;
-	sunLight.shadow.camera.bottom = - sunLightSettings.size;
-	sunLight.shadow.camera.left = - sunLightSettings.size;
-	sunLight.shadow.camera.right = sunLightSettings.size;
-	sunLight.shadow.camera.near = sunLightSettings.nearClip;
-	sunLight.shadow.camera.far = sunLightSettings.farClip;
-	sunLight.shadow.mapSize.set(sunLightSettings.mapSize, sunLightSettings.mapSize);
-	sunLight.shadow.bias = sunLightSettings.shadowBias;
+	settingsNamespace.onChange((sunLightSettings) => {
+		sunLight.intensity = sunLightSettings.intensity;
+		sunLight.position.set(sunLightSettings.position[0], sunLightSettings.position[1], sunLightSettings.position[2]);
+		sunLight.castShadow = sunLightSettings.castShadow;
+		sunLight.shadow.camera.top = sunLightSettings.size;
+		sunLight.shadow.camera.bottom = - sunLightSettings.size;
+		sunLight.shadow.camera.left = - sunLightSettings.size;
+		sunLight.shadow.camera.right = sunLightSettings.size;
+		sunLight.shadow.camera.near = sunLightSettings.nearClip;
+		sunLight.shadow.camera.far = sunLightSettings.farClip;
+		sunLight.shadow.mapSize.set(sunLightSettings.mapSize, sunLightSettings.mapSize);
+		sunLight.shadow.bias = sunLightSettings.shadowBias;
+
+		shadowCameraHelper.visible = sunLightSettings.showHelper;
+	}, 'sunLight')();
 
 	scene.add(sunLight);
-
-	if (sunLightSettings.showHelper) {
-		let shadowCameraHelper = new THREE.CameraHelper(sunLight.shadow.camera);
-		shadowCameraHelper.visible = true;
-		scene.add(shadowCameraHelper);
-	}
+	scene.add(shadowCameraHelper);
 }
 
 // Ambient light
@@ -152,12 +153,8 @@ function hidePerson() {
 		person.visible = false;
 	}
 }
-appSettings.defaults({
-	Render : {
-		showPerson : true
-	}
-});
-appSettings.onChange(["Render", "showPerson"], (value) => {
+
+settingsNamespace.onChange((value) => {
 	if(value) {
 		showPerson();
 	}
@@ -165,7 +162,7 @@ appSettings.onChange(["Render", "showPerson"], (value) => {
 		hidePerson();
 	}
 	rendererRouter.notifyChange('renderView');
-})();
+}, "showPerson")();
 
 // System
 scene.add(system);

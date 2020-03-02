@@ -13,41 +13,44 @@ import { outputTimeline } from '../Data/outputTimeline.js'
 let settingsNamespace = new SettingsNamespace(["Views", "Navigator"]);
 
 //set defaults for testObjective
-settingsNamespace.get("testObjective", [
+settingsNamespace.defaults(
 	{
-		"objective": {
-			"type": "BeSpringLike"
+		"testObjective" : [
+		{
+			"objective": {
+				"type": "BeSpringLike"
+			},
+			"weight": 1.234
 		},
-		"weight": 1.234
-	},
-	{
-		"objective": {
-			"scale": 20,
-			"type": "StayInTheGarden"
+		{
+			"objective": {
+				"scale": 20,
+				"type": "StayInTheGarden"
+			},
+			"weight": 2.345
 		},
-		"weight": 2.345
-	},
-	{
-		"objective": {
-			"firstBeam": 15,
-			"secondBeam": 17,
-			"type": "HoldHands"
+		{
+			"objective": {
+				"firstBeam": 15,
+				"secondBeam": 17,
+				"type": "HoldHands"
+			},
+			"weight": 0.1
 		},
-		"weight": 0.1
-	},
-	{
-		"objective": {
-			"standardDeviation": 0.3,
-			"type": "DoNotCollide"
-		},
-		"weight": 1
-	}
-]);
+		{
+			"objective": {
+				"standardDeviation": 0.3,
+				"type": "DoNotCollide"
+			},
+			"weight": 1
+		}
+	]
+});
 
 let testObjectiveInspectable = new Inspectable(() => {
 	return settingsNamespace.get("testObjective");
 }, (value) => {
-	settingsNamespace.set("testObjective", value);
+	settingsNamespace.set(value, "testObjective");
 }, "Test objectives");
 
 class Navigator extends Functions {

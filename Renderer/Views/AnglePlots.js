@@ -7,6 +7,9 @@ import { rendererRouter } from '../rendererRouter.js'
 
 const radialDomainScale = 8;
 const settingsNamespace = new SettingsNamespace(["Views", "AnglePlots"]);
+settingsNamespace.defaults({
+	showDebugText : false
+});
 
 class AnglePlots extends Base {
 	constructor(container, state) {
@@ -37,13 +40,17 @@ class AnglePlots extends Base {
 					let checkBox = $(`<input type="checkbox" class="custom-control-input" id="AnglePlots_${settingName}_switch" checked="">`);
 					optionDiv.append(checkBox);
 
-					let value = settingsNamespace.get(settingName, defaultValue);
+					settingsNamespace.defaults({
+						settingsName : defaultValue
+					});
+
+					let value = settingsNamespace.get(settingName);
 					if(!value) {
 						checkBox.removeAttr("checked");
 					}
 
 					checkBox.change((value) => {
-						settingsNamespace.set(settingName, value.target.checked);
+						settingsNamespace.set(value.target.checked, settingName);
 					});
 
 					let label = $(`<label class="custom-control-label" for="AnglePlots_${settingName}_switch">${caption}</label>`);
@@ -250,7 +257,7 @@ class AnglePlots extends Base {
 			}
 		}
 
-		if(settingsNamespace.get('showDebugText', false)) {
+		if(settingsNamespace.get('showDebugText')) {
 			{
 				let angleToXArray = outputFrames[currentFrameIndex].content.configuration.map(config => config.angleToX * (180 / Math.PI));
 				let angleToXReport = [];

@@ -1,10 +1,13 @@
 import { Element } from './Element.js'
-import { layout } from './layout.js'
+import { SettingsNamespace } from '../../Database.js'
+let settingsNamespace = new SettingsNamespace(["Views", "InputTimeline"]);
 
 class Ruler extends Element {
 	constructor(parent) {
 		super(parent.draw.nested());
 		this.parent = parent;
+
+		let layout = settingsNamespace.get("layout");
 
 		this.draw.x(layout.trackCaptionAreaWidth);
 

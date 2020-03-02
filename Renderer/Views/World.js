@@ -15,7 +15,14 @@ import { scene } from './World/scene.js'
 import { Constants } from '../Utils/Constants.js'
 import { settings, SettingsNamespace as SettingsNamespace } from '../Database.js'
 import { rendererRouter } from '../rendererRouter.js';
+import { InspectableSettings } from '../Utils/InspectableSettings.js'
+
 let settingsNamespace = new SettingsNamespace(["Views", "World"]);
+let inspectableSettings = new InspectableSettings(settingsNamespace)
+
+settingsNamespace.defaults({
+	"renderDirtyTime" : 3
+});
 
 let worlds = [];
 
@@ -41,6 +48,9 @@ class World extends Base {
 	init() {
 		this.div = $(`<div class="rendererContainer" />`);
 		this.container.getElement().append(this.div);
+		this.div.click(() => {
+			inspectableSettings.inspect();
+		});
 
 		let width = this.div.width();
 		let height = this.div.height();
@@ -206,7 +216,7 @@ class World extends Base {
 	}
 
 	render() {
-		let renderDirtyTime = settingsNamespace.get("renderDirtyTime", 3);
+		let renderDirtyTime = settingsNamespace.get("renderDirtyTime");
 		let timeSinceLastAction = new Date() - this.lastActionTime;
 		if(timeSinceLastAction > renderDirtyTime * 1000) {
 			return;

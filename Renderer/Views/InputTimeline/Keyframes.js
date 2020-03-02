@@ -1,11 +1,14 @@
 import { Element } from './Element.js'
-import { layout } from './layout.js'
 import { Inspectable, toggleInspect } from '../Inspector.js'
+import { InputTimelineUtils} from '../../Utils/InputTimelineUtils.js'
+import { SettingsNamespace } from '../../Database.js'
+let settingsNamespace = new SettingsNamespace(["Views", "InputTimeline"]);
 
 class KeyFrames extends Element {
 	constructor(parent) {
 		super(parent.draw.nested());
 		this.parent = parent;
+		let layout = settingsNamespace.get("layout");
 
 		this.draw.move(layout.trackCaptionAreaWidth, layout.frameNumbersAreaHeight);
 
@@ -57,7 +60,7 @@ class KeyFrames extends Element {
 								keyFrame.content = value;
 								this.parent.timelineDataChange();
 							}
-							, `${track.name} : Keyframe ${keyFrame.frameIndex}`);
+							, () => `${InputTimelineUtils.getTrackObjectiveType(track)} : Keyframe ${keyFrame.frameIndex}`);
 							inspectable.onInspectChange(() => {
 								element.dirty = true;
 								element.refresh();

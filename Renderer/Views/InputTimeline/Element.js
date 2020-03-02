@@ -14,6 +14,10 @@ class Element {
 		this.build();
 	}
 
+	destroy() {
+		
+	}
+
 	build() {
 		if(this.onBuild) {
 			this.onBuild(this);
@@ -51,6 +55,13 @@ class Element {
 				this.children[childName].markDirty(true);
 			}
 		}
+	}
+
+	clear() {
+		for(let childName in this.children) {
+			this.children[childName].destroy();
+		}
+		this.children = {};
 	}
 }
 

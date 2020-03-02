@@ -1,14 +1,16 @@
 import { Element } from './Element.js'
-import { layout } from './layout.js'
+import { SettingsNamespace } from '../../Database.js'
 import { InputTimelineUtils} from '../../Utils/InputTimelineUtils.js'
 import { Inspectable } from '../Inspector.js'
 import { ErrorHandler } from '../../Utils/ErrorHandler.js'
+
+let settingsNamespace = new SettingsNamespace(["Views", "InputTimeline"]);
 
 class TrackHeaders extends Element {
 	constructor(parent) {
 		super(parent.draw.nested());
 		this.parent = parent;
-		this.draw.y(layout.frameNumbersAreaHeight);
+		this.draw.y(settingsNamespace.get(["layout", "frameNumbersAreaHeight"]));
 
 		this.inspectables = {};
 
@@ -37,7 +39,7 @@ class TrackHeaders extends Element {
 							return result;
 						}
 						, null // no set function
-						, `${track.name}`);
+						, () => InputTimelineUtils.getTrackObjectiveType(track));
 						inspectable.onInspectChange(() => {
 							element.dirty = true;
 							element.refresh();
@@ -54,6 +56,7 @@ class TrackHeaders extends Element {
 			}
 			
 			let y = 0;
+			let layout = settingsNamespace.get("layout");
 			for(let track of this.parent.tracks) {
 				let inspectable = this.inspectables[track.id];
 				element.draw.rect(layout.trackCaptionAreaWidth, layout.trackHeight)
@@ -64,7 +67,7 @@ class TrackHeaders extends Element {
 					.mousedown(() => {
 						inspectable.toggleInspect();
 					});
-				element.draw.text(track.name)
+				element.draw.text(InputTimelineUtils.getTrackObjectiveType(track))
 					.move(10, y)
 					.font({ weight : inspectable.isBeingInspected() ? 400 : 200 });
 				y += layout.trackHeight;

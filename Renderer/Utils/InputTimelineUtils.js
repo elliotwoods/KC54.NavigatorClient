@@ -178,6 +178,20 @@ class InputTimelineUtils {
 		}
 		return InputTimelineUtils.flattenPathObject(result);
 	}
+
+	static getTrackObjectiveType(track) {
+		let name = 'Empty Track';
+		for(let keyFrame of track.keyFrames) {
+			try {
+				name = keyFrame.content.objective.type;
+			}
+			catch {
+				continue;
+			}
+			break;
+		}
+		return name;
+	}
 }
 
 export { InputTimelineUtils }

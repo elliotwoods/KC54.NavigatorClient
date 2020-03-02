@@ -43,6 +43,13 @@ class NavigatorServer {
 			objectives : objectives
 		});
 	}
+
+	static async calculateForces(pose, windProfile) {
+		return await NavigatorServer.call("CalculateForces", {
+			pose : pose,
+			windProfile : windProfile
+		});
+	};
 }
 
 export { NavigatorServer } 

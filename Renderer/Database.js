@@ -54,6 +54,13 @@ function namespaceMatchAtCommonDepth (ns1, ns2) {
 }
 
 function mergeNamespace(outer, inner) {
+	if(typeof(outer) == "string") {
+		outer = [outer];
+	}
+	if(typeof(inner) == "string") {
+		inner = [inner];
+	}
+
 	if(outer) {
 		if (inner) {
 			return [...outer, ...inner];
@@ -76,7 +83,7 @@ class SettingsNamespace {
 		return mergeNamespace(this.outerSettingsNameSpace, innerSettingsNameSpace);
 	}
 
-	get(innerSettingsNameSpace, defaultValue) {
+	get(innerSettingsNameSpace) {
 		let namespace = this.totalNamespace(innerSettingsNameSpace);
 		
 		let setting = settings;
@@ -86,23 +93,10 @@ class SettingsNamespace {
 			setting = setting.get(level);
 		}
 		let value = setting.value();
-
-		if(value !== undefined) {
-			// we have a value
-			return value;
-		}
-		else if(defaultValue !== undefined) {
-			// we dont have a value - set default
-			this.set(innerSettingsNameSpace, defaultValue);
-			return defaultValue;
-		}
-		else {
-			// we dont have a value or a default
-			return null;
-		}
+		return value;
 	}
 
-	set(innerSettingsNameSpace, value) {
+	set(value, innerSettingsNameSpace) {
 		let namespace = this.totalNamespace(innerSettingsNameSpace);
 		
 		let setting = settings;
@@ -121,7 +115,7 @@ class SettingsNamespace {
 		settingsNamespaceObjects.map(settingsNamespaceObject => settingsNamespaceObject.onGlobalChange(namespace));
 	}
 
-	onChange(innerNamespace, action) {
+	onChange(action, innerNamespace) {
 		this._onChangeListeners.push({
 			innerNamespace : innerNamespace,
 			action :  action
@@ -156,7 +150,7 @@ class SettingsNamespace {
 
 	defaults(values) {
 		let value = {...values, ...this.get()};
-		this.set(null, value);
+		this.set(value);
 	}
 }
 

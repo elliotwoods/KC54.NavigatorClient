@@ -4,7 +4,6 @@ import { document, SettingsNamespace, settings } from '../Database.js'
 import { rendererRouter } from '../rendererRouter.js';
 import { ErrorHandler } from '../Utils/ErrorHandler.js'
 
-import { layout } from './InputTimeline/layout.js'
 import { Element } from './InputTimeline/Element.js'
 import { Ruler } from './InputTimeline/Ruler.js'
 import { TrackHeaders } from './InputTimeline/TrackHeaders.js'
@@ -14,67 +13,82 @@ import { InputTimelineUtils } from '../Utils/InputTimelineUtils.js';
 import { outputTimeline } from '../Data/outputTimeline.js'
 import { NavigatorServer } from '../Utils/NavigatorServer.js';
 import { transport } from '../Data/transport.js'
+import { InspectableSettings } from '../Utils/InspectableSettings.js'
 
 const shortid = require('shortid');
 const fastEqual = require('fast-deep-equal');
 
 let settingsNamespace = new SettingsNamespace(["Views", "InputTimeline"]);
-
-
-// override with set whilst editing
-
+let inspectableSettings = new InspectableSettings(settingsNamespace)
+let layout = settingsNamespace.get("layout");
 
 // set some defaults for testing
-settingsNamespace.get("tracks", [
-	{
-		name : "Track 1",
-		id : shortid.generate(),
-		keyFrames : [
-			{
-				frameIndex : 0,
-				id : shortid.generate(),
-				content : {
-					value : 0,
-					constant : 1
-				}
-			},
-			{
-				frameIndex : 50,
-				id : shortid.generate(),
-				content : {
-					value : 0.5
-				}
-			},
-			{
-				frameIndex : 99,
-				id : shortid.generate(),
-				content : {
-					value : 1
-				}
-			}
-		]
+settingsNamespace.defaults(
+{
+	"layout": {
+		trackCaptionAreaWidth: 150,
+		trackHeight: 30,
+		frameNumbersAreaHeight: 30,
+		keyFrameSize: 9,
+		frameTicks: {
+			height: 5,
+			color: '#aaa'
+		},
+		frameCursor: {
+			color: '#333'
+		},
+		backgroundColor: '#efeeee',
+		freshFramesColor: '#efffee'
 	},
-	{
-		name : "Track 2",
-		id : shortid.generate(),
-		keyFrames : [
-			{
-				frameIndex : 50,
-				id : shortid.generate(),
-				content : {
-					value : 0
+	"tracks" : [
+		{
+			id: shortid.generate(),
+			keyFrames: [
+				{
+					frameIndex: 0,
+					id: shortid.generate(),
+					content: {
+						value: 0,
+						constant: 1
+					}
+				},
+				{
+					frameIndex: 50,
+					id: shortid.generate(),
+					content: {
+						value: 0.5
+					}
+				},
+				{
+					frameIndex: 99,
+					id: shortid.generate(),
+					content: {
+						value: 1
+					}
 				}
-			},
-			{
-				frameIndex : 99,
-				id : shortid.generate(),
-				content : {
-					value : 1
+			]
+		},
+		{
+			id: shortid.generate(),
+			keyFrames: [
+				{
+					frameIndex: 50,
+					id: shortid.generate(),
+					content: {
+						value: 0
+					}
+				},
+				{
+					frameIndex: 99,
+					id: shortid.generate(),
+					content: {
+						value: 1
+					}
 				}
-			}
-		]
-	}
-]);
+			]
+		}
+	]
+});
 
 class InputTimeline extends Base {
 	constructor(container, state) {
@@ -86,13 +100,12 @@ class InputTimeline extends Base {
 	}
 
 	init() {
-		this.scrollDiv = $(`<div class="scrollContainerY" />`);
+		this.div = $(`<div class="scrollContainerY" />`);
 
 		this.toolBar = $(`<div class="toolBar"/>`);
-		this.scrollDiv.append(this.toolBar);
-
-		this.container.getElement().append(this.scrollDiv);
-		this.draw = SVG().addTo(this.scrollDiv[0]);
+		this.div.append(this.toolBar);
+		this.container.getElement().append(this.div);
+		this.draw = SVG().addTo(this.div[0]);
 
 		this.zoomLevel = 1;
 		this.visibleRangeStart = 0;
@@ -102,91 +115,99 @@ class InputTimeline extends Base {
 		this.syncToOutputFrameIndex = settingsNamespace.get("syncToOutputFrameIndex");
 
 		this.actions = {
-			addTrack : {
-				do : () => {
+			addTrack: {
+				do: () => {
 					this.addTrack();
 				},
-				buttonPreferences : {
-					icon : "fas fa-plus"
+				buttonPreferences: {
+					icon: "fas fa-plus"
 				}
 			},
-			removeTrack : {
-				do : () => {
+			removeTrack: {
+				do: () => {
 					this.removeTrack();
 				},
-				isEnabled : () => this.getSelectedTrack() != null,
-				buttonPreferences : {
-					icon : "fas fa-minus"
+				isEnabled: () => this.getSelectedTrack() != null,
+				buttonPreferences: {
+					icon: "fas fa-minus"
 				}
 			},
-			newKeyFrame : {
-				do : () => {
+			newKeyFrame: {
+				do: () => {
 					this.insertKeyFrame();
 				},
-				isEnabled : () => this.getSelectedTrack() != null,
-				buttonPreferences : {
-					icon : "fas fa-circle"
+				isEnabled: () => this.getSelectedTrack() != null,
+				buttonPreferences: {
+					icon: "fas fa-circle"
 				}
 			},
-			deleteKeyFrame : {
-				do : () => {
+			deleteKeyFrame: {
+				do: () => {
 					this.deleteKeyFrame();
 				},
-				isEnabled : () => this.getSelectedKeyframe() != null,
-				buttonPreferences : {
-					icon : "fas fa-times"
+				isEnabled: () => this.getSelectedKeyframe() != null,
+				buttonPreferences: {
+					icon: "fas fa-times"
 				}
 			},
-			renderOneFrame : {
-				do : async () => { 
+			renderOneFrame: {
+				do: async () => {
 					await this.renderOneFrame();
 				},
-				buttonPreferences : {
-					icon : "fas fa-walking"
+				buttonPreferences: {
+					icon: "fas fa-walking"
 				}
 			},
-			renderAllFrames : {
-				do : async () => { 
+			renderAllFrames: {
+				do: async () => {
 					await this.renderAllFrames();
 				},
-				buttonPreferences : {
-					icon : "fas fa-running"
+				buttonPreferences: {
+					icon: "fas fa-running"
 				}
 			},
-			markDirtyFromHere : {
-				do : () => {
+			markDirtyFromHere: {
+				do: () => {
 					this.markDirtyFromHere();
 				},
-				buttonPreferences : {
-					icon : "fas fa-toilet-paper"
+				buttonPreferences: {
+					icon: "fas fa-toilet-paper"
 				}
 			},
-			save : {
-				do : () => { 
+			save: {
+				do: () => {
 					this.save();
 				},
-				buttonPreferences : {
-					icon : "fas fa-save"
+				buttonPreferences: {
+					icon: "fas fa-save"
 				}
 			},
-			syncToOutputFrameIndex : {
+			settings : {
 				do : () => {
+					inspectableSettings.inspect();
+				},
+				buttonPreferences : {
+					icon: "fas fa-cogs"
+				}
+			},
+			syncToOutputFrameIndex: {
+				do: () => {
 					this.syncToOutputFrameIndex = !this.syncToOutputFrameIndex;
-					if(this.syncToOutputFrameIndex) {
+					if (this.syncToOutputFrameIndex) {
 						transport.skipToFrame(this.currentFrameIndex);
 					}
-					settingsNamespace.set("syncToOutputFrameIndex", this.syncToOutputFrameIndex);
+					settingsNamespace.set(this.syncToOutputFrameIndex, "syncToOutputFrameIndex");
 					this.refresh();
 				},
-				isDown : () => this.syncToOutputFrameIndex,
-				buttonPreferences : {
-					icon : "fas fa-sync"
+				isDown: () => this.syncToOutputFrameIndex,
+				buttonPreferences: {
+					icon: "fas fa-sync"
 				}
 			}
 		};
 
 		this.element = new Element(this);
-		
+
 		ErrorHandler.do(() => {
 			this.build();
 		});
@@ -204,23 +225,13 @@ class InputTimeline extends Base {
 			this.refresh();
 		});
 		rendererRouter.onChange('outputFrame', () => {
-			if(this.syncToOutputFrameIndex) {
+			if (this.syncToOutputFrameIndex) {
 				this.setFrameIndex(transport.getCurrentFrameIndex());
 			}
 		});
-	}
-
-	build() {
-		this.draw.clear();
-
-		this.tracks = settingsNamespace.get("tracks");
-		
-		this.element.children.ruler = new Ruler(this);
-		this.element.children.trackHeaders = new TrackHeaders(this);
-		this.element.children.keyFrames = new KeyFrames(this);
 
 		//actions
-		for(let actionName in this.actions) {
+		for (let actionName in this.actions) {
 			let action = this.actions[actionName];
 			let button = GuiUtils.makeButton(GuiUtils.camelCapsToLong(actionName), action.buttonPreferences, async () => {
 				await action.do();
@@ -228,6 +239,25 @@ class InputTimeline extends Base {
 			action.button = button;
 			this.toolBar.append(button);
 		}
+
+		// if layout changes, rebuild all
+		settingsNamespace.onChange(() => {
+			this.element.clear();
+			layout = settingsNamespace.get("layout");
+			this.build();
+			this.refresh();
+		}, 'layout');
+	}
+
+	build() {
+		this.draw.clear();
+
+		this.tracks = settingsNamespace.get("tracks");
+
+		this.element.children.ruler = new Ruler(this);
+		this.element.children.trackHeaders = new TrackHeaders(this);
+		this.element.children.keyFrames = new KeyFrames(this);
+
 	}
 
 	frameIndexToPixel(frameIndex) {
@@ -235,19 +265,22 @@ class InputTimeline extends Base {
 	}
 
 	pixelToFrameIndex(pixel, ignoreCaptionArea = true) {
-		if(!ignoreCaptionArea) {
+		if (!ignoreCaptionArea) {
 			pixel -= layout.trackCaptionAreaWidth;
 		}
 		return (pixel / this.pixelsPerFrame) + this.visibleRangeStart;
 	}
 
 	getFrameCount() {
-		return Math.max.apply(null, this.tracks.map(track => track.keyFrames[track.keyFrames.length - 1].frameIndex + 1));
+		return Math.max.apply(null, this.tracks.map(track =>
+			track.keyFrames.length > 0
+				? track.keyFrames[track.keyFrames.length - 1].frameIndex + 1
+				: 0));
 	}
 
 	resize() {
-		let width = this.scrollDiv.width() - 30;
-		if(width == 0) {
+		let width = this.div.width() - 30;
+		if (width == 0) {
 			return;
 		}
 
@@ -266,11 +299,11 @@ class InputTimeline extends Base {
 		this.element.refresh();
 
 		// When the selection changes, update states of buttons
-		for(let actionName in this.actions) {
+		for (let actionName in this.actions) {
 			let action = this.actions[actionName];
 
-			if(action.isEnabled) {
-				if(action.button.hasClass("btn-waiting")) {
+			if (action.isEnabled) {
+				if (action.button.hasClass("btn-waiting")) {
 					// don't update the state
 				}
 				else {
@@ -279,8 +312,8 @@ class InputTimeline extends Base {
 				}
 			}
 
-			if(action.isDown) {
-				if(action.isDown()) {
+			if (action.isDown) {
+				if (action.isDown()) {
 					action.button.addClass("btn-toggle-active");
 				}
 				else {
@@ -292,10 +325,10 @@ class InputTimeline extends Base {
 
 	validateFrameIndex(frameIndex) {
 		frameIndex = Math.floor(frameIndex);
-		if(frameIndex < 0) {
+		if (frameIndex < 0) {
 			frameIndex = 0;
 		}
-		if(frameIndex >= this.getFrameCount()) {
+		if (frameIndex >= this.getFrameCount()) {
 			frameIndex = this.getFrameCount() - 1;
 		}
 
@@ -304,31 +337,31 @@ class InputTimeline extends Base {
 	}
 
 	setFrameIndex(frameIndex) {
-		if(this.currentFrameIndex == frameIndex) {
+		if (this.currentFrameIndex == frameIndex) {
 			return;
 		}
 
 		this.currentFrameIndex = this.validateFrameIndex(frameIndex);
-		
+
 		this.element.children.ruler.children.frameCursor.dirty = true;
 		this.element.children.keyFrames.children.frameCursor.dirty = true;
 		this.refresh();
-		
+
 		// Announce to inspsector that rendered values might have changed
-		for(let trackID in this.element.children.trackHeaders.inspectables) {
+		for (let trackID in this.element.children.trackHeaders.inspectables) {
 			this.element.children.trackHeaders.inspectables[trackID].notifyValueChange();
 		}
 
-		if(this.syncToOutputFrameIndex) {
+		if (this.syncToOutputFrameIndex) {
 			transport.skipToFrame(this.currentFrameIndex);
 		}
 	}
 
 	addTrack() {
 		this.tracks.push({
-			name : "New track",
-			id : shortid.generate(),
-			keyFrames : []
+			name: "New track",
+			id: shortid.generate(),
+			keyFrames: []
 		});
 		this.element.children.trackHeaders.markDirty(true);
 		this.element.children.keyFrames.markDirty(true);
@@ -343,15 +376,15 @@ class InputTimeline extends Base {
 	}
 
 	getSelectedTrack() {
-		for(let trackID in this.element.children.trackHeaders.inspectables) {
+		for (let trackID in this.element.children.trackHeaders.inspectables) {
 			let inspectable = this.element.children.trackHeaders.inspectables[trackID];
-			if(inspectable.isBeingInspected()) {
+			if (inspectable.isBeingInspected()) {
 				return inspectable.track;
 			}
 		}
-		for(let keyFrameID in this.element.children.keyFrames.inspectables) {
+		for (let keyFrameID in this.element.children.keyFrames.inspectables) {
 			let inspectable = this.element.children.keyFrames.inspectables[keyFrameID];
-			if(inspectable.isBeingInspected()) {
+			if (inspectable.isBeingInspected()) {
 				return inspectable.track;
 			}
 		}
@@ -360,9 +393,9 @@ class InputTimeline extends Base {
 	}
 
 	getSelectedKeyframe() {
-		for(let keyFrameID in this.element.children.keyFrames.inspectables) {
+		for (let keyFrameID in this.element.children.keyFrames.inspectables) {
 			let inspectable = this.element.children.keyFrames.inspectables[keyFrameID];
-			if(inspectable.isBeingInspected()) {
+			if (inspectable.isBeingInspected()) {
 				return inspectable.keyFrame;
 			}
 		}
@@ -380,14 +413,14 @@ class InputTimeline extends Base {
 
 	insertKeyFrame() {
 		let selectedTrack = this.getSelectedTrack();
-		if(!selectedTrack) {
-			throw(new Error("No track selected"));
+		if (!selectedTrack) {
+			throw (new Error("No track selected"));
 		}
 
 		let keyFrame = {
-			frameIndex : this.currentFrameIndex,
-			id : shortid.generate(),
-			content : {}
+			frameIndex: this.currentFrameIndex,
+			id: shortid.generate(),
+			content: {}
 		};
 
 		selectedTrack.keyFrames.push(keyFrame);
@@ -403,13 +436,13 @@ class InputTimeline extends Base {
 
 	deleteKeyFrame() {
 		let selectedKeyframe = this.getSelectedKeyframe();
-		if(!selectedKeyframe) {
-			throw(new Error("No key frame selected"));
+		if (!selectedKeyframe) {
+			throw (new Error("No key frame selected"));
 		}
-		
+
 		let selectedTrack = this.getSelectedTrack();
-		if(!selectedTrack) {
-			throw(new Error("No track selected"));
+		if (!selectedTrack) {
+			throw (new Error("No track selected"));
 		}
 
 		// delete it
@@ -421,26 +454,26 @@ class InputTimeline extends Base {
 
 	isFrameDirty(frameIndex, newObjectives) {
 		// we don't have this frame yet
-		if(frameIndex >= outputTimeline.getFrameCount()) {
+		if (frameIndex >= outputTimeline.getFrameCount()) {
 			return true;
 		}
 
 		let frameData = outputTimeline.getFrame(frameIndex);
-		if(!frameData) {
+		if (!frameData) {
 			return true;
 		}
 
 		let renderData = frameData.renderData;
-		if(!renderData) {
+		if (!renderData) {
 			return true;
 		}
 
-		if(renderData.dirty) {
+		if (renderData.dirty) {
 			return true;
 		}
 
-		if(newObjectives) {
-			if(!fastEqual(renderData.objectives, newObjectives)) {
+		if (newObjectives) {
+			if (!fastEqual(renderData.objectives, newObjectives)) {
 				return true;
 			}
 		}
@@ -450,21 +483,21 @@ class InputTimeline extends Base {
 
 	markDirtyFrame(frameIndex) {
 		let frameData = outputTimeline.getFrame(frameIndex);
-		if(frameData.renderData) {
+		if (frameData.renderData) {
 			frameData.renderData.dirty = true;
 		}
 		else {
 			frameData.renderData = {
-				dirty : true
+				dirty: true
 			};
 		}
 	}
 
 	markDirtyFrames() {
-		let frameCount= this.getFrameCount();
-		for(let frameIndex=0; frameIndex<frameCount; frameIndex++) {
+		let frameCount = this.getFrameCount();
+		for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
 			let dirty = this.isFrameDirty(frameIndex);
-			if(dirty) {
+			if (dirty) {
 				this.markDirtyFrame(frameIndex);
 			}
 		}
@@ -472,8 +505,8 @@ class InputTimeline extends Base {
 
 	getIndexOfFirstDirtyFrame() {
 		let frameCount = this.getFrameCount();
-		for(let i=0; i<frameCount; i++) {
-			if(this.isFrameDirty(i)) {
+		for (let i = 0; i < frameCount; i++) {
+			if (this.isFrameDirty(i)) {
 				return i;
 			}
 		}
@@ -493,10 +526,10 @@ class InputTimeline extends Base {
 
 		// select a prior pose
 		let priorPose;
-		if(frameIndex <= 0 && priorFrameCount > 0) {
+		if (frameIndex <= 0 && priorFrameCount > 0) {
 			priorPose = outputTimeline.getFrame(0).content.configuration;
 		}
-		else if(frameIndex - 1 < priorFrameCount) {
+		else if (frameIndex - 1 < priorFrameCount) {
 			// previous frame is available in timeline
 			priorPose = outputTimeline.getLastFrame().content.configuration;
 		}
@@ -507,14 +540,14 @@ class InputTimeline extends Base {
 
 		// create objectives
 		let objectives = [];
-		for(let track of this.tracks) {
+		for (let track of this.tracks) {
 			let objective = InputTimelineUtils.calculateTrackFrame(track, frameIndex);
 			objectives.push(objective);
 		}
 
 		// skip non dirty frames
-		if(skipNonDirty) {
-			if(!this.isFrameDirty(frameIndex, objectives)) {
+		if (skipNonDirty) {
+			if (!this.isFrameDirty(frameIndex, objectives)) {
 				return false;
 			}
 		}
@@ -524,9 +557,9 @@ class InputTimeline extends Base {
 		let pose = await NavigatorServer.optimise(priorPose, objectives);
 		let callEnd = performance.now();
 		outputTimeline.setFrame(frameIndex, pose, "InputTimeline", {
-			dirty : false,
-			objectives : objectives,
-			renderTime : (callEnd - callStart) / 1000
+			dirty: false,
+			objectives: objectives,
+			renderTime: (callEnd - callStart) / 1000
 		});
 
 		return true;
@@ -537,7 +570,7 @@ class InputTimeline extends Base {
 	}
 
 	async renderAllFrames() {
-		for(let frameIndex=0; frameIndex<this.getFrameCount(); frameIndex++) {
+		for (let frameIndex = 0; frameIndex < this.getFrameCount(); frameIndex++) {
 			console.log(`Rendering frame ${frameIndex}...`);
 			if (await this.renderAndStoreFrame(frameIndex, true)) {
 				transport.skipToFrame(frameIndex);
@@ -546,7 +579,6 @@ class InputTimeline extends Base {
 			else {
 				// Frame was skipped
 			}
-			
 		}
 	}
 
@@ -562,7 +594,7 @@ class InputTimeline extends Base {
 	}
 
 	save() {
-		settingsNamespace.set("tracks", this.tracks);
+		settingsNamespace.set(this.tracks, "tracks");
 	}
 }
 

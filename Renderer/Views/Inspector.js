@@ -22,8 +22,13 @@ class Inspector extends Base {
 			options = {
 				modes : ['tree', 'form', 'code'],
 				onChange : () => {
-					if(this.target != null) {
-						this.target.set(this.editor.get());
+					try {
+						if(this.target != null) {
+							this.target.set(this.editor.get());
+						}
+					}
+					catch {
+						// json is not valid, ignore
 					}
 				}
 			};
@@ -68,7 +73,12 @@ class Inspector extends Base {
 			this.title.text("")
 		}
 		else {
-			this.title.text(this.target.name)
+			let name = this.target.name;
+			// if we gave a lambda for the name, use that
+			if(typeof(name) == "function") {
+				name = name();
+			}
+			this.title.text(name)
 
 			if(this.target.set) {
 				// EDIT
