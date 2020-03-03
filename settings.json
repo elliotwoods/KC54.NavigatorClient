@@ -176,8 +176,9 @@
         "trackHeight": 30,
         "frameNumbersAreaHeight": 30,
         "keyFrame": {
-          "selectedColor": "#ccf",
-          "size": 9
+          "inspectingColor": "#eef",
+          "size": 9,
+          "selectedColor": "#ccf"
         },
         "frameTicks": {
           "height": 5,
@@ -199,12 +200,12 @@
               "id": "P8Y_3gUS6",
               "content": {
                 "objective": {
-                  "type": "MinimiseMoments",
                   "momentWeight": {
+                    "z": 5,
                     "x": 1,
-                    "y": 1,
-                    "z": 5
-                  }
+                    "y": 1
+                  },
+                  "type": "MinimiseMoments"
                 },
                 "weight": 1
               }
@@ -237,12 +238,54 @@
               }
             }
           ]
+        },
+        {
+          "id": "rRYJlg1f",
+          "keyFrames": [
+            {
+              "frameIndex": 0,
+              "id": "KIgI7ifZ",
+              "content": {
+                "objective": {
+                  "type": "PreferBeamAngles",
+                  "pose": {
+                    "__generator": {
+                      "centredness": 0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "frameIndex": 99,
+              "id": "czmyvnl9",
+              "content": {
+                "objective": {
+                  "pose": {
+                    "__generator": {
+                      "centredness": 1
+                    }
+                  }
+                }
+              }
+            }
+          ]
         }
       ],
       "optimisation": {
         "preferBeamAngles": {
           "prior": true,
           "weight": 0.01
+        },
+        "calculateForces": {
+          "enabled": true,
+          "windProfile": {
+            "Vref": 5,
+            "href": 2,
+            "theta": 0,
+            "roughness": 0.1,
+            "drag": 2
+          }
         }
       },
       "syncToOutputFrameIndex": true
