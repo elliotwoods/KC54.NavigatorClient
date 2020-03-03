@@ -247,13 +247,17 @@
               "id": "KIgI7ifZ",
               "content": {
                 "objective": {
-                  "type": "PreferBeamAngles",
                   "pose": {
                     "__generator": {
-                      "centredness": 0
+                      "args": {
+                        "centredness": 0
+                      },
+                      "type": "SpiralMap"
                     }
-                  }
-                }
+                  },
+                  "type": "PreferBeamAngles"
+                },
+                "weight": 1
               }
             },
             {
@@ -263,7 +267,9 @@
                 "objective": {
                   "pose": {
                     "__generator": {
-                      "centredness": 1
+                      "args": {
+                        "centredness": 1
+                      }
                     }
                   }
                 }

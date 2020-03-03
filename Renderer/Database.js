@@ -150,7 +150,8 @@ class SettingsNamespace {
 	}
 
 	defaults(values) {
-		let value = merge(values, this.get());
+		const overwriteMerge = (destination, source, options) => source;
+		let value = merge(values, this.get(), {arrayMerge : overwriteMerge});
 		this.set(value);
 	}
 }

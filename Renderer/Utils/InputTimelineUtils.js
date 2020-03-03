@@ -182,7 +182,7 @@ class InputTimelineUtils {
 	}
 
 	static getTrackObjectiveType(track) {
-		let name = 'Empty Track';
+		let name;
 		for(let keyFrame of track.keyFrames) {
 			try {
 				name = keyFrame.content.objective.type;
@@ -192,7 +192,19 @@ class InputTimelineUtils {
 			}
 			break;
 		}
+		if(!name) {
+			name = 'Empty Track'
+		}
 		return name;
+	}
+
+	static getTrackCaption(track) {
+		if(track.name) {
+			return track.name;
+		}
+		else {
+			return InputTimelineUtils.getTrackObjectiveType(track);
+		}
 	}
 }
 

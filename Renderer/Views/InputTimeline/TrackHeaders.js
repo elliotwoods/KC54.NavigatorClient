@@ -39,7 +39,7 @@ class TrackHeaders extends Element {
 							return result;
 						}
 						, null // no set function
-						, () => InputTimelineUtils.getTrackObjectiveType(track));
+						, () => InputTimelineUtils.getTrackCaption(track));
 						inspectable.onInspectChange(() => {
 							element.dirty = true;
 							element.refresh();
@@ -67,7 +67,7 @@ class TrackHeaders extends Element {
 					.mousedown(() => {
 						inspectable.toggleInspect();
 					});
-				element.draw.text(InputTimelineUtils.getTrackObjectiveType(track))
+				element.draw.text(InputTimelineUtils.getTrackCaption(track))
 					.move(10, y)
 					.font({ weight : inspectable.isBeingInspected() ? 400 : 200 });
 				y += layout.trackHeight;

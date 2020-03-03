@@ -12,8 +12,9 @@ class NavigatorServer {
 		}
 	}
 
-	static async getSpiralPose() {
-		return await NavigatorServer.call("SpiralPose");
+	static async getSpiralPose(configuration) {
+		let result = await NavigatorServer.call("SpiralPose", configuration);
+		return result;
 	}
 
 	static async getParkingPose() {
@@ -27,7 +28,7 @@ class NavigatorServer {
 							x: 1,
 							y: 1,
 							z: 50
-						},
+						}
 					},
 					weight: 1
 				}

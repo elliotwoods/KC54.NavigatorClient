@@ -34,12 +34,13 @@ class World extends Base {
 
 		this.markRenderDirty();
 		this.init();
-		rendererRouter.onChange('outputFrame', () => {
+		let needsRender = () => {
 			this.markRenderDirty();
-		});
-		rendererRouter.onChange('renderView', () => {
-			this.markRenderDirty();
-		});
+		};
+		rendererRouter.onChange('outputFrame', needsRender);
+		rendererRouter.onChange('renderView', needsRender);
+		rendererRouter.onChange('outputTimeline', needsRender);
+		
 		this.container.getElement().mousemove(() => {
 			this.markRenderDirty();
 		});
