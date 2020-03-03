@@ -29,7 +29,10 @@ settingsNamespace.defaults(
 		trackCaptionAreaWidth: 150,
 		trackHeight: 30,
 		frameNumbersAreaHeight: 30,
-		keyFrameSize: 9,
+		keyFrame : {
+			selectedColor : '#eef',
+			size : 9,
+		},
 		frameTicks: {
 			height: 5,
 			color: '#aaa'
@@ -87,7 +90,23 @@ settingsNamespace.defaults(
 				}
 			]
 		}
-	]
+	],
+	"optimisation" : {
+		preferBeamAngles : {
+			prior : true,
+			weight : 0.01
+		},
+		calculateForces : {
+			enabled : true,
+			windProfile : {
+				Vref : 5,
+				href : 2,
+				theta : 0,
+				roughness : 0.1,
+				drag : 2
+			}
+		},
+	}
 });
 
 class InputTimeline extends Base {
@@ -326,10 +345,10 @@ class InputTimeline extends Base {
 	validateFrameIndex(frameIndex) {
 		frameIndex = Math.floor(frameIndex);
 		if (frameIndex < 0) {
-			frameIndex = 0;
+			frameIndex = this.getFrameCount() - 1;
 		}
 		if (frameIndex >= this.getFrameCount()) {
-			frameIndex = this.getFrameCount() - 1;
+			frameIndex = 0;
 		}
 
 		// also we need to clamp to max, but we dont have this yet
@@ -543,6 +562,20 @@ class InputTimeline extends Base {
 		for (let track of this.tracks) {
 			let objective = InputTimelineUtils.calculateTrackFrame(track, frameIndex);
 			objectives.push(objective);
+		}
+
+		if(settingsNamespace.get(["optimisation", "preferBeamAngles", "prior"])) {
+			let preferBeamAnglesObjective = {
+				objective : {
+					type : "PreferBeamAngles",
+					desiredAngles : {}
+				},
+				weight : settingsNamespace.get(["optimisation", "preferBeamAngles", "weight"])
+			}
+			for(let i = 0; i<priorPose.length; i++) {
+				preferBeamAnglesObjective.objective.desiredAngles[i] = priorPose[i].angleToX
+			}
+			objectives.push(preferBeamAnglesObjective);
 		}
 
 		// skip non dirty frames

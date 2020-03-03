@@ -40,11 +40,21 @@ class NavigatorServer {
 		// do we need to await here since we already return a Promise
 		return await NavigatorServer.call("Optimise", {
 			initialGuessPose : priorPose,
-			objectives : objectives
+			objectives : objectives,
+			maxIterations : 20
 		});
 	}
 
 	static async calculateForces(pose, windProfile) {
+		if(!windProfile) {
+			windProfile = {
+				Vref : 5,
+				href : 2,
+				theta : 0,
+				roughness : 0.1,
+				drag : 2
+			}
+		}
 		return await NavigatorServer.call("CalculateForces", {
 			pose : pose,
 			windProfile : windProfile

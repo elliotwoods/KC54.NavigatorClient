@@ -20,6 +20,7 @@
 		"@svgdotjs/svg.js": "^3.0.16",
 		"bent": "^7.1.0",
 		"bootstrap": "^4.4.1",
+		"deepmerge": "^4.2.2",
 		"golden-layout": "^1.5.9",
 		"jquery": "^3.4.1",
 		"js-sha256": "^0.9.0",

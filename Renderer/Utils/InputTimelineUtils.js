@@ -1,3 +1,5 @@
+const merge = require('deepmerge')
+
 class InputTimelineUtils {
 	static sortKeyFrames(track) {
 		track.keyFrames = track.keyFrames.sort((a, b) => a.frameIndex - b.frameIndex)
@@ -13,7 +15,7 @@ class InputTimelineUtils {
 		// gather all content into merged data 
 		let content = {};
 		for(let keyFrame of track.keyFrames) {
-			content = {...keyFrame.content, ...content}
+			content = merge(keyFrame.content, content);
 		}
 
 		// put the merged data into first keyframe
@@ -121,7 +123,7 @@ class InputTimelineUtils {
 		// Clamp frameIndex for last
 		let lastFrameIndex = track.keyFrames[track.keyFrames.length - 1].frameIndex;
 		if(frameIndex > lastFrameIndex) {
-			trackIndex = lastFrameIndex;
+			frameIndex = lastFrameIndex;
 		}
 
 		// TWEEN

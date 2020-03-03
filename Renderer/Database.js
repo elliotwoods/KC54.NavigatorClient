@@ -2,6 +2,7 @@ import { rendererRouter } from './rendererRouter.js'
 
 const low = require('lowdb')
 const FileSync = require('../node_modules/lowdb/adapters/FileSync')
+const merge = require('deepmerge')
 
 const settings = low(new FileSync('settings.json'));
 settings.defaults({
@@ -149,7 +150,7 @@ class SettingsNamespace {
 	}
 
 	defaults(values) {
-		let value = {...values, ...this.get()};
+		let value = merge(values, this.get());
 		this.set(value);
 	}
 }

@@ -17,7 +17,7 @@ class KeyFrames extends Element {
 		// define the keyFrame symbol
 		this.keyFrameSymbol = this.draw.symbol();
 		{
-			let s = layout.keyFrameSize / 2;
+			let s = layout.keyFrame.size / 2;
 			this.keyFrameSymbol.circle(s);
 		}
 
@@ -108,10 +108,10 @@ class KeyFrames extends Element {
 					let inspectable = this.inspectables[keyFrame.id];
 
 					// background
-					trackGroup.rect(this.parent.frameIndexToPixel(nextKeyFrame.frameIndex + 1), layout.trackHeight)
+					trackGroup.rect(this.parent.frameIndexToPixel(nextKeyFrame.frameIndex - keyFrame.frameIndex + 1), layout.trackHeight)
 						.move(this.parent.frameIndexToPixel(keyFrame.frameIndex), 0)
 						.attr({
-							'fill': inspectable.isBeingInspected() ? '#eef' : '#fff',
+							'fill': inspectable.isBeingInspected() ? layout.keyFrame.selectedColor : '#fff',
 							'stroke' : '#000',
 							'stroke-width' : 0.5,
 							'keyFrameID' : keyFrame.id
@@ -148,7 +148,7 @@ class KeyFrames extends Element {
 					if(keyFrame.frameIndex >= this.parent.visibleRangeStart && keyFrame.frameIndex <= this.parent.visibleRangeEnd) {
 						trackGroup.use(this.keyFrameSymbol)
 							.center(this.parent.frameIndexToPixel(keyFrame.frameIndex + 0.5), layout.trackHeight / 2)
-							.dx(-layout.keyFrameSize / 4); // somehow it's offset
+							.dx(-layout.keyFrame.size / 4); // somehow it's offset
 					}
 				}
 

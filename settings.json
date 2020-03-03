@@ -175,7 +175,10 @@
         "trackCaptionAreaWidth": 150,
         "trackHeight": 30,
         "frameNumbersAreaHeight": 30,
-        "keyFrameSize": 9,
+        "keyFrame": {
+          "selectedColor": "#ccf",
+          "size": 9
+        },
         "frameTicks": {
           "height": 5,
           "color": "#aaa"
@@ -218,8 +221,30 @@
               }
             }
           ]
+        },
+        {
+          "name": "New track",
+          "id": "OHD-S4Ly",
+          "keyFrames": [
+            {
+              "frameIndex": 0,
+              "id": "Cr5JsfHi",
+              "content": {
+                "objective": {
+                  "type": "FixToFoundations"
+                },
+                "weight": 10
+              }
+            }
+          ]
         }
       ],
+      "optimisation": {
+        "preferBeamAngles": {
+          "prior": true,
+          "weight": 0.01
+        }
+      },
       "syncToOutputFrameIndex": true
     },
     "RenderSettings": {
@@ -283,7 +308,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 48.18273348538512,
+                  "height": 52.628564021239136,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-eye\" /> Perspective",
@@ -302,7 +327,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 25.593105558789233,
+                  "height": 30.03893609464325,
                   "content": [
                     {
                       "type": "stack",
@@ -356,31 +381,12 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 12.886669348263595,
+                  "height": 17.332499884117613,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
                       "type": "component",
                       "componentName": "InputTimeline",
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
-                  "header": {},
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "width": 50,
-                  "height": 13.337491607562052,
-                  "content": [
-                    {
-                      "title": "<i class=\"fas fa-play-circle\" /> Transport",
-                      "type": "component",
-                      "componentName": "Transport",
                       "isClosable": true,
                       "reorderEnabled": true
                     }
@@ -400,7 +406,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 31.958249084905606,
+                  "height": 15.382838497625029,
                   "content": [
                     {
                       "type": "stack",
@@ -448,7 +454,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 31.824252002807928,
+                  "height": 48.399662590088504,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-user-secret\" /> Inspector",
@@ -466,7 +472,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 36.21749891228647,
+                  "height": 18.684936938838703,
                   "content": [
                     {
                       "type": "component",
@@ -475,6 +481,24 @@
                       "isClosable": false,
                       "reorderEnabled": true,
                       "title": "ViewPalette"
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "header": {},
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "height": 17.53256197344777,
+                  "content": [
+                    {
+                      "title": "<i class=\"fas fa-play-circle\" /> Transport",
+                      "type": "component",
+                      "componentName": "Transport",
+                      "isClosable": true,
+                      "reorderEnabled": true
                     }
                   ]
                 }
