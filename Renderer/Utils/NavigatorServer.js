@@ -1,5 +1,6 @@
 const bent = require('bent')
 const post = bent('http://localhost:8080/', 'POST', 'json');
+import { ServerError } from './ServerError.js'
 
 class NavigatorServer {
 	static async call(requestName, args) {
@@ -8,7 +9,7 @@ class NavigatorServer {
 			return response.result;
 		}
 		else {
-			throw (new Error(response.result));
+			throw (new ServerError(response));
 		}
 	}
 
@@ -42,7 +43,7 @@ class NavigatorServer {
 		return await NavigatorServer.call("Optimise", {
 			initialGuessPose : priorPose,
 			objectives : objectives,
-			maxIterations : 20
+			maxIterations : 5
 		});
 	}
 

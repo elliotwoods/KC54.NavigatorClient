@@ -188,11 +188,16 @@
           "color": "#333"
         },
         "backgroundColor": "#efeeee",
-        "freshFramesColor": "#efffee"
+        "freshFramesColor": "#efffee",
+        "ruler": {
+          "forcesArea": {
+            "height": 5,
+            "fillColor": "#ccc"
+          }
+        }
       },
       "tracks": [
         {
-          "name": "Track 1",
           "id": "pnRSYQRn",
           "keyFrames": [
             {
@@ -224,7 +229,6 @@
           ]
         },
         {
-          "name": "New track",
           "id": "OHD-S4Ly",
           "keyFrames": [
             {
@@ -247,7 +251,7 @@
               "id": "KIgI7ifZ",
               "content": {
                 "objective": {
-                  "pose": {
+                  "desiredAngles": {
                     "__generator": {
                       "args": {
                         "centredness": 0
@@ -265,7 +269,7 @@
               "id": "czmyvnl9",
               "content": {
                 "objective": {
-                  "pose": {
+                  "desiredAngles": {
                     "__generator": {
                       "args": {
                         "centredness": 1
@@ -294,7 +298,7 @@
           }
         }
       },
-      "syncToOutputFrameIndex": true
+      "syncToOutputFrameIndex": false
     },
     "RenderSettings": {
       "renderPerson": false,
@@ -376,7 +380,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 30.03893609464325,
+                  "height": 31.616682384014602,
                   "content": [
                     {
                       "type": "stack",
@@ -430,7 +434,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 17.332499884117613,
+                  "height": 15.754753594746262,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",

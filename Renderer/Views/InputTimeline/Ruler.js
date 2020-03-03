@@ -1,5 +1,7 @@
 import { Element } from './Element.js'
 import { SettingsNamespace } from '../../Database.js'
+import { outputTimeline } from '../../Data/outputTimeline.js'
+
 let settingsNamespace = new SettingsNamespace(["Views", "InputTimeline"]);
 
 class Ruler extends Element {
@@ -41,16 +43,17 @@ class Ruler extends Element {
 		, (element) => {
 			element.background.width(this.viewWidth - layout.trackCaptionAreaWidth);
 
-			let freshFrameCount = this.parent.getIndexOfFirstDirtyFrame();
-			if(freshFrameCount <= this.parent.visibleRangeStart) {
-				element.freshRegion.hide();
-			}
-			else {
-				element.freshRegion.show();
-				let width = Math.min(freshFrameCount, this.parent.visibleRangeEnd) - this.parent.visibleRangeStart;
-				width *= this.parent.pixelsPerFrame;
-				element.freshRegion.width(width);
-			}
+			this.parent.getIndexOfFirstDirtyFrame().then(freshFrameCount => {
+				if(freshFrameCount <= this.parent.visibleRangeStart) {
+					element.freshRegion.hide();
+				}
+				else {
+					element.freshRegion.show();
+					let width = Math.min(freshFrameCount, this.parent.visibleRangeEnd) - this.parent.visibleRangeStart;
+					width *= this.parent.pixelsPerFrame;
+					element.freshRegion.width(width);
+				}
+			});
 		}
 		, true);
 
@@ -98,6 +101,29 @@ class Ruler extends Element {
 			}
 		}
 		, true);
+
+		// Forces indicator
+		this.children.forcesIndicator = new Element(this.draw.group()
+		, null
+		, (element) => {
+			element.draw.clear();
+
+			let outputFrameCount = outputTimeline.getFrameCount();
+
+			for(let i=this.parent.visibleRangeStart; i<=this.parent.visibleRangeEnd; i+= 1) {
+				if(i < outputFrameCount) {
+					let outputFrame = outputTimeline.getFrame(i);
+					if(outputFrame.forces) {
+						// frame has forces
+						element.draw.rect(parent.pixelsPerFrame, layout.ruler.forcesArea.height)
+							.move(this.parent.frameIndexToPixel(i), layout.frameNumbersAreaHeight - layout.ruler.forcesArea.height)
+							.attr({
+								'fill' : layout.ruler.forcesArea.fillColor
+							});
+					}
+				}
+			}
+		});
 
 		// Current frame cursor
 		this.children.frameCursor = new Element(this.draw.group()

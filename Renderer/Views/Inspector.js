@@ -38,7 +38,7 @@ class Inspector extends Base {
 		{
 			this.viewerDiv = $(`<div class="container Inspector_container"/>`);
 			this.container.getElement().append(this.viewerDiv);
-			let viewOnlyOptions = {...options};
+			let viewOnlyOptions = {...options}; // clone object
 			viewOnlyOptions.modes = ['view'];
 			this.viewer = new JSONEditor(this.viewerDiv[0], viewOnlyOptions);
 		}

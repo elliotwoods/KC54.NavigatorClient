@@ -43,7 +43,13 @@ settingsNamespace.defaults(
 			color: '#333'
 		},
 		backgroundColor: '#efeeee',
-		freshFramesColor: '#efffee'
+		freshFramesColor: '#efffee',
+		ruler : {
+			forcesArea : {
+				height : 5,
+				fillColor : '#ccc'
+			}
+		}
 	},
 	"tracks" : [
 	],
@@ -199,6 +205,14 @@ class InputTimeline extends Base {
 					icon: "fas fa-eye"
 				}
 
+			},
+			calculateForces : {
+				do : async () => {
+					await this.calculateForces();
+				},
+				buttonPreferences : {
+					icon : "fas fa-balance-scale-right"
+				}
 			}
 		};
 
@@ -331,7 +345,13 @@ class InputTimeline extends Base {
 			}
 		}
 
-		this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex);
+		try {
+			this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex);
+		}
+		catch(error) {
+			console.error(error);
+			this.cachedOutputValuesForThisFrame = undefined;
+		}
 		this.viewDataInspectable.notifyValueChange();
 	}
 
@@ -554,10 +574,10 @@ class InputTimeline extends Base {
 		for (let i = 0; i < frameCount; i++) {
 			let dirty = true;
 			try {
-				dirty = outputTimeline.getFrame(frameIndex).renderData.dirty;
+				dirty = outputTimeline.getFrame(i).renderData.dirty;
 			}
 			catch {
-				//
+				return i;
 			}
 			if(dirty) {
 				return i;
@@ -617,16 +637,19 @@ class InputTimeline extends Base {
 		outputTimeline.setFrame(frameIndex, pose, "InputTimeline", {
 			dirty: false,
 			objectives: objectives,
-			renderTime: (callEnd - callStart) / 1000
+			renderTime: (callEnd - callStart) / 1000,
+			timestamp : new Date()
 		});
 
 		console.log(`Done rendering frame ${frameIndex} in ${outputTimeline.getFrame(frameIndex).renderData.renderTime} seconds.`);
+		this.requestRefresh();
 
 		return true;
 	}
 
 	async renderOneFrame() {
 		await this.renderAndStoreFrame(this.currentFrameIndex);
+		this.requestRefresh();
 	}
 
 	async renderAllFrames() {
@@ -653,6 +676,26 @@ class InputTimeline extends Base {
 
 	save() {
 		settingsNamespace.set(this.tracks, "tracks");
+	}
+
+	async calculateForces() {
+		let freshFrameCount = await this.getIndexOfFirstDirtyFrame();
+		for(let i = 0; i<freshFrameCount; i++) {
+			let outputFrame = outputTimeline.getFrame(i);
+			
+			let callStart = performance.now();
+			outputFrame.forces = await NavigatorServer.calculateForces(outputFrame.configuration);
+			let callEnd = performance.now();
+
+			outputFrame.forcesRenderData = {
+				renderTime : (callEnd - callStart) / 1000,
+				windProfile : windProfile,
+				timestamp : new Date()
+			};
+
+			this.element.children.ruler.markDirty(true);
+			this.requestRefresh();
+		}
 	}
 }
 

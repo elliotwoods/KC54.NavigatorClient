@@ -1,5 +1,6 @@
 let generators = [];
 let genKey = '__generator';
+let activeKey = '__active';
 
 function register(generatorType) {
 	generators.push(generatorType);
@@ -20,6 +21,15 @@ async function parseGenerators(object, priorPose) {
 		for(let childKey in object) {
 			if(typeof(object[childKey]) == "object") {
 				let grandChildKeys = Object.keys(object[childKey]);
+
+				// Check if this branch is deactivated
+				if(grandChildKeys.includes(activeKey)) {
+					if(!object[childKey][activeKey]) {
+						delete object.childKey;
+						continue;
+					}
+				}
+
 				if(grandChildKeys.includes(genKey)) {
 					// it's a generator
 					object[childKey] = await generate(object[childKey][genKey], priorPose);
