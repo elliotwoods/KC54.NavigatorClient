@@ -46,8 +46,8 @@ settingsNamespace.defaults(
 		freshFramesColor: '#efffee',
 		ruler : {
 			forcesArea : {
-				height : 5,
-				fillColor : '#ccc'
+				height : 8,
+				fillColor : '#90e576'
 			}
 		}
 	},
@@ -68,8 +68,18 @@ settingsNamespace.defaults(
 				drag : 2
 			}
 		},
+		preferences : {
+			maxIterations : 200
+		}
 	},
-	"syncToOutputFrameIndex" : false
+	"syncToOutputFrameIndex" : false,
+	windProfile : {
+		Vref : 0,
+		href : 2,
+		theta : 0,
+		roughness : 0.1,
+		drag : 2
+	}
 });
 
 class InputTimeline extends Base {
@@ -312,7 +322,9 @@ class InputTimeline extends Base {
 		this.refreshQueued = true;
 		setTimeout(() => {
 			this.refreshQueued = false;
-			this.refresh();
+			ErrorHandler.doAsync(async () => {
+				await this.refresh();
+			});
 		}, 20)
 	}
 
@@ -632,7 +644,7 @@ class InputTimeline extends Base {
 		
 		// call to the server
 		let callStart = performance.now();
-		let pose = await NavigatorServer.optimise(priorPose, objectivesWithPriorPose);
+		let pose = await NavigatorServer.optimise(priorPose, objectivesWithPriorPose, settingsNamespace.get(["optimisation", "preferences"]));
 		let callEnd = performance.now();
 		outputTimeline.setFrame(frameIndex, pose, "InputTimeline", {
 			dirty: false,
@@ -642,6 +654,8 @@ class InputTimeline extends Base {
 		});
 
 		console.log(`Done rendering frame ${frameIndex} in ${outputTimeline.getFrame(frameIndex).renderData.renderTime} seconds.`);
+
+		this.element.children.ruler.markDirty(true);
 		this.requestRefresh();
 
 		return true;
@@ -680,18 +694,22 @@ class InputTimeline extends Base {
 
 	async calculateForces() {
 		let freshFrameCount = await this.getIndexOfFirstDirtyFrame();
+		let windProfile = settingsNamespace.get("windProfile");
+
 		for(let i = 0; i<freshFrameCount; i++) {
-			let outputFrame = outputTimeline.getFrame(i);
+			let frameData = outputTimeline.getFrame(i);
 			
 			let callStart = performance.now();
-			outputFrame.forces = await NavigatorServer.calculateForces(outputFrame.configuration);
+			frameData.content.forces = await NavigatorServer.calculateForces(frameData.content.configuration, windProfile);
 			let callEnd = performance.now();
 
-			outputFrame.forcesRenderData = {
+			frameData.forcesRenderData = {
 				renderTime : (callEnd - callStart) / 1000,
 				windProfile : windProfile,
 				timestamp : new Date()
 			};
+
+			outputTimeline.setFrameData(i, frameData);
 
 			this.element.children.ruler.markDirty(true);
 			this.requestRefresh();

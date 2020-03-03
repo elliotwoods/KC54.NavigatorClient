@@ -2,52 +2,37 @@ import * as THREE from '../../../node_modules/three/build/three.module.js';
 
 import { document, SettingsNamespace } from '../../Database.js'
 import { rendererRouter } from '../../rendererRouter.js'
+import { ErrorHandler } from '../../Utils/ErrorHandler.js'
 
 let settingsNamespace = new SettingsNamespace(["Views", "World"])
 let blockMaterial = null;
 
 settingsNamespace.defaults({
 	blockMaterial : {
-		color: 11184810,
 		metalness: 0.8,
 		roughness: 0.1,
-		envMapIntensity: 1
+		envMapIntensity: 1,
+		wireframe : false
 	},
-	showForces : false
+	forces : {
+		show : true,
+		scale : {
+			x : 10000,
+			y : 10000,
+			z : 100
+		},
+		headSize : 0.05
+	}
 });
 
 function initBlockMaterial() {
-
-	let materialSettings = settingsNamespace.get("blockMaterial");
-
-	blockMaterial = new THREE.MeshPhysicalMaterial(materialSettings);
-}
-
-function makeBlock() {
-	let block = new THREE.Object3D();
-
-	{
-		let geometry = new THREE.BoxGeometry(1.5, 0.3, 0.3);
-		let mesh = new THREE.Mesh(geometry, blockMaterial);
-		mesh.position.set(0.5, 0.0, 0.15);
-
-		mesh.receiveShadow = true;
-		mesh.castShadow = true;
-
-		block.add(mesh);
-	}
-
-	return block;
-}
-
-function makeMomentGeometry(value) {
-	let geometry = new THREE.CylinderGeometry(0.2, 0.2, 0.1
-		, 12
-		, 1
-		, false
-		, 0
-		, value * Math.PI * 2.0);
-	return geometry;
+	blockMaterial = new THREE.MeshPhysicalMaterial();
+	settingsNamespace.onChange((materialSetings) => {
+		for(let key in materialSetings) {
+			blockMaterial[key] = materialSetings[key];
+		}
+		blockMaterial.needsUpdate = true;
+	}, "blockMaterial")();
 }
 
 let materialRed = new THREE.MeshBasicMaterial({
@@ -63,92 +48,106 @@ let materialBlue = new THREE.MeshBasicMaterial({
 	side: THREE.DoubleSide
 });
 
-
-function makeMoments(forcesItem) {
-	var momentData = forcesItem.moment;
-	var moments = new THREE.Object3D();
+function makeBlock() {
+	let block = new THREE.Object3D();
 
 	{
-		let momentGeomtry = makeMomentGeometry(momentData.x / 5000);
-		let mesh = new THREE.Mesh(momentGeomtry, materialRed);
-		mesh.rotateY(Math.PI / 2.0);
-		moments.add(mesh);
+		let geometry = new THREE.BoxGeometry(1.5, 0.3, 0.3);
+		let mesh = new THREE.Mesh(geometry, blockMaterial);
+		mesh.position.set(0.5, 0.0, 0.15);
+
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+
+		block.add(mesh);
 	}
 
 	{
-		let momentGeomtry = makeMomentGeometry(momentData.y / 5000);
-		let mesh = new THREE.Mesh(momentGeomtry, materialGreen);
-		mesh.rotateX(Math.PI / 2.0);
-		moments.add(mesh);
+		let forces = new THREE.Object3D();
+
+		{
+			forces.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 1, 0xff0000));
+			forces.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 1, 0x00ff00));
+			forces.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 1, 0x0000ff));
+
+			forces.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(1, 0, 0), 1, 0xff0000));
+			forces.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1, 0, 0), 1, 0x00ff00));
+			forces.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(1, 0, 0), 1, 0x0000ff));
+		}
+
+		block.add(forces);
+		block.forces = forces;
 	}
 
-	{
-		let momentGeomtry = makeMomentGeometry(momentData.z / 5000);
-		let mesh = new THREE.Mesh(momentGeomtry, materialBlue);
-		moments.add(mesh);
-	}
-
-
-	return moments;
+	return block;
 }
+
 
 let system = new THREE.Object3D();
 
 function makeSystem() {
 	// Build the blocks
 	initBlockMaterial();
-	let frameData = document.getCurrentOutputFrame();
+	let frameContent = document.getCurrentOutputFrame();
 
 	let blocks = [];
-	for (let blockData of frameData.configuration) {
+	for (let blockData of frameContent.configuration) {
 		let block = makeBlock();
 		system.add(block);
 		blocks.push(block);
 	}
 
-	function setBlockTransforms(frameData) {
+	function updateBlocks(frameContent) {
+		let showForces = settingsNamespace.get(["forces", "show"]);
+		let forcesScale = settingsNamespace.get(["forces", "scale"]);
+		let forcesHeadSize = settingsNamespace.get(["forces", "headSize"]);
+
+		let updateArrow = (arrowHelper, moment, axis) => {
+			let length = moment[axis] / forcesScale[axis];
+			arrowHelper.setLength(Math.abs(length), forcesHeadSize, forcesHeadSize);
+
+			let direction = new THREE.Vector3(0, 0, 0);
+			direction[axis] = length > 0 ? 1 : -1;
+			arrowHelper.setDirection(direction);
+		};
+
 		for (let i = 0; i < blocks.length; i++) {
 			let block = blocks[i];
-			let blockData = frameData.configuration[i];
+			let blockData = frameContent.configuration[i];
 			block.position.set(blockData.start.x, blockData.start.y, blockData.start.z);
 			block.rotation.z = blockData.angleToX;
+
+			if(showForces && frameContent.forces) {
+				block.forces.visible = true;
+
+				updateArrow(block.forces.children[0], frameContent.forces[i * 2 + 0].moment, 'x');
+				updateArrow(block.forces.children[1], frameContent.forces[i * 2 + 0].moment, 'y');
+				updateArrow(block.forces.children[2], frameContent.forces[i * 2 + 0].moment, 'z');
+
+				updateArrow(block.forces.children[3], frameContent.forces[i * 2 + 1].moment, 'x');
+				updateArrow(block.forces.children[4], frameContent.forces[i * 2 + 1].moment, 'y');
+				updateArrow(block.forces.children[5], frameContent.forces[i * 2 + 1].moment, 'z');
+			}
+			else {
+				block.forces.visible = false;
+			}
 		}
 	}
 
-	setBlockTransforms(frameData)
-
-	// Build the forces
-	let showForces = settingsNamespace.get("showForces");
-
-	if (showForces && frameData.forces) {
-		system.updateMatrixWorld();
-		for (let i = 0; i < frameData.forces.length; i++) {
-			let positionInBlock = i % 2 == 0
-				? new THREE.Vector3(0, 0, 0)
-				: new THREE.Vector3(1.0, 0, 0.0);
-			let block = blocks[Math.floor(i / 2)];
-
-			let positionInWorld = block.localToWorld(positionInBlock);
-
-			let momentHelper = makeMoments(frameData.forces[i]);
-			momentHelper.position.copy(positionInWorld);
-			system.add(momentHelper);
-		}
-	}
+	updateBlocks(frameContent);
 
 	// listen for changes
 	let callback = () => {
-		setBlockTransforms(document.getCurrentOutputFrame());
+		updateBlocks(document.getCurrentOutputFrame());
 	}
+
 	rendererRouter.onChange('outputFrame', callback);
 	rendererRouter.onChange('outputTimeline', callback);
+	settingsNamespace.onChange(callback);
 }
 
-try {
+ErrorHandler.do(() => {
 	makeSystem();
-}
-catch(error) {
-	console.error(error);
-}
+});
 
 export { system }

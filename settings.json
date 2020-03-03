@@ -101,12 +101,20 @@
         "shadowBias": -0.00001
       },
       "blockMaterial": {
-        "color": 11184810,
         "metalness": 0.8,
         "roughness": 0.1,
-        "envMapIntensity": 1
+        "envMapIntensity": 1,
+        "wireframe": false
       },
-      "showForces": false,
+      "forces": {
+        "show": true,
+        "scale": {
+          "x": 10000,
+          "y": 10000,
+          "z": 10
+        },
+        "headSize": 0.05
+      },
       "postProcessing": {
         "enabled": true,
         "ambientOcclusion": {
@@ -191,8 +199,8 @@
         "freshFramesColor": "#efffee",
         "ruler": {
           "forcesArea": {
-            "height": 5,
-            "fillColor": "#ccc"
+            "height": 8,
+            "fillColor": "#90e576"
           }
         }
       },
@@ -296,9 +304,19 @@
             "roughness": 0.1,
             "drag": 2
           }
+        },
+        "preferences": {
+          "maxIterations": 200
         }
       },
-      "syncToOutputFrameIndex": false
+      "syncToOutputFrameIndex": true,
+      "windProfile": {
+        "Vref": 0,
+        "href": 2,
+        "theta": 0,
+        "roughness": 0.1,
+        "drag": 2
+      }
     },
     "RenderSettings": {
       "renderPerson": false,
@@ -352,7 +370,7 @@
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 63.59832635983263,
+              "width": 63.76569037656904,
               "content": [
                 {
                   "type": "stack",
@@ -380,7 +398,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 31.616682384014602,
+                  "height": 32.18747901603222,
                   "content": [
                     {
                       "type": "stack",
@@ -434,7 +452,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 15.754753594746262,
+                  "height": 15.183956962728645,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",
@@ -452,7 +470,7 @@
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 36.40167364016737,
+              "width": 36.23430962343096,
               "content": [
                 {
                   "type": "row",

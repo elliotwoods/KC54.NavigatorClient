@@ -57,7 +57,28 @@ class Ruler extends Element {
 		}
 		, true);
 
-		// 
+		// Forces indicator
+		this.children.forcesIndicator = new Element(this.draw.group()
+		, null
+		, (element) => {
+			element.draw.clear();
+
+			let outputFrameCount = outputTimeline.getFrameCount();
+
+			for(let i=this.parent.visibleRangeStart; i<=this.parent.visibleRangeEnd; i+= 1) {
+				if(i < outputFrameCount) {
+					let outputFrame = outputTimeline.getFrame(i);
+					if(outputFrame.content.forces) {
+						// frame has forces
+						element.draw.rect(parent.pixelsPerFrame, layout.ruler.forcesArea.height)
+							.move(this.parent.frameIndexToPixel(i), layout.frameNumbersAreaHeight - layout.ruler.forcesArea.height)
+							.attr({
+								'fill' : layout.ruler.forcesArea.fillColor
+							});
+					}
+				}
+			}
+		}, true);
 
 		// Frame labels
 		this.children.frameLabels = new Element(this.draw.group()
@@ -101,29 +122,6 @@ class Ruler extends Element {
 			}
 		}
 		, true);
-
-		// Forces indicator
-		this.children.forcesIndicator = new Element(this.draw.group()
-		, null
-		, (element) => {
-			element.draw.clear();
-
-			let outputFrameCount = outputTimeline.getFrameCount();
-
-			for(let i=this.parent.visibleRangeStart; i<=this.parent.visibleRangeEnd; i+= 1) {
-				if(i < outputFrameCount) {
-					let outputFrame = outputTimeline.getFrame(i);
-					if(outputFrame.forces) {
-						// frame has forces
-						element.draw.rect(parent.pixelsPerFrame, layout.ruler.forcesArea.height)
-							.move(this.parent.frameIndexToPixel(i), layout.frameNumbersAreaHeight - layout.ruler.forcesArea.height)
-							.attr({
-								'fill' : layout.ruler.forcesArea.fillColor
-							});
-					}
-				}
-			}
-		});
 
 		// Current frame cursor
 		this.children.frameCursor = new Element(this.draw.group()

@@ -95,13 +95,16 @@ class OutputTimeline {
 				}
 			};
 
-			document.get("outputFrames")
-				.nth(frameIndex)
-				.assign(frameData)
-				.write();
-
-			rendererRouter.notifyChange('outputTimeline');
+			this.setFrameData(frameIndex, frameData);
 		}
+	}
+
+	setFrameData(frameIndex, frameData) {
+		document.get("outputFrames")
+			.nth(frameIndex)
+			.assign(frameData)
+			.write();
+		rendererRouter.notifyChange('outputTimeline');
 	}
 
 	getFrame(frameIndex) {

@@ -8,6 +8,8 @@ import { document, settings } from '../Database.js'
 import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { transport } from '../Data/transport.js'
+import { outputTimeline } from '../Data/outputTimeline.js'
+import { Inspectable } from '../Views/Inspector.js'
 
 class Transport extends Functions {
 	constructor(container, state, childType) {
@@ -30,6 +32,9 @@ class Transport extends Functions {
 			},
 			skipToEnd : {
 				icon: "fas fa-fast-forward"
+			},
+			inspect_frameData : {
+				icon: "fas fa-eye"
 			}
 		});
 
@@ -50,6 +55,8 @@ class Transport extends Functions {
 			rendererRouter.onChange('outputTimeline', redraw);
 			redraw();
 		}
+
+		this.inspectableFrameData = new Inspectable(() => outputTimeline.getFrame(transport.getCurrentFrameIndex()), null, "Transport : Current frame");
 
 		this._updatePlayState();
 		rendererRouter.onChange("playing", () => {
@@ -88,6 +95,10 @@ class Transport extends Functions {
 	stop() {
 		rendererRouter.appState.set_playing(false);
 		rendererRouter.appState.set_outputFrameIndex(0);
+	}
+
+	inspect_frameData() {
+		return this.inspectableFrameData;
 	}
 
 	_updatePlayState() {
