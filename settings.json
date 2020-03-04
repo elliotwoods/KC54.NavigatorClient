@@ -221,7 +221,7 @@
                   "type": "MinimiseMoments"
                 },
                 "weight": 0.00001,
-                "__active": true
+                "__active": false
               }
             }
           ]
@@ -268,7 +268,7 @@
                   "scale": 20,
                   "type": "StayInTheGarden"
                 },
-                "weight": 100,
+                "weight": 1,
                 "__active": true
               }
             }
@@ -286,11 +286,11 @@
                   "desiredShaftPositions": {
                     "8": {
                       "x": -2,
-                      "y": -4
+                      "y": -3
                     },
                     "9": {
                       "x": -1,
-                      "y": -4
+                      "y": -3
                     }
                   }
                 },
@@ -332,7 +332,28 @@
                   }
                 },
                 "weight": 0.1,
-                "__name": "Prefer Priors"
+                "__name": "Prefer previous frame"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wU216dpC",
+          "keyFrames": [
+            {
+              "frameIndex": 0,
+              "id": "R95cexB_",
+              "content": {
+                "objective": {
+                  "type": "PreferBeamAngles",
+                  "desiredAngles": {
+                    "__generator": {
+                      "type": "SpiralMap"
+                    }
+                  }
+                },
+                "weight": 0.5,
+                "__name": "Spiral"
               }
             }
           ]
@@ -354,7 +375,7 @@
           }
         },
         "preferences": {
-          "maxIterations": 50
+          "maxIterations": 20000
         }
       },
       "preview": {
@@ -449,7 +470,7 @@
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "height": 20.03326669003778,
+                  "height": 39.27895645394451,
                   "content": [
                     {
                       "type": "stack",
@@ -503,7 +524,7 @@
                   "reorderEnabled": true,
                   "title": "",
                   "activeItemIndex": 0,
-                  "height": 44.030334810724746,
+                  "height": 24.78464504681802,
                   "content": [
                     {
                       "title": "<i class=\"fas fa-indent\" /> InputTimeline",

@@ -2,6 +2,11 @@ import { NavigatorServer } from '../Utils/NavigatorServer.js'
 
 class SpiralMap {
 	static async generate(args, priorPose) {
+		if(!args) {
+			args = {
+				centredness : 0
+			};
+		}
 		if(args.centredness) {
 			if(args.centredness < -1.3) {
 				args.centredness = -1.3;
