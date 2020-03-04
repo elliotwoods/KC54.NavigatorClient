@@ -8,7 +8,7 @@ class ErrorHandler {
 		let report = $("<span />");
 
 		if(error instanceof ServerError) {
-			report.append(`<h3>Server error</h3>`);
+			report.append(`<h3>Server error : ${error.message}</h3>`);
 
 			let table = $(`<table class="table table-hover">
 				<thead>

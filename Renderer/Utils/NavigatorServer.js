@@ -4,12 +4,18 @@ import { ServerError } from './ServerError.js'
 
 class NavigatorServer {
 	static async call(requestName, args) {
-		let response = await post(requestName, args);
-		if (response.success) {
-			return response.result;
+		try {
+			let response = await post(requestName, args);
+			if (response.success) {
+				return response.result;
+			}
+			else {
+				throw (new ServerError(response));
+			}
 		}
-		else {
-			throw (new ServerError(response));
+		catch(error) {
+			error.message = requestName + ' : ' + error.message;
+			throw(error);
 		}
 	}
 
@@ -65,6 +71,13 @@ class NavigatorServer {
 			windProfile : windProfile
 		});
 	};
+
+	static async calculateObjectiveValues(pose, objectives) {
+		return await NavigatorServer.call("CalculateObjectiveValues", {
+			pose : pose,
+			objective : objectives
+		});
+	}
 }
 
 export { NavigatorServer } 

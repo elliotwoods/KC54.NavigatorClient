@@ -16,6 +16,7 @@ import { transport } from '../Data/transport.js'
 import { InspectableSettings } from '../Utils/InspectableSettings.js'
 import { parseGenerators } from '../Generators/generatorFactoryRegister.js'
 import { Inspectable } from './Inspector.js'
+const fs = require('fs')
 
 const shortid = require('shortid');
 const fastEqual = require('fast-deep-equal');
@@ -72,6 +73,9 @@ settingsNamespace.defaults(
 			maxIterations : 200
 		}
 	},
+	"preview" : {
+		applyGenerators : true
+	},
 	"syncToOutputFrameIndex" : false,
 	windProfile : {
 		Vref : 0,
@@ -107,7 +111,9 @@ class InputTimeline extends Base {
 		this.syncToOutputFrameIndex = settingsNamespace.get("syncToOutputFrameIndex");
 		this.cachedOutputValuesForThisFrame = {};
 
-		this.viewDataInspectable = new Inspectable(() => {
+		this.refreshRequests = 0;
+
+		this.previewObjectivesInspectable = new Inspectable(() => {
 				return this.cachedOutputValuesForThisFrame;
 			}
 			, null
@@ -181,6 +187,22 @@ class InputTimeline extends Base {
 					icon: "fas fa-save"
 				}
 			},
+			import : {
+				do : () => {
+					this.import();
+				},
+				buttonPreferences : {
+					icon : "fas fa-file-import"
+				}
+			},
+			export : {
+				do : () => {
+					this.export();
+				},
+				buttonPreferences : {
+					icon : "fas fa-file-export"
+				}
+			},
 			settings : {
 				do : () => {
 					inspectableSettings.toggleInspect();
@@ -205,12 +227,12 @@ class InputTimeline extends Base {
 					icon: "fas fa-sync"
 				}
 			},
-			viewResult : {
+			previewObjectives : {
 				do : () => {
-					this.viewDataInspectable.toggleInspect();
+					this.previewObjectivesInspectable.toggleInspect();
 					this.requestRefresh();
 				},
-				isDown : () => this.viewDataInspectable.isBeingInspected(),
+				isDown : () => this.previewObjectivesInspectable.isBeingInspected(),
 				buttonPreferences : {
 					icon: "fas fa-eye"
 				}
@@ -223,14 +245,24 @@ class InputTimeline extends Base {
 				buttonPreferences : {
 					icon : "fas fa-balance-scale-right"
 				}
+			},
+			calculateObjectiveValues : {
+				do : async () => {
+					await this.calculateObjectiveValues();
+				},
+				buttonPreferences : {
+					icon : "fas fa-bullseye"
+				}
 			}
 		};
 
 		this.element = new Element(this);
 
-		ErrorHandler.do(() => {
+		ErrorHandler.doAsync(async () => {
 			this.build();
+			await this.markDirtyFrames();
 		});
+
 
 		this.container.on("resize", () => {
 			this.resize();
@@ -241,8 +273,6 @@ class InputTimeline extends Base {
 		});
 		rendererRouter.onChange('outputTimeline', async () => {
 			await this.markDirtyFrames();
-			this.element.children.ruler.children.background.markDirty();
-			this.requestRefresh();
 		});
 		rendererRouter.onChange('outputFrame', () => {
 			if (this.syncToOutputFrameIndex) {
@@ -314,22 +344,24 @@ class InputTimeline extends Base {
 	}
 
 	requestRefresh() {
-		if(this.refreshQueued) {
+		if(this.refreshRequests > 0) {
 			return;
 		}
 
-		// wait a little
-		this.refreshQueued = true;
-		setTimeout(() => {
-			this.refreshQueued = false;
-			ErrorHandler.doAsync(async () => {
+		this.refreshRequests++;
+
+		ErrorHandler.doAsync(async () => {
+			await new Promise(resolve => setTimeout(resolve, 20));
+
+			while(this.refreshRequests > 0) {
+				this.refreshRequests--;
 				await this.refresh();
-			});
-		}, 20)
+			}
+		});
 	}
 
 	async refresh() {
-		await this.markDirtyFrames();
+		this.draw.height(layout.frameNumbersAreaHeight + layout.trackHeight * this.tracks.length);
 
 		this.element.refresh();
 
@@ -358,13 +390,13 @@ class InputTimeline extends Base {
 		}
 
 		try {
-			this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex);
+			this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex, settingsNamespace.get(["preview", "applyGenerators"]));
 		}
 		catch(error) {
 			console.error(error);
 			this.cachedOutputValuesForThisFrame = undefined;
 		}
-		this.viewDataInspectable.notifyValueChange();
+		this.previewObjectivesInspectable.notifyValueChange();
 	}
 
 	validateFrameIndex(frameIndex) {
@@ -496,7 +528,7 @@ class InputTimeline extends Base {
 		this.timelineDataChange();
 	}
 
-	async isFrameDirty(frameIndex, newObjectives) {
+	async calculateIfFrameIsDirty(frameIndex, newObjectives) {
 		// we don't have this frame yet
 		if (frameIndex >= outputTimeline.getFrameCount()) {
 			return true;
@@ -542,11 +574,13 @@ class InputTimeline extends Base {
 	async markDirtyFrames() {
 		let frameCount = this.getFrameCount();
 		for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
-			let dirty = await this.isFrameDirty(frameIndex);
+			let dirty = await this.calculateIfFrameIsDirty(frameIndex);
 			if (dirty) {
 				this.markDirtyFrame(frameIndex);
 			}
 		}
+		this.element.children.ruler.markDirty(true);
+		this.requestRefresh();
 	}
 
 	async getPriorPoseForFrame(frameIndex) {
@@ -564,14 +598,17 @@ class InputTimeline extends Base {
 		}
 	}
 	
-	async getObjectivesForFrame(frameIndex) {
+	async getObjectivesForFrame(frameIndex, applyGenerators = true) {
 		let objectives = this.tracks.map(track => InputTimelineUtils.calculateTrackFrame(track, frameIndex));
 		
 		// clone copy
 		objectives = JSON.parse(JSON.stringify(objectives));
 
-		let priorPose = await this.getPriorPoseForFrame(frameIndex);
-		await parseGenerators(objectives, priorPose);
+		if(applyGenerators) {
+			let priorPose = await this.getPriorPoseForFrame(frameIndex);
+			objectives = await parseGenerators(objectives, priorPose);
+		}
+		
 		return objectives;
 	}
 
@@ -615,7 +652,7 @@ class InputTimeline extends Base {
 
 		// skip non dirty frames
 		if (skipNonDirty) {
-			if (!await this.isFrameDirty(frameIndex, objectives)) {
+			if (!await this.calculateIfFrameIsDirty(frameIndex, objectives)) {
 				return false;
 			}
 		}
@@ -692,6 +729,47 @@ class InputTimeline extends Base {
 		settingsNamespace.set(this.tracks, "tracks");
 	}
 
+	import() {
+		let result = rendererRouter.openDialog({
+			properties: ['openFile'],
+			filters: [
+				{ name: 'Animation tracks', extensions: ['json'] }
+			],
+			message: "Import tracks from JSON file"
+		});
+		if(!result) {
+			return;
+		}
+		let filename = result[0];
+		let fileContents = fs.readFileSync(filename, {
+			encoding: 'utf8'
+		});
+		let newTracks = JSON.parse(fileContents);
+		if(newTracks) {
+			this.tracks = newTracks;
+			this.element.markDirty(true);
+			this.requestRefresh();
+			this.markDirtyFrames();
+		}
+	}
+
+	export() {
+		let result = rendererRouter.saveDialog({
+			properties: ['saveFile'],
+			filters: [
+				{ name: 'Animation tracks', extensions: ['json'] }
+			],
+			message: "Export tracks as JSON file"
+		});
+		if(!result) {
+			return;
+		}
+		let filename = result;
+		fs.writeFileSync(filename, JSON.stringify(this.tracks, null, 4), {
+			encoding: 'utf8'
+		});
+	}
+
 	async calculateForces() {
 		let freshFrameCount = await this.getIndexOfFirstDirtyFrame();
 		let windProfile = settingsNamespace.get("windProfile");
@@ -714,6 +792,12 @@ class InputTimeline extends Base {
 			this.element.children.ruler.markDirty(true);
 			this.requestRefresh();
 		}
+	}
+
+	async calculateObjectiveValues() {
+		let pose = outputTimeline.getFrame(this.currentFrameIndex).content.configuration;
+		let objectives = this.getObjectivesForFrame(this.currentFrameIndex);
+		console.log(await NavigatorServer.calculateObjectiveValues(pose, objectives));
 	}
 }
 

@@ -25,7 +25,7 @@ async function parseGenerators(object, priorPose) {
 				// Check if this branch is deactivated
 				if(grandChildKeys.includes(activeKey)) {
 					if(!object[childKey][activeKey]) {
-						delete object.childKey;
+						delete object[childKey];
 						continue;
 					}
 				}
@@ -36,10 +36,13 @@ async function parseGenerators(object, priorPose) {
 				}
 				else {
 					// go down the tree
-					await parseGenerators(object[childKey], priorPose);
+					object[childKey] = await parseGenerators(object[childKey], priorPose);
 				}
 			}
 		}
+	}
+	if(Array.isArray(object)) {
+		object = object.filter(element => element); // remove null/undefined elements
 	}
 	return object; // just in case
 }

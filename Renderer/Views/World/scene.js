@@ -136,6 +136,8 @@ function showPerson() {
 			gltf.scene.position.set(Constants.footDistance / 2, -5, 0.5);
 			person = gltf.scene;
 			scene.add(person);
+
+			rendererRouter.notifyChange('renderView');
 		}
 		, undefined
 		, (error) => {
