@@ -37,6 +37,11 @@ class NavigatorServer {
 	}
 
 	static async getSpiralPose(configuration) {
+		if(!configuration) {
+			configuration = {
+				centredness : 0
+			};
+		}
 		let result = await NavigatorServer.call("SpiralPose", configuration);
 		return result;
 	}

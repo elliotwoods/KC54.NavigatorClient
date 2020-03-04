@@ -23,11 +23,11 @@ class OutputTimeline {
 	}
 
 	get() {
-		return document.get("outputTimeline").value();
+		return document.get("outputFrames").value();
 	}
 
 	set(value) {
-		document.set("outputTimeline").set(value).write();
+		document.set("outputFrames", value).write();
 	}
 
 	getTracks() {

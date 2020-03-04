@@ -62,8 +62,9 @@ class KeyFrames extends Element {
 							}
 							, () => `${InputTimelineUtils.getTrackObjectiveType(track)} : Keyframe ${keyFrame.frameIndex}`);
 							inspectable.onInspectChange(() => {
-								element.dirty = true;
-								element.refresh();
+								element.markDirty(true);
+								this.parent.element.children.trackHeaders.markDirty(true);
+								this.parent.element.refresh();
 							});
 							inspectable.keyFrame = keyFrame;
 							inspectable.track = track;

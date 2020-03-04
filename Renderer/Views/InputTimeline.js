@@ -390,7 +390,7 @@ class InputTimeline extends Base {
 		}
 
 		try {
-			this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex, settingsNamespace.get(["preview", "applyGenerators"]));
+			this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex, !settingsNamespace.get(["preview", "applyGenerators"]));
 		}
 		catch(error) {
 			console.error(error);
@@ -404,11 +404,12 @@ class InputTimeline extends Base {
 		if (frameIndex < 0) {
 			frameIndex = this.getFrameCount() - 1;
 		}
-		if (frameIndex >= this.getFrameCount()) {
-			frameIndex = 0;
-		}
 
-		// also we need to clamp to max, but we dont have this yet
+		// Actually we dont want this. If we only have one keyframe, we still want to be able to move the cursor
+		// if (frameIndex >= this.getFrameCount()) {
+		// 	frameIndex = 0;
+		// }
+
 		return frameIndex;
 	}
 
@@ -549,7 +550,7 @@ class InputTimeline extends Base {
 		}
 
 		if(!newObjectives) {
-			newObjectives = await this.getObjectivesForFrame(frameIndex);
+			newObjectives = await this.getObjectivesForFrame(frameIndex, false);
 		}
 
 		if (!fastEqual(renderData.objectives, newObjectives)) {
@@ -585,8 +586,8 @@ class InputTimeline extends Base {
 
 	async getPriorPoseForFrame(frameIndex) {
 		let priorFrameCount = outputTimeline.getFrameCount();
-		if (frameIndex <= 0 && priorFrameCount > 0) {
-			return outputTimeline.getFrame(0).content.configuration;
+		if(frameIndex == 0) {
+			return await NavigatorServer.getSpiralPose();
 		}
 		else if (frameIndex - 1 < priorFrameCount) {
 			// previous frame is available in timeline
@@ -598,14 +599,16 @@ class InputTimeline extends Base {
 		}
 	}
 	
-	async getObjectivesForFrame(frameIndex, applyGenerators = true) {
+	async getObjectivesForFrame(frameIndex, dontApplyGenerators, priorPose) {
 		let objectives = this.tracks.map(track => InputTimelineUtils.calculateTrackFrame(track, frameIndex));
 		
 		// clone copy
 		objectives = JSON.parse(JSON.stringify(objectives));
 
-		if(applyGenerators) {
-			let priorPose = await this.getPriorPoseForFrame(frameIndex);
+		if(!dontApplyGenerators) {
+			if(!priorPose) {
+				priorPose = await this.getPriorPoseForFrame(frameIndex);
+			}
 			objectives = await parseGenerators(objectives, priorPose);
 		}
 		
@@ -644,11 +647,10 @@ class InputTimeline extends Base {
 	 * @memberof InputTimeline
 	 */
 	async renderAndStoreFrame(frameIndex, skipNonDirty) {
-		// select a prior pose
 		let priorPose = await this.getPriorPoseForFrame(frameIndex);
 
 		// create objectives
-		let objectives = await this.getObjectivesForFrame(frameIndex);
+		let objectives = await this.getObjectivesForFrame(frameIndex, false, priorPose);
 
 		// skip non dirty frames
 		if (skipNonDirty) {
@@ -656,32 +658,10 @@ class InputTimeline extends Base {
 				return false;
 			}
 		}
-		
-		// inject prior pose as a PreferBeamAngles
-		let objectivesWithPriorPose = [...objectives];
-		{
-			if(!priorPose) {
-				priorPose = await this.getPriorPoseForFrame(frameIndex);
-			}
 
-			if(settingsNamespace.get(["optimisation", "preferBeamAngles", "prior"])) {
-				let preferBeamAnglesObjective = {
-					objective : {
-						type : "PreferBeamAngles",
-						desiredAngles : {}
-					},
-					weight : settingsNamespace.get(["optimisation", "preferBeamAngles", "weight"])
-				}
-				for(let i = 0; i<priorPose.length; i++) {
-					preferBeamAnglesObjective.objective.desiredAngles[i] = priorPose[i].angleToX
-				}
-				objectivesWithPriorPose.push(preferBeamAnglesObjective);
-			}
-		}
-		
 		// call to the server
 		let callStart = performance.now();
-		let pose = await NavigatorServer.optimise(priorPose, objectivesWithPriorPose, settingsNamespace.get(["optimisation", "preferences"]));
+		let pose = await NavigatorServer.optimise(priorPose, objectives, settingsNamespace.get(["optimisation", "preferences"]));
 		let callEnd = performance.now();
 		outputTimeline.setFrame(frameIndex, pose, "InputTimeline", {
 			dirty: false,
@@ -729,7 +709,7 @@ class InputTimeline extends Base {
 		settingsNamespace.set(this.tracks, "tracks");
 	}
 
-	import() {
+	async import() {
 		let result = rendererRouter.openDialog({
 			properties: ['openFile'],
 			filters: [
@@ -751,7 +731,7 @@ class InputTimeline extends Base {
 			outputTimeline.set(data.outputTimeline);
 			this.element.markDirty(true);
 			this.requestRefresh();
-			this.markDirtyFrames();
+			this.markDirtyFrames(); // run this async detached
 		}
 	}
 
@@ -821,8 +801,10 @@ class InputTimeline extends Base {
 
 	async calculateObjectiveValues() {
 		let pose = outputTimeline.getFrame(this.currentFrameIndex).content.configuration;
-		let objectives = this.getObjectivesForFrame(this.currentFrameIndex);
+		let objectives = this.getObjectivesForFrame(this.currentFrameIndex, false);
 		console.log(await NavigatorServer.calculateObjectiveValues(pose, objectives));
+
+		// this needs to be completed
 	}
 }
 

@@ -185,26 +185,41 @@ class InputTimelineUtils {
 		let name;
 		for(let keyFrame of track.keyFrames) {
 			try {
-				name = keyFrame.content.objective.type;
+				return keyFrame.content.objective.type;
 			}
 			catch {
 				continue;
 			}
 			break;
 		}
-		if(!name) {
-			name = 'Empty Track'
+	}
+
+	static getTrackName(track) {
+		let name;
+		for(let keyFrame of track.keyFrames) {
+			try {
+				return keyFrame.content["__name"];
+			}
+			catch {
+				continue;
+			}
+			break;
 		}
-		return name;
 	}
 
 	static getTrackCaption(track) {
 		if(track.name) {
 			return track.name;
 		}
-		else {
-			return InputTimelineUtils.getTrackObjectiveType(track);
+		let foundTrackName = this.getTrackName(track);
+		if(foundTrackName) {
+			return foundTrackName;
 		}
+		let trackObjectiveType = this.getTrackObjectiveType(track);
+		if(trackObjectiveType) {
+			return `[${trackObjectiveType}]`;
+		}
+		return 'Empty track';
 	}
 }
 

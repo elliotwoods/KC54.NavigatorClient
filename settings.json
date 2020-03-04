@@ -242,44 +242,6 @@
           ]
         },
         {
-          "id": "rRYJlg1f",
-          "keyFrames": [
-            {
-              "frameIndex": 0,
-              "id": "KIgI7ifZ",
-              "content": {
-                "objective": {
-                  "desiredAngles": {
-                    "__generator": {
-                      "args": {
-                        "centredness": 1.3
-                      },
-                      "type": "SpiralMap"
-                    }
-                  },
-                  "type": "PreferBeamAngles"
-                },
-                "weight": 1
-              }
-            },
-            {
-              "frameIndex": 99,
-              "id": "czmyvnl9",
-              "content": {
-                "objective": {
-                  "desiredAngles": {
-                    "__generator": {
-                      "args": {
-                        "centredness": -1.3
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
           "id": "SU6qhyTi",
           "keyFrames": [
             {
@@ -304,10 +266,73 @@
               "content": {
                 "objective": {
                   "scale": 20,
-                  "type": "StayInGarden"
+                  "type": "StayInTheGarden"
                 },
-                "weight": 1,
-                "__active": false
+                "weight": 100,
+                "__active": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "WAlD__8T",
+          "keyFrames": [
+            {
+              "frameIndex": 0,
+              "id": "V4yvPBrj",
+              "content": {
+                "objective": {
+                  "type": "PreferShaftPositions",
+                  "desiredShaftPositions": {
+                    "8": {
+                      "x": -2,
+                      "y": -4
+                    },
+                    "9": {
+                      "x": -1,
+                      "y": -4
+                    }
+                  }
+                },
+                "weight": 5
+              }
+            },
+            {
+              "frameIndex": 99,
+              "id": "2fXOmVUH",
+              "content": {
+                "objective": {
+                  "type": "PreferShaftPositions",
+                  "desiredShaftPositions": {
+                    "8": {
+                      "x": 8
+                    },
+                    "9": {
+                      "x": 9
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "Qw52ptim",
+          "keyFrames": [
+            {
+              "frameIndex": 0,
+              "id": "YkH2qC1X",
+              "content": {
+                "objective": {
+                  "type": "PreferBeamAngles",
+                  "desiredAngles": {
+                    "__generator": {
+                      "type": "PriorAnglesMap"
+                    }
+                  }
+                },
+                "weight": 0.1,
+                "__name": "Prefer Priors"
               }
             }
           ]
@@ -329,7 +354,7 @@
           }
         },
         "preferences": {
-          "maxIterations": 200
+          "maxIterations": 50
         }
       },
       "preview": {

@@ -48,7 +48,9 @@ async function parseGenerators(object, priorPose) {
 }
 
 import { SpiralMap } from './SpiralMap.js'
+import { PriorAnglesMap } from './PriorAnglesMap.js'
 
 register(SpiralMap);
+register(PriorAnglesMap);
 
 export { parseGenerators }
