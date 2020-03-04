@@ -58,7 +58,7 @@ class Ruler extends Element {
 		, true);
 
 		// Forces indicator
-		this.children.forcesIndicator = new Element(this.draw.group()
+		this.children.background.children.forcesIndicator = new Element(this.children.background.draw.group()
 		, null
 		, (element) => {
 			element.draw.clear();
@@ -153,6 +153,9 @@ class Ruler extends Element {
 			switch(this.mouseDragStart.target) {
 			case this.children.background:
 				let frameIndex = this.mouseDragStart.frameIndex + (args.pageX - this.mouseDragStart.x) / parent.pixelsPerFrame;
+				if(frameIndex < 0) {
+					frameIndex = 0;
+				}
 				this.parent.setFrameIndex(frameIndex);
 				break;
 			default:

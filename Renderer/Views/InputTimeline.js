@@ -744,9 +744,11 @@ class InputTimeline extends Base {
 		let fileContents = fs.readFileSync(filename, {
 			encoding: 'utf8'
 		});
-		let newTracks = JSON.parse(fileContents);
-		if(newTracks) {
-			this.tracks = newTracks;
+		let data = JSON.parse(fileContents);
+
+		if(data) {
+			this.tracks = data.tracks;
+			outputTimeline.set(data.outputTimeline);
 			this.element.markDirty(true);
 			this.requestRefresh();
 			this.markDirtyFrames();
@@ -765,32 +767,55 @@ class InputTimeline extends Base {
 			return;
 		}
 		let filename = result;
-		fs.writeFileSync(filename, JSON.stringify(this.tracks, null, 4), {
+
+		let data = {
+			tracks : this.tracks,
+			outputTimeline : outputTimeline.get()
+		};
+		fs.writeFileSync(filename, JSON.stringify(data, null, 4), {
 			encoding: 'utf8'
 		});
 	}
 
 	async calculateForces() {
-		let freshFrameCount = await this.getIndexOfFirstDirtyFrame();
 		let windProfile = settingsNamespace.get("windProfile");
 
-		for(let i = 0; i<freshFrameCount; i++) {
+		let promises = [];
+
+		for(let i = 0; i < await this.getIndexOfFirstDirtyFrame(); i++) {
 			let frameData = outputTimeline.getFrame(i);
 			
-			let callStart = performance.now();
-			frameData.content.forces = await NavigatorServer.calculateForces(frameData.content.configuration, windProfile);
-			let callEnd = performance.now();
-
-			frameData.forcesRenderData = {
-				renderTime : (callEnd - callStart) / 1000,
-				windProfile : windProfile,
-				timestamp : new Date()
+			let call = async() => {
+				let callStart = performance.now();
+				frameData.content.forces = await NavigatorServer.calculateForces(frameData.content.configuration, windProfile);
+				let callEnd = performance.now();
+	
+				frameData.forcesRenderData = {
+					renderTime : (callEnd - callStart) / 1000,
+					windProfile : windProfile,
+					timestamp : new Date()
+				};
+	
+				outputTimeline.setFrameData(i, frameData);
+	
+				this.element.children.ruler.markDirty(true);
+				this.requestRefresh();
 			};
 
-			outputTimeline.setFrameData(i, frameData);
+			// handle multiple at once
+			promises.push(call());
 
-			this.element.children.ruler.markDirty(true);
-			this.requestRefresh();
+			// when we get to 4 wait for them all to finish
+			if(promises.length >= NavigatorServer.getMaxConcurrentRequests()) {
+				for(let promise of promises) {
+					await promise;
+				}
+				promises = [];
+			}
+		}
+
+		for(let promise of promises) {
+			await promise;
 		}
 	}
 

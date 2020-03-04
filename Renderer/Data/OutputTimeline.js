@@ -22,6 +22,14 @@ class OutputTimeline {
 		];
 	}
 
+	get() {
+		return document.get("outputTimeline").value();
+	}
+
+	set(value) {
+		document.set("outputTimeline").set(value).write();
+	}
+
 	getTracks() {
 		this.buildTracks();
 		return this._cache.tracks;

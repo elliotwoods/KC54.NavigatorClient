@@ -2,18 +2,35 @@ const bent = require('bent')
 const post = bent('http://localhost:8080/', 'POST', 'json');
 import { ServerError } from './ServerError.js'
 
+const maxConcurrentRequests = 16;
+let currentRequestCount = 0;
+
 class NavigatorServer {
+	static getMaxConcurrentRequests() {
+		return maxConcurrentRequests;
+	}
+
 	static async call(requestName, args) {
 		try {
+			while(currentRequestCount >= maxConcurrentRequests) {
+				await new Promise(resolve => setTimeout(resolve, 100));
+			}
+
+			currentRequestCount++;
 			let response = await post(requestName, args);
+			currentRequestCount--;
+			
 			if (response.success) {
 				return response.result;
 			}
 			else {
 				throw (new ServerError(response));
 			}
+
 		}
 		catch(error) {
+			currentRequestCount--;
+
 			error.message = requestName + ' : ' + error.message;
 			throw(error);
 		}
