@@ -152,6 +152,34 @@ class InputTimeline extends Base {
 					icon: "fas fa-circle"
 				}
 			},
+			toggleActive : {
+				do: () => {
+					let track = this.getSelectedTrack();
+					InputTimelineUtils.setTrackActive(track, !InputTimelineUtils.getTrackActive(track));
+					this.element.children.trackHeaders.markDirty(true);
+					this.requestRefresh();
+				},
+				isEnabled: () => {
+					let track = this.getSelectedTrack();
+					if(!track) {
+						return false;
+					}
+					if(track.keyFrames.length == 0) {
+						return false;
+					}
+					return true;
+				},
+				isDown : () => {
+					let track = this.getSelectedTrack();
+					if(!track) {
+						return false;
+					}
+					return InputTimelineUtils.getTrackActive(track);
+				},
+				buttonPreferences: {
+					icon: "fas fa-check-square"
+				}
+			},
 			deleteKeyFrame: {
 				do: () => {
 					this.deleteKeyFrame();
@@ -282,7 +310,14 @@ class InputTimeline extends Base {
 		});
 		rendererRouter.onChange('outputFrame', () => {
 			if (this.syncToOutputFrameIndex) {
-				this.setFrameIndex(transport.getCurrentFrameIndex());
+				let frameIndex = transport.getCurrentFrameIndex();
+
+				// check if we want to loop
+				if(frameIndex > this.visibleRangeEnd) {
+					frameIndex = (frameIndex - this.visibleRangeStart) % (this.visibleRangeEnd - this.visibleRangeStart) + this.visibleRangeStart;
+				}
+
+				this.setFrameIndex(frameIndex);
 			}
 		});
 
@@ -703,7 +738,7 @@ class InputTimeline extends Base {
 	}
 
 	async renderAllFrames() {
-		for (let frameIndex = 0; frameIndex < this.getFrameCount(); frameIndex++) {
+		for (let frameIndex = 0; frameIndex <= this.getFrameCount(); frameIndex++) {
 			if (await this.renderAndStoreFrame(frameIndex, true)) {
 				transport.skipToFrame(frameIndex);
 			}

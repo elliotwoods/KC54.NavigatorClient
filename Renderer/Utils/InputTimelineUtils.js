@@ -228,13 +228,20 @@ class InputTimelineUtils {
 		return 'Empty track';
 	}
 
-	static isTrackActive(track) {
+	static getTrackActive(track) {
 		for(let keyFrame of track.keyFrames) {
 			if('__active' in keyFrame.content) {
 				return keyFrame.content.__active;
 			}
 		}
 		return true;
+	}
+
+	static setTrackActive(track, value) {
+		if(track.keyFrames.length == 0) {
+			throw(new Error("Cannot set track active for a track with no keyFrames"));
+		}
+		track.keyFrames[0].content.__active = value;
 	}
 }
 

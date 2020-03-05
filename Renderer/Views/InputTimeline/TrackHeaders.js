@@ -73,7 +73,7 @@ class TrackHeaders extends Element {
 						weight : inspectable.isBeingInspected() ? 400 : 200,
 						size : layout.trackHeaders.font.size
 					 });
-				if(!InputTimelineUtils.isTrackActive(track)) {
+				if(!InputTimelineUtils.getTrackActive(track)) {
 					text.fill(layout.trackHeaders.disabledColor);
 				}
 				y += layout.trackHeight;
