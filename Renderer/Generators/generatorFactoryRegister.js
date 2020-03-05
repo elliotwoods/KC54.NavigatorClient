@@ -6,16 +6,16 @@ function register(generatorType) {
 	generators.push(generatorType);
 }
 
-async function generate(configuration, priorPose) {
+async function generate(configuration, priorFrameContent, frameIndex) {
 	for(let generator of generators) {
 		if(generator.name == configuration.type) {
-			return await generator.generate(configuration.args, priorPose)
+			return await generator.generate(configuration.args, priorFrameContent, frameIndex)
 		}
 	}
 	throw(new Error(`No generator type '${configuration.type}'`));
 }
 
-async function parseGenerators(object, priorPose) {
+async function parseGenerators(object, priorFrameContent, frameIndex) {
 	// find a child which is an object and contains key "__generator"
 	if(typeof(object) == "object") {
 		for(let childKey in object) {
@@ -32,11 +32,11 @@ async function parseGenerators(object, priorPose) {
 
 				if(grandChildKeys.includes(genKey)) {
 					// it's a generator
-					object[childKey] = await generate(object[childKey][genKey], priorPose);
+					object[childKey] = await generate(object[childKey][genKey], priorFrameContent, frameIndex);
 				}
 				else {
 					// go down the tree
-					object[childKey] = await parseGenerators(object[childKey], priorPose);
+					object[childKey] = await parseGenerators(object[childKey], priorFrameContent, frameIndex);
 				}
 			}
 		}
@@ -47,10 +47,16 @@ async function parseGenerators(object, priorPose) {
 	return object; // just in case
 }
 
-import { SpiralMap } from './SpiralMap.js'
+import { SpiralAngleMap } from './SpiralAngleMap.js'
+import { SpiralPositionMap } from './SpiralPositionMap.js'
 import { PriorAnglesMap } from './PriorAnglesMap.js'
+import { PriorShaftAnglesArray } from './PriorShaftAnglesArray.js'
+import { PreviousShaftAnglesArray } from './PreviousShaftAnglesArray.js'
 
-register(SpiralMap);
+register(SpiralAngleMap);
+register(SpiralPositionMap);
 register(PriorAnglesMap);
+register(PriorShaftAnglesArray);
+register(PreviousShaftAnglesArray);
 
 export { parseGenerators }

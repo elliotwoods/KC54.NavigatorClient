@@ -67,9 +67,15 @@ class TrackHeaders extends Element {
 					.mousedown(() => {
 						inspectable.toggleInspect();
 					});
-				element.draw.text(InputTimelineUtils.getTrackCaption(track))
+				let text = element.draw.text(InputTimelineUtils.getTrackCaption(track))
 					.move(10, y)
-					.font({ weight : inspectable.isBeingInspected() ? 400 : 200 });
+					.font({
+						weight : inspectable.isBeingInspected() ? 400 : 200,
+						size : layout.trackHeaders.font.size
+					 });
+				if(!InputTimelineUtils.isTrackActive(track)) {
+					text.fill(layout.trackHeaders.disabledColor);
+				}
 				y += layout.trackHeight;
 			}
 		});

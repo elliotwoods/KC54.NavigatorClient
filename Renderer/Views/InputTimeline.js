@@ -29,7 +29,7 @@ let layout = settingsNamespace.get("layout");
 settingsNamespace.defaults(
 {
 	"layout": {
-		trackCaptionAreaWidth: 150,
+		trackCaptionAreaWidth: 200,
 		trackHeight: 30,
 		frameNumbersAreaHeight: 30,
 		keyFrame : {
@@ -49,6 +49,12 @@ settingsNamespace.defaults(
 			forcesArea : {
 				height : 8,
 				fillColor : '#90e576'
+			}
+		},
+		trackHeaders : {
+			disabledColor : '#aaa',
+			font : {
+				size : 14
 			}
 		}
 	},
@@ -390,7 +396,8 @@ class InputTimeline extends Base {
 		}
 
 		try {
-			this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex, !settingsNamespace.get(["preview", "applyGenerators"]));
+			this.cachedOutputValuesForThisFrame = await this.getObjectivesForFrame(this.currentFrameIndex
+					, !settingsNamespace.get(["preview", "applyGenerators"]));
 		}
 		catch(error) {
 			console.error(error);
@@ -489,13 +496,22 @@ class InputTimeline extends Base {
 	}
 
 	async insertKeyFrame() {
+		let frameIndex = this.currentFrameIndex;
+
 		let selectedTrack = this.getSelectedTrack();
 		if (!selectedTrack) {
 			throw (new Error("No track selected"));
 		}
 
+		// check keyFrame doesn't already exist
+		for(let keyFrame of selectedTrack.keyFrames) {
+			if(keyFrame.frameIndex == frameIndex) {
+				throw(new Error("Cannot insert keyframe - one already exists here"));
+			}
+		}
+
 		let keyFrame = {
-			frameIndex: this.currentFrameIndex,
+			frameIndex: frameIndex,
 			id: shortid.generate(),
 			content: {}
 		};
@@ -584,33 +600,36 @@ class InputTimeline extends Base {
 		this.requestRefresh();
 	}
 
-	async getPriorPoseForFrame(frameIndex) {
+	async getPriorFrameContentForFrame(frameIndex) {
 		let priorFrameCount = outputTimeline.getFrameCount();
-		if(frameIndex == 0) {
-			return await NavigatorServer.getSpiralPose();
+		if(frameIndex <= 0) {
+			return await NavigatorServer.getSpiral();
 		}
 		else if (frameIndex - 1 < priorFrameCount) {
 			// previous frame is available in timeline
-			return outputTimeline.getLastFrame().content.configuration;
+			return outputTimeline.getFrame(frameIndex - 1).content;
 		}
 		else {
 			// otherwise start with a spiral pose
-			return await NavigatorServer.getSpiralPose();
+			return await NavigatorServer.getSpiral();
 		}
 	}
 	
-	async getObjectivesForFrame(frameIndex, dontApplyGenerators, priorPose) {
+	async getObjectivesForFrame(frameIndex, dontApplyGenerators, priorFrameContent) {
 		let objectives = this.tracks.map(track => InputTimelineUtils.calculateTrackFrame(track, frameIndex));
-		
+
 		// clone copy
 		objectives = JSON.parse(JSON.stringify(objectives));
 
 		if(!dontApplyGenerators) {
-			if(!priorPose) {
-				priorPose = await this.getPriorPoseForFrame(frameIndex);
+			if(!priorFrameContent) {
+				priorFrameContent = await this.getPriorFrameContentForFrame(frameIndex);
 			}
-			objectives = await parseGenerators(objectives, priorPose);
+			objectives = await parseGenerators(objectives, priorFrameContent, frameIndex);
 		}
+
+		// Remove empty objects from top level
+		objectives = objectives.filter(objective => Object.keys(objective).length != 0);
 		
 		return objectives;
 	}
@@ -647,10 +666,10 @@ class InputTimeline extends Base {
 	 * @memberof InputTimeline
 	 */
 	async renderAndStoreFrame(frameIndex, skipNonDirty) {
-		let priorPose = await this.getPriorPoseForFrame(frameIndex);
+		let priorFrameContent = await this.getPriorFrameContentForFrame(frameIndex);
 
 		// create objectives
-		let objectives = await this.getObjectivesForFrame(frameIndex, false, priorPose);
+		let objectives = await this.getObjectivesForFrame(frameIndex, false, priorFrameContent);
 
 		// skip non dirty frames
 		if (skipNonDirty) {
@@ -661,9 +680,9 @@ class InputTimeline extends Base {
 
 		// call to the server
 		let callStart = performance.now();
-		let pose = await NavigatorServer.optimise(priorPose, objectives, settingsNamespace.get(["optimisation", "preferences"]));
+		let frameContent = await NavigatorServer.optimise(priorFrameContent.pose, objectives, settingsNamespace.get(["optimisation", "preferences"]));
 		let callEnd = performance.now();
-		outputTimeline.setFrame(frameIndex, pose, "InputTimeline", {
+		outputTimeline.setFrame(frameIndex, frameContent, "InputTimeline", {
 			dirty: false,
 			objectives: objectives,
 			renderTime: (callEnd - callStart) / 1000,
@@ -767,7 +786,7 @@ class InputTimeline extends Base {
 			
 			let call = async() => {
 				let callStart = performance.now();
-				frameData.content.forces = await NavigatorServer.calculateForces(frameData.content.configuration, windProfile);
+				frameData.content.forces = await NavigatorServer.calculateForces(frameData.content.pose, windProfile);
 				let callEnd = performance.now();
 	
 				frameData.forcesRenderData = {
@@ -800,7 +819,7 @@ class InputTimeline extends Base {
 	}
 
 	async calculateObjectiveValues() {
-		let pose = outputTimeline.getFrame(this.currentFrameIndex).content.configuration;
+		let pose = outputTimeline.getFrame(this.currentFrameIndex).content.pose;
 		let objectives = this.getObjectivesForFrame(this.currentFrameIndex, false);
 		console.log(await NavigatorServer.calculateObjectiveValues(pose, objectives));
 

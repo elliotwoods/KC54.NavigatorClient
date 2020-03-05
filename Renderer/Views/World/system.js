@@ -88,10 +88,10 @@ let system = new THREE.Object3D();
 function makeSystem() {
 	// Build the blocks
 	initBlockMaterial();
-	let frameContent = document.getCurrentOutputFrame();
+	let frameContent = document.getCurrentOutputFrame().content;
 
 	let blocks = [];
-	for (let blockData of frameContent.configuration) {
+	for (let blockData of frameContent.pose) {
 		let block = makeBlock();
 		system.add(block);
 		blocks.push(block);
@@ -113,7 +113,7 @@ function makeSystem() {
 
 		for (let i = 0; i < blocks.length; i++) {
 			let block = blocks[i];
-			let blockData = frameContent.configuration[i];
+			let blockData = frameContent.pose[i];
 			block.position.set(blockData.start.x, blockData.start.y, blockData.start.z);
 			block.rotation.z = blockData.angleToX;
 
@@ -138,7 +138,12 @@ function makeSystem() {
 
 	// listen for changes
 	let callback = () => {
-		updateBlocks(document.getCurrentOutputFrame());
+		try {
+			updateBlocks(document.getCurrentOutputFrame().content);
+		}
+		catch(error) {
+			console.error(`Can't update blocks in 3D view`);
+		}
 	}
 
 	rendererRouter.onChange('outputFrame', callback);

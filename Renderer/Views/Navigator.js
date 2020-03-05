@@ -78,7 +78,7 @@ class Navigator extends Functions {
 	}
 
 	async ping() {
-		let response = await post('Ping');
+		let response = await NavigatorServer.ping();
 		console.log(response);
 	}
 
@@ -103,6 +103,7 @@ class Navigator extends Functions {
 	async optimise() {
 		let currentOutputFrame = document.getCurrentOutputFrame();
 
+		throw(new Error("This function is no longer compatible with new API"));
 		const response = await post('optimise', {
 			initialGuess : currentOutputFrame.configuration,
 			objective : settingsNamespace.get("testObjective")

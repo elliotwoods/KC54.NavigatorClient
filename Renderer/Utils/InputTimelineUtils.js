@@ -115,8 +115,14 @@ class InputTimelineUtils {
 		if(track.keyFrames.length == 0) {
 			return {};
 		}
+
+		// BEFORE FIRST
+		else if(frameIndex < track.keyFrames[0].frameIndex) {
+			return {};
+		}
+
 		// FIRST
-		else if(frameIndex <= track.keyFrames[0].frameIndex) {
+		else if(frameIndex == track.keyFrames[0].frameIndex) {
 			return track.keyFrames[0].content;
 		}
 
@@ -220,6 +226,15 @@ class InputTimelineUtils {
 			return `[${trackObjectiveType}]`;
 		}
 		return 'Empty track';
+	}
+
+	static isTrackActive(track) {
+		for(let keyFrame of track.keyFrames) {
+			if('__active' in keyFrame.content) {
+				return keyFrame.content.__active;
+			}
+		}
+		return true;
 	}
 }
 

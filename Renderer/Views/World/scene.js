@@ -78,7 +78,7 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 				'ny.png',
 				'pz.png',
 				'nz.png'
-			]);;
+			]);
 	}
 }
 
@@ -86,7 +86,7 @@ scene.background = new THREE.Color(0xcccccc); // temporary background
 {
 	scene.add(new THREE.AxesHelper(1.0));
 
-	let roomGrid = new RoomGrid(new THREE.Vector3(-2.0, -3.0, 0.0), new THREE.Vector3(10.0, 3.0, 7.0))
+	let roomGrid = new RoomGrid(new THREE.Vector3(-2.5, -3.0, 0.0), new THREE.Vector3(10.5, 3.0, 7.0))
 	scene.add(roomGrid);
 }
 

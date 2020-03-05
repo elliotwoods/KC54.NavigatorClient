@@ -259,7 +259,7 @@ class AnglePlots extends Base {
 
 		if(settingsNamespace.get('showDebugText')) {
 			{
-				let angleToXArray = outputFrames[currentFrameIndex].content.configuration.map(config => config.angleToX * (180 / Math.PI));
+				let angleToXArray = outputFrames[currentFrameIndex].content.pose.map(config => config.angleToX * (180 / Math.PI));
 				let angleToXReport = [];
 				for (let i = 0; i < angleToXArray.length; i++) {
 					angleToXReport.push(`[${i}] ${angleToXArray[i].toFixed(1)}`);
@@ -334,7 +334,7 @@ class AnglePlots extends Base {
 	async updateShaftCursors() {
 		if (this.needsUpdateTraces && settingsNamespace.get('liveUpdate')) {
 			let frame = document.getCurrentOutputFrame();
-			let anglesToX = frame.configuration.map(block => block.angleToX);
+			let anglesToX = frame.content.pose.map(block => block.angleToX);
 			let shaftAngles = AxisMath.anglesToXToShaftAngles(anglesToX);
 
 			let traceIndices = new Array(shaftAngles.length).fill(0).map((_, i) => i + shaftAngles.length);

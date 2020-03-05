@@ -129,11 +129,15 @@ class ImportExport extends Functions {
 		{
 			content = content.map((frame) => {
 				if (frame.configuration) {
-					return frame;
+					return {
+						pose : frame.configuration
+					};
+				} else if (frame.pose) {
+					return frame
 				}
 				else {
 					return {
-						configuration: frame
+						pose: frame
 					};
 				}
 			});

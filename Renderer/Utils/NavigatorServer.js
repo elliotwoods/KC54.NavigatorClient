@@ -36,19 +36,19 @@ class NavigatorServer {
 		}
 	}
 
-	static async getSpiralPose(configuration) {
-		if(!configuration) {
-			configuration = {
+	static async getSpiral(args) {
+		if(!args) {
+			args = {
 				centredness : 0
 			};
 		}
-		let result = await NavigatorServer.call("SpiralPose", configuration);
+		let result = await NavigatorServer.call("SpiralPose", args);
 		return result;
 	}
 
-	static async getParkingPose() {
-		const spiralPose = await NavigatorServer.getSpiralPose();
-		const parkingPose = NavigatorServer.optimise(spiralPose
+	static async getParking() {
+		const spiral = await NavigatorServer.getSpiral();
+		const result = await NavigatorServer.optimise(spiral.pose
 			, [
 				{
 					objective: {
@@ -59,11 +59,11 @@ class NavigatorServer {
 							z: 50
 						}
 					},
-					weight: 1
+					weight: 1e-4
 				}
 			]);
 
-		return parkingPose;
+		return result;
 	}
 
 	static async optimise(priorPose, objectives, preferences) {
@@ -99,6 +99,10 @@ class NavigatorServer {
 			pose : pose,
 			objective : objectives
 		});
+	}
+
+	static async ping() {
+		return await this.call("Ping");
 	}
 }
 

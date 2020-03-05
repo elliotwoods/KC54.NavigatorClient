@@ -97,13 +97,13 @@ class World extends Base {
 				break;
 			case "top":
 				{
-					this.camera = new THREE.OrthographicCamera(-6.0, 6.0, 6.0, -6.0, -10000.0, 10000.0);
+					this.camera = new THREE.OrthographicCamera(-6.5, 6.5, 6.5, -6.5, -10000.0, 10000.0);
 					this.camera.position.set(Constants.footDistance / 2, 0, 0);
 				}
 				break;
 			case "front":
 				{
-					this.camera = new THREE.OrthographicCamera(-6.0, 6.0, 6.0, -6.0, -100.0, 100.0);
+					this.camera = new THREE.OrthographicCamera(-6.5, 6.5, 6.5, -6.5, -100.0, 100.0);
 					this.camera.position.set(Constants.footDistance / 2, -1.0, 3.0);
 					this.camera.lookAt(Constants.footDistance / 2, 0, 3);
 				}

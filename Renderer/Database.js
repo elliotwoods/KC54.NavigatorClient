@@ -33,10 +33,10 @@ document.getCurrentOutputFrame = () => {
 	}
 	else if (currentFrameIndex >= outputFrames.length) {
 		rendererRouter.appState.set_outputFrameIndex(0);
-		return outputFrames[0].content;
+		return outputFrames[0];
 	}
 	else {
-		return outputFrames[currentFrameIndex].content;
+		return outputFrames[currentFrameIndex];
 	}
 };
 

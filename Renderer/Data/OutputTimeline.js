@@ -81,7 +81,7 @@ class OutputTimeline {
 		rendererRouter.notifyChange('outputTimeline');
 	}
 
-	setFrame(frameIndex, pose, sourceName, renderData) {
+	setFrame(frameIndex, frameContent, sourceName, renderData) {
 		let priorFrameCount = this.getFrameCount();
 		if (frameIndex == priorFrameCount) {
 			// append frame
@@ -93,9 +93,7 @@ class OutputTimeline {
 		else {
 			let frameData = {
 				id: shortid.generate(),
-				content: {
-					configuration: pose
-				},
+				content: frameContent,
 				renderData: renderData,
 				importReport: {
 					source: sourceName,

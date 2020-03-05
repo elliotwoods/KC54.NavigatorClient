@@ -4,7 +4,7 @@ import { settings } from '../Database.js'
 class AxisMath {
 	static outputFramesToShaftAnglesPerFrame(outputFrames) {
 		return outputFrames.map((frame) => {
-			let anglesToX = frame.content.configuration.map(block => block.angleToX);
+			let anglesToX = frame.content.pose.map(block => block.angleToX);
 			let shaftAngles = AxisMath.anglesToXToShaftAngles(anglesToX);
 			return shaftAngles;
 		});

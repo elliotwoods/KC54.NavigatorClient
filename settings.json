@@ -80,6 +80,7 @@
   "Views": {
     "AnglePlots": {
       "showDebugText": false,
+      "settingsName": true,
       "liveUpdate": false
     },
     "World": {
@@ -180,7 +181,7 @@
     },
     "InputTimeline": {
       "layout": {
-        "trackCaptionAreaWidth": 150,
+        "trackCaptionAreaWidth": 200,
         "trackHeight": 30,
         "frameNumbersAreaHeight": 30,
         "keyFrame": {
@@ -202,30 +203,15 @@
             "height": 8,
             "fillColor": "#90e576"
           }
+        },
+        "trackHeaders": {
+          "disabledColor": "#adadad",
+          "font": {
+            "size": 14
+          }
         }
       },
       "tracks": [
-        {
-          "id": "pnRSYQRn",
-          "keyFrames": [
-            {
-              "frameIndex": 0,
-              "id": "P8Y_3gUS6",
-              "content": {
-                "objective": {
-                  "momentWeight": {
-                    "z": 5,
-                    "x": 1,
-                    "y": 1
-                  },
-                  "type": "MinimiseMoments"
-                },
-                "weight": 0.00001,
-                "__active": false
-              }
-            }
-          ]
-        },
         {
           "id": "OHD-S4Ly",
           "keyFrames": [
@@ -236,7 +222,7 @@
                 "objective": {
                   "type": "FixToFoundations"
                 },
-                "weight": 10
+                "weight": 100
               }
             }
           ]
@@ -249,10 +235,10 @@
               "id": "X3H_29IH",
               "content": {
                 "objective": {
-                  "standardDeviation": 1,
+                  "standardDeviation": 0.5,
                   "type": "DoNotCollide"
                 },
-                "weight": 1
+                "weight": 10
               }
             }
           ]
@@ -268,7 +254,7 @@
                   "scale": 20,
                   "type": "StayInTheGarden"
                 },
-                "weight": 1,
+                "weight": 2,
                 "__active": true
               }
             }
@@ -286,15 +272,15 @@
                   "desiredShaftPositions": {
                     "8": {
                       "x": -2,
-                      "y": -3
+                      "y": 0
                     },
                     "9": {
                       "x": -1,
-                      "y": -3
+                      "y": 0
                     }
                   }
                 },
-                "weight": 5
+                "weight": 100
               }
             },
             {
@@ -305,10 +291,10 @@
                   "type": "PreferShaftPositions",
                   "desiredShaftPositions": {
                     "8": {
-                      "x": 8
+                      "x": 7
                     },
                     "9": {
-                      "x": 9
+                      "x": 8
                     }
                   }
                 }
@@ -317,43 +303,76 @@
           ]
         },
         {
-          "id": "Qw52ptim",
+          "id": "BHQ5womH",
           "keyFrames": [
             {
               "frameIndex": 0,
-              "id": "YkH2qC1X",
+              "id": "zPqGGXv7",
               "content": {
                 "objective": {
-                  "type": "PreferBeamAngles",
-                  "desiredAngles": {
-                    "__generator": {
-                      "type": "PriorAnglesMap"
-                    }
-                  }
+                  "scale": 5,
+                  "limits": {
+                    "x": 10000,
+                    "y": 10000,
+                    "z": 600
+                  },
+                  "type": "LimitMoments"
                 },
-                "weight": 0.1,
-                "__name": "Prefer previous frame"
+                "weight": 1,
+                "__active": false
               }
             }
           ]
         },
         {
-          "id": "wU216dpC",
+          "id": "xGwmO4lT",
           "keyFrames": [
             {
-              "frameIndex": 0,
-              "id": "R95cexB_",
+              "frameIndex": 1,
+              "id": "dcEXIbyH",
               "content": {
                 "objective": {
-                  "type": "PreferBeamAngles",
-                  "desiredAngles": {
+                  "currentShaftAngles": {
                     "__generator": {
-                      "type": "SpiralMap"
+                      "type": "PriorShaftAnglesArray"
                     }
-                  }
+                  },
+                  "maxVelocity": 0.04,
+                  "type": "LimitShaftAngleVelocity"
                 },
-                "weight": 0.5,
-                "__name": "Spiral"
+                "weight": 5
+              }
+            }
+          ]
+        },
+        {
+          "id": "e8L7QffU",
+          "keyFrames": [
+            {
+              "frameIndex": 2,
+              "id": "5O-LUTaw",
+              "content": {
+                "objective": {
+                  "currentShaftAngles": {
+                    "__generator": {
+                      "type": "PreviousShaftAnglesArray",
+                      "args": {
+                        "lookBackDistance": 1
+                      }
+                    }
+                  },
+                  "previousShaftAngles": {
+                    "__generator": {
+                      "type": "PreviousShaftAnglesArray",
+                      "args": {
+                        "lookBackDistance": 2
+                      }
+                    }
+                  },
+                  "maxAcceleration": 0.04,
+                  "type": "LimitShaftAngleAcceleration"
+                },
+                "weight": 1
               }
             }
           ]
@@ -432,45 +451,24 @@
       },
       "content": [
         {
-          "type": "row",
+          "type": "column",
           "isClosable": true,
           "reorderEnabled": true,
           "title": "",
           "content": [
             {
-              "type": "column",
+              "type": "row",
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 63.76569037656904,
+              "height": 78.25854700854701,
               "content": [
                 {
-                  "type": "stack",
-                  "header": {},
+                  "type": "column",
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "activeItemIndex": 0,
-                  "height": 35.93639849923746,
-                  "content": [
-                    {
-                      "title": "<i class=\"fas fa-eye\" /> Perspective",
-                      "type": "component",
-                      "componentName": "World",
-                      "componentState": {
-                        "camera": "perspective"
-                      },
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    }
-                  ]
-                },
-                {
-                  "type": "row",
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "height": 39.27895645394451,
+                  "width": 56.903765690376574,
                   "content": [
                     {
                       "type": "stack",
@@ -479,16 +477,169 @@
                       "reorderEnabled": true,
                       "title": "",
                       "activeItemIndex": 0,
-                      "height": 25,
-                      "width": 50,
+                      "height": 47.93493255958094,
                       "content": [
                         {
-                          "title": "<i class=\"fas fa-arrow-down\" /> Top",
+                          "title": "<i class=\"fas fa-eye\" /> Perspective",
                           "type": "component",
                           "componentName": "World",
                           "componentState": {
-                            "camera": "top"
+                            "camera": "perspective"
                           },
+                          "isClosable": true,
+                          "reorderEnabled": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "row",
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "height": 52.06506744041904,
+                      "content": [
+                        {
+                          "type": "stack",
+                          "header": {},
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "height": 25,
+                          "width": 50,
+                          "content": [
+                            {
+                              "title": "<i class=\"fas fa-arrow-down\" /> Top",
+                              "type": "component",
+                              "componentName": "World",
+                              "componentState": {
+                                "camera": "top"
+                              },
+                              "isClosable": true,
+                              "reorderEnabled": true
+                            }
+                          ]
+                        },
+                        {
+                          "type": "stack",
+                          "header": {},
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "width": 50,
+                          "content": [
+                            {
+                              "title": "<i class=\"fas fa-arrow-right\" /> Front",
+                              "type": "component",
+                              "componentName": "World",
+                              "componentState": {
+                                "camera": "front"
+                              },
+                              "isClosable": true,
+                              "reorderEnabled": true
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "column",
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "width": 43.096234309623426,
+                  "content": [
+                    {
+                      "type": "row",
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "height": 30.272133372497596,
+                      "content": [
+                        {
+                          "type": "column",
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "width": 50,
+                          "content": [
+                            {
+                              "type": "stack",
+                              "header": {},
+                              "isClosable": true,
+                              "reorderEnabled": true,
+                              "title": "",
+                              "activeItemIndex": 0,
+                              "height": 50,
+                              "width": 50,
+                              "content": [
+                                {
+                                  "title": "<i class=\"fas fa-file\" /> Import/Export",
+                                  "type": "component",
+                                  "componentName": "ImportExport",
+                                  "isClosable": true,
+                                  "reorderEnabled": true
+                                }
+                              ]
+                            },
+                            {
+                              "type": "stack",
+                              "header": {},
+                              "isClosable": true,
+                              "reorderEnabled": true,
+                              "title": "",
+                              "activeItemIndex": 0,
+                              "height": 50,
+                              "content": [
+                                {
+                                  "type": "component",
+                                  "componentName": "ViewPalette",
+                                  "componentState": {},
+                                  "isClosable": false,
+                                  "reorderEnabled": true,
+                                  "title": "ViewPalette"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "stack",
+                          "header": {},
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "activeItemIndex": 0,
+                          "width": 50,
+                          "content": [
+                            {
+                              "title": "<i class=\"fas fa-map-signs\" /> Navigator",
+                              "type": "component",
+                              "componentName": "Navigator",
+                              "isClosable": true,
+                              "reorderEnabled": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "stack",
+                      "header": {},
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "activeItemIndex": 0,
+                      "height": 35.20775908607617,
+                      "width": 100,
+                      "content": [
+                        {
+                          "title": "<i class=\"fas fa-user-secret\" /> Inspector",
+                          "type": "component",
+                          "componentName": "Inspector",
                           "isClosable": true,
                           "reorderEnabled": true
                         }
@@ -501,149 +652,36 @@
                       "reorderEnabled": true,
                       "title": "",
                       "activeItemIndex": 0,
-                      "width": 50,
+                      "height": 34.52010754142625,
                       "content": [
                         {
-                          "title": "<i class=\"fas fa-arrow-right\" /> Front",
+                          "title": "<i class=\"fas fa-play-circle\" /> Transport",
                           "type": "component",
-                          "componentName": "World",
-                          "componentState": {
-                            "camera": "front"
-                          },
+                          "componentName": "Transport",
                           "isClosable": true,
                           "reorderEnabled": true
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
-                  "header": {},
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "height": 24.78464504681802,
-                  "content": [
-                    {
-                      "title": "<i class=\"fas fa-indent\" /> InputTimeline",
-                      "type": "component",
-                      "componentName": "InputTimeline",
-                      "isClosable": true,
-                      "reorderEnabled": true
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "column",
+              "type": "stack",
+              "header": {},
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "width": 36.23430962343096,
+              "activeItemIndex": 0,
+              "height": 21.74145299145299,
               "content": [
                 {
-                  "type": "row",
+                  "title": "<i class=\"fas fa-indent\" /> InputTimeline",
+                  "type": "component",
+                  "componentName": "InputTimeline",
                   "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "height": 15.382838497625029,
-                  "content": [
-                    {
-                      "type": "stack",
-                      "header": {},
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "height": 31.25,
-                      "width": 50,
-                      "content": [
-                        {
-                          "title": "<i class=\"fas fa-file\" /> Import/Export",
-                          "type": "component",
-                          "componentName": "ImportExport",
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "stack",
-                      "header": {},
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "width": 50,
-                      "content": [
-                        {
-                          "title": "<i class=\"fas fa-map-signs\" /> Navigator",
-                          "type": "component",
-                          "componentName": "Navigator",
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
-                  "header": {},
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "height": 48.399662590088504,
-                  "content": [
-                    {
-                      "title": "<i class=\"fas fa-user-secret\" /> Inspector",
-                      "type": "component",
-                      "componentName": "Inspector",
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
-                  "width": 50,
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "height": 18.684936938838703,
-                  "content": [
-                    {
-                      "type": "component",
-                      "componentName": "ViewPalette",
-                      "componentState": {},
-                      "isClosable": false,
-                      "reorderEnabled": true,
-                      "title": "ViewPalette"
-                    }
-                  ]
-                },
-                {
-                  "type": "stack",
-                  "header": {},
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "activeItemIndex": 0,
-                  "height": 17.53256197344777,
-                  "content": [
-                    {
-                      "title": "<i class=\"fas fa-play-circle\" /> Transport",
-                      "type": "component",
-                      "componentName": "Transport",
-                      "isClosable": true,
-                      "reorderEnabled": true
-                    }
-                  ]
+                  "reorderEnabled": true
                 }
               ]
             }
