@@ -21,10 +21,6 @@ class Ruler extends Element {
 				.attr({
 					fill : layout.backgroundColor
 				});
-			element.freshRegion = element.draw.rect(100, layout.frameNumbersAreaHeight)
-				.attr({
-					fill : layout.freshFramesColor
-				});
 			//apply mouse event to the element's draw group
 			element.draw.mousedown((args) => {
 				element.draggingCursor = true;
@@ -42,20 +38,32 @@ class Ruler extends Element {
 		}
 		, (element) => {
 			element.background.width(this.viewWidth - layout.trackCaptionAreaWidth);
-
-			this.parent.getIndexOfFirstDirtyFrame().then(freshFrameCount => {
-				if(freshFrameCount <= this.parent.visibleRangeStart) {
-					element.freshRegion.hide();
-				}
-				else {
-					element.freshRegion.show();
-					let width = Math.min(freshFrameCount, this.parent.visibleRangeEnd) - this.parent.visibleRangeStart;
-					width *= this.parent.pixelsPerFrame;
-					element.freshRegion.width(width);
-				}
-			});
 		}
 		, true);
+
+		// Fresh frame indicator
+		this.children.background.children.freshFrameIndicator = new Element(this.children.background.draw.group()
+		, null
+		, (element) => {
+			element.draw.clear();
+
+			let outputFrameCount = outputTimeline.getFrameCount();
+
+			for(let i=this.parent.visibleRangeStart; i<=this.parent.visibleRangeEnd; i+= 1) {
+				if(i < outputFrameCount) {
+					let dirty = this.parent.isFrameDirtyCached(i);
+					
+					if(!dirty) {
+						// frame isn't dirty
+						element.draw.rect(parent.pixelsPerFrame, layout.frameNumbersAreaHeight)
+							.x(this.parent.frameIndexToPixel(i))
+							.attr({
+								fill : layout.freshFramesColor
+							});
+					}
+				}
+			}
+		}, true);
 
 		// Forces indicator
 		this.children.background.children.forcesIndicator = new Element(this.children.background.draw.group()

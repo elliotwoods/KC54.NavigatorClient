@@ -243,6 +243,25 @@ class InputTimelineUtils {
 		}
 		track.keyFrames[0].content.__active = value;
 	}
+
+	static stripMovementObjectives(objectives) {
+		return objectives.filter(objective => {
+			objective.objective.type != "__LimitMovement";
+		})
+	}
+
+	static getStrideSet(stride) {
+		if(stride == 1) {
+			return [stride];
+		}
+		else {
+			return [stride, ...this.getStrideSet(stride / 2)];
+		}
+	}
+
+	static stepSet(stride) {
+		let set = [4, 4-2, 4+2, 4-2-1, 4-2+1, 4+2-1, 4+2+1];
+	}
 }
 
 export { InputTimelineUtils }

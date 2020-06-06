@@ -13,67 +13,97 @@
       },
       null,
       {
-        "min": -0.710268875038797,
-        "max": 3.0115037038442254
+        "min": -2.005847343774824,
+        "max": -2.2520643035562697
       },
       {
-        "min": -3.054326190990077,
-        "max": -2.145112777824754
+        "min": 0.27673257352890707,
+        "max": -1.1166601156072868
       },
       {
-        "min": 0.2502516346947812,
-        "max": 2.9946789596292818
-      },
-      null,
-      {
-        "min": 1.3104310764377494,
-        "max": 3.054326190990077
+        "min": -0.5451542631415323,
+        "max": -2.005337542057224
       },
       {
-        "min": -3.054326190990077,
-        "max": -1.5173105073840851
+        "min": -0.12055904276584063,
+        "max": -1.8480394972709746
       },
       {
-        "min": 1.3104310764377498,
-        "max": 3.054323087447902
+        "min": -0.10864395123423604,
+        "max": -1.6907193307082917
       },
-      null,
-      null,
-      null,
       {
-        "min": 1.3104310764377494,
-        "max": -1.9534059860614843
+        "min": -0.23429565882392456,
+        "max": -1.533896723574399
+      },
+      {
+        "min": -0.08066542688961068,
+        "max": -1.3788667264133398
+      },
+      {
+        "min": 0.04488731358559085,
+        "max": -1.2275557466565157
+      },
+      {
+        "min": 0.08769279290444472,
+        "max": -1.0736745243016685
+      },
+      {
+        "min": 0.08860953879585819,
+        "max": -0.8491460211924535
+      },
+      {
+        "min": 0.5033993923150656,
+        "max": -1.0606270700705807
       },
       {
         "min": 2.2689280275926285,
         "max": 0.8726646259971648
       },
       null,
-      null,
-      null,
       {
-        "min": -0.34250592759129794,
-        "max": 3.054326190990077
-      },
-      null,
-      {
-        "min": 1.3137912477669071,
-        "max": 3.054326190990077
+        "min": -0.40813484704710296,
+        "max": -3.0425180017797206
       },
       {
-        "min": -3.054326190990077,
-        "max": -1.5562236162703407
+        "min": -0.6490814677751731,
+        "max": -1.958915305527695
       },
       {
-        "min": 1.3137912477669071,
-        "max": 3.054326190990077
+        "min": -0.2159965381639885,
+        "max": -1.6742382434671104
       },
-      null,
-      null,
-      null,
       {
-        "min": 1.3137912477669071,
-        "max": -2.8582234442463474
+        "min": -0.28498181266140643,
+        "max": -1.534741078987844
+      },
+      {
+        "min": -0.09243411990117234,
+        "max": -1.3761117054794134
+      },
+      {
+        "min": 0.03739855554575132,
+        "max": -1.2200365968124647
+      },
+      {
+        "min": 0.08791610496414579,
+        "max": -1.075426654241883
+      },
+      {
+        "min": 0.14145178484246135,
+        "max": -0.9225420166887296
+      },
+      {
+        "min": 0.19703319059374114,
+        "max": -0.6848977968284142
+      },
+      {
+        "min": 0.7519797882850253,
+        "max": -0.803378905679562
+      },
+      {
+        "min": 0.08758671691748186,
+        "max": -0.08747171216207904
       }
     ]
   },
@@ -81,11 +111,11 @@
     "AnglePlots": {
       "showDebugText": false,
       "settingsName": true,
-      "liveUpdate": false
+      "liveUpdate": true
     },
     "World": {
       "renderDirtyTime": 3,
-      "showPerson": true,
+      "showPerson": false,
       "sunLight": {
         "intensity": 0.5,
         "castShadow": true,
@@ -222,7 +252,8 @@
                 "objective": {
                   "type": "FixToFoundations"
                 },
-                "weight": 100
+                "weight": 100,
+                "__active": true
               }
             }
           ]
@@ -238,7 +269,8 @@
                   "standardDeviation": 0.5,
                   "type": "DoNotCollide"
                 },
-                "weight": 10
+                "weight": 10,
+                "__active": true
               }
             }
           ]
@@ -268,19 +300,25 @@
               "id": "V4yvPBrj",
               "content": {
                 "objective": {
-                  "type": "PreferShaftPositions",
                   "desiredShaftPositions": {
                     "8": {
-                      "x": -2,
-                      "y": 0
+                      "x": 7
                     },
                     "9": {
-                      "x": -1,
-                      "y": 0
+                      "x": 8
+                    },
+                    "__generator": {
+                      "args": {
+                        "centredness": -1
+                      },
+                      "type": "SpiralPositionMap"
                     }
-                  }
+                  },
+                  "type": "PreferShaftPositions"
                 },
-                "weight": 100
+                "weight": 1,
+                "__name": "Spiral",
+                "__active": true
               }
             },
             {
@@ -288,13 +326,11 @@
               "id": "2fXOmVUH",
               "content": {
                 "objective": {
-                  "type": "PreferShaftPositions",
                   "desiredShaftPositions": {
-                    "8": {
-                      "x": 7
-                    },
-                    "9": {
-                      "x": 8
+                    "__generator": {
+                      "args": {
+                        "centredness": 1
+                      }
                     }
                   }
                 }
@@ -312,8 +348,8 @@
                 "objective": {
                   "scale": 5,
                   "limits": {
-                    "x": 10000,
-                    "y": 10000,
+                    "x": 20000,
+                    "y": 20000,
                     "z": 600
                   },
                   "type": "LimitMoments"
@@ -325,54 +361,23 @@
           ]
         },
         {
-          "id": "xGwmO4lT",
+          "id": "eFylgoJ3s",
           "keyFrames": [
             {
-              "frameIndex": 1,
-              "id": "dcEXIbyH",
+              "frameIndex": 0,
+              "id": "gQYZmui4k",
               "content": {
                 "objective": {
-                  "currentShaftAngles": {
-                    "__generator": {
-                      "type": "PriorShaftAnglesArray"
-                    }
+                  "momentWeight": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
                   },
-                  "maxVelocity": 0.04,
-                  "type": "LimitShaftAngleVelocity"
+                  "type": "MaximiseMoments"
                 },
-                "weight": 5
-              }
-            }
-          ]
-        },
-        {
-          "id": "e8L7QffU",
-          "keyFrames": [
-            {
-              "frameIndex": 2,
-              "id": "5O-LUTaw",
-              "content": {
-                "objective": {
-                  "currentShaftAngles": {
-                    "__generator": {
-                      "type": "PreviousShaftAnglesArray",
-                      "args": {
-                        "lookBackDistance": 1
-                      }
-                    }
-                  },
-                  "previousShaftAngles": {
-                    "__generator": {
-                      "type": "PreviousShaftAnglesArray",
-                      "args": {
-                        "lookBackDistance": 2
-                      }
-                    }
-                  },
-                  "maxAcceleration": 0.04,
-                  "type": "LimitShaftAngleAcceleration"
-                },
-                "weight": 1
+                "weight": 0.0001,
+                "__active": false,
+                "__name": "Maximise Moments"
               }
             }
           ]
@@ -394,7 +399,7 @@
           }
         },
         "preferences": {
-          "maxIterations": 20000
+          "maxIterations": 1000
         }
       },
       "preview": {
@@ -451,52 +456,31 @@
       },
       "content": [
         {
-          "type": "column",
+          "type": "row",
           "isClosable": true,
           "reorderEnabled": true,
           "title": "",
           "content": [
             {
-              "type": "row",
+              "type": "column",
               "isClosable": true,
               "reorderEnabled": true,
               "title": "",
-              "height": 78.25854700854701,
+              "width": 78.04659498207886,
               "content": [
                 {
-                  "type": "column",
+                  "type": "row",
                   "isClosable": true,
                   "reorderEnabled": true,
                   "title": "",
-                  "width": 56.903765690376574,
+                  "height": 70.25151777970513,
                   "content": [
                     {
-                      "type": "stack",
-                      "header": {},
+                      "type": "column",
                       "isClosable": true,
                       "reorderEnabled": true,
                       "title": "",
-                      "activeItemIndex": 0,
-                      "height": 47.93493255958094,
-                      "content": [
-                        {
-                          "title": "<i class=\"fas fa-eye\" /> Perspective",
-                          "type": "component",
-                          "componentName": "World",
-                          "componentState": {
-                            "camera": "perspective"
-                          },
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "row",
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "height": 52.06506744041904,
+                      "width": 56.903765690376574,
                       "content": [
                         {
                           "type": "stack",
@@ -505,15 +489,14 @@
                           "reorderEnabled": true,
                           "title": "",
                           "activeItemIndex": 0,
-                          "height": 25,
-                          "width": 50,
+                          "height": 47.93493255958094,
                           "content": [
                             {
-                              "title": "<i class=\"fas fa-arrow-down\" /> Top",
+                              "title": "<i class=\"fas fa-eye\" /> Perspective",
                               "type": "component",
                               "componentName": "World",
                               "componentState": {
-                                "camera": "top"
+                                "camera": "perspective"
                               },
                               "isClosable": true,
                               "reorderEnabled": true
@@ -521,50 +504,11 @@
                           ]
                         },
                         {
-                          "type": "stack",
-                          "header": {},
+                          "type": "row",
                           "isClosable": true,
                           "reorderEnabled": true,
                           "title": "",
-                          "activeItemIndex": 0,
-                          "width": 50,
-                          "content": [
-                            {
-                              "title": "<i class=\"fas fa-arrow-right\" /> Front",
-                              "type": "component",
-                              "componentName": "World",
-                              "componentState": {
-                                "camera": "front"
-                              },
-                              "isClosable": true,
-                              "reorderEnabled": true
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "column",
-                  "isClosable": true,
-                  "reorderEnabled": true,
-                  "title": "",
-                  "width": 43.096234309623426,
-                  "content": [
-                    {
-                      "type": "row",
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "height": 30.272133372497596,
-                      "content": [
-                        {
-                          "type": "column",
-                          "isClosable": true,
-                          "reorderEnabled": true,
-                          "title": "",
-                          "width": 50,
+                          "height": 52.06506744041904,
                           "content": [
                             {
                               "type": "stack",
@@ -573,13 +517,16 @@
                               "reorderEnabled": true,
                               "title": "",
                               "activeItemIndex": 0,
-                              "height": 50,
+                              "height": 25,
                               "width": 50,
                               "content": [
                                 {
-                                  "title": "<i class=\"fas fa-file\" /> Import/Export",
+                                  "title": "<i class=\"fas fa-arrow-down\" /> Top",
                                   "type": "component",
-                                  "componentName": "ImportExport",
+                                  "componentName": "World",
+                                  "componentState": {
+                                    "camera": "top"
+                                  },
                                   "isClosable": true,
                                   "reorderEnabled": true
                                 }
@@ -592,8 +539,56 @@
                               "reorderEnabled": true,
                               "title": "",
                               "activeItemIndex": 0,
-                              "height": 50,
+                              "height": 100,
+                              "width": 50,
                               "content": [
+                                {
+                                  "title": "<i class=\"fas fa-arrow-right\" /> Front",
+                                  "type": "component",
+                                  "componentName": "World",
+                                  "componentState": {
+                                    "camera": "front"
+                                  },
+                                  "isClosable": true,
+                                  "reorderEnabled": true
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "column",
+                      "isClosable": true,
+                      "reorderEnabled": true,
+                      "title": "",
+                      "width": 43.096234309623426,
+                      "content": [
+                        {
+                          "type": "row",
+                          "isClosable": true,
+                          "reorderEnabled": true,
+                          "title": "",
+                          "height": 52.79424776361741,
+                          "content": [
+                            {
+                              "type": "stack",
+                              "header": {},
+                              "isClosable": true,
+                              "reorderEnabled": true,
+                              "title": "",
+                              "activeItemIndex": 0,
+                              "height": 100,
+                              "width": 50,
+                              "content": [
+                                {
+                                  "title": "<i class=\"fas fa-file\" /> Import/Export",
+                                  "type": "component",
+                                  "componentName": "ImportExport",
+                                  "isClosable": true,
+                                  "reorderEnabled": true
+                                },
                                 {
                                   "type": "component",
                                   "componentName": "ViewPalette",
@@ -601,6 +596,24 @@
                                   "isClosable": false,
                                   "reorderEnabled": true,
                                   "title": "ViewPalette"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "stack",
+                              "header": {},
+                              "isClosable": true,
+                              "reorderEnabled": true,
+                              "title": "",
+                              "activeItemIndex": 0,
+                              "width": 50,
+                              "content": [
+                                {
+                                  "title": "<i class=\"fas fa-map-signs\" /> Navigator",
+                                  "type": "component",
+                                  "componentName": "Navigator",
+                                  "isClosable": true,
+                                  "reorderEnabled": true
                                 }
                               ]
                             }
@@ -613,55 +626,36 @@
                           "reorderEnabled": true,
                           "title": "",
                           "activeItemIndex": 0,
-                          "width": 50,
+                          "height": 47.20575223638257,
                           "content": [
                             {
-                              "title": "<i class=\"fas fa-map-signs\" /> Navigator",
+                              "title": "<i class=\"fas fa-play-circle\" /> Transport",
                               "type": "component",
-                              "componentName": "Navigator",
+                              "componentName": "Transport",
                               "isClosable": true,
                               "reorderEnabled": true
                             }
                           ]
                         }
                       ]
-                    },
+                    }
+                  ]
+                },
+                {
+                  "type": "stack",
+                  "header": {},
+                  "isClosable": true,
+                  "reorderEnabled": true,
+                  "title": "",
+                  "activeItemIndex": 0,
+                  "height": 29.748482220294882,
+                  "content": [
                     {
-                      "type": "stack",
-                      "header": {},
+                      "title": "<i class=\"fas fa-indent\" /> InputTimeline",
+                      "type": "component",
+                      "componentName": "InputTimeline",
                       "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "height": 35.20775908607617,
-                      "width": 100,
-                      "content": [
-                        {
-                          "title": "<i class=\"fas fa-user-secret\" /> Inspector",
-                          "type": "component",
-                          "componentName": "Inspector",
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "stack",
-                      "header": {},
-                      "isClosable": true,
-                      "reorderEnabled": true,
-                      "title": "",
-                      "activeItemIndex": 0,
-                      "height": 34.52010754142625,
-                      "content": [
-                        {
-                          "title": "<i class=\"fas fa-play-circle\" /> Transport",
-                          "type": "component",
-                          "componentName": "Transport",
-                          "isClosable": true,
-                          "reorderEnabled": true
-                        }
-                      ]
+                      "reorderEnabled": true
                     }
                   ]
                 }
@@ -674,12 +668,12 @@
               "reorderEnabled": true,
               "title": "",
               "activeItemIndex": 0,
-              "height": 21.74145299145299,
+              "width": 21.953405017921142,
               "content": [
                 {
-                  "title": "<i class=\"fas fa-indent\" /> InputTimeline",
+                  "title": "<i class=\"fas fa-user-secret\" /> Inspector",
                   "type": "component",
-                  "componentName": "InputTimeline",
+                  "componentName": "Inspector",
                   "isClosable": true,
                   "reorderEnabled": true
                 }

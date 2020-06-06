@@ -6,6 +6,7 @@ import { AnglePlots } from './Views/AnglePlots.js'
 import { World } from './Views/World.js'
 import { Navigator } from './Views/Navigator.js'
 import { Inspector } from './Views/Inspector.js'
+import { FrameReport } from './Views/FrameReport.js'
 
 import { settings } from './Database.js'
 import { GuiUtils } from './Utils/GuiUtils.js'
@@ -332,6 +333,16 @@ let viewPalette = [
 			type: 'component',
 			componentName: 'Inspector'
 		}
+	},
+	{
+		buttonPreferences: {
+			icon: `fas fa-chart-bar`
+		},
+		config : {
+			title : 'Frame Report',
+			type : 'component',
+			componentName : 'FrameReport'
+		}
 	}
 ];
 
@@ -359,6 +370,7 @@ function setup() {
 	Transport.register(goldenLayout);
 	Navigator.register(goldenLayout);
 	Inspector.register(goldenLayout);
+	FrameReport.register(goldenLayout);
 
 	goldenLayout.registerComponent('Placeholder', function (container, componentState) {
 		container.getElement().html('<h2>' + componentState.label + '</h2>');

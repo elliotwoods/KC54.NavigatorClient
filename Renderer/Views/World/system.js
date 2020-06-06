@@ -3,6 +3,7 @@ import * as THREE from '../../../node_modules/three/build/three.module.js';
 import { document, SettingsNamespace } from '../../Database.js'
 import { rendererRouter } from '../../rendererRouter.js'
 import { ErrorHandler } from '../../Utils/ErrorHandler.js'
+import { outputTimeline } from '../../Data/outputTimeline.js'
 
 let settingsNamespace = new SettingsNamespace(["Views", "World"])
 let blockMaterial = null;
@@ -88,10 +89,10 @@ let system = new THREE.Object3D();
 function makeSystem() {
 	// Build the blocks
 	initBlockMaterial();
-	let frameContent = document.getCurrentOutputFrame().content;
+	let currentFrameContent = outputTimeline.getCurrentFrame().content;
 
 	let blocks = [];
-	for (let blockData of frameContent.pose) {
+	for (let blockData of currentFrameContent.pose) {
 		let block = makeBlock();
 		system.add(block);
 		blocks.push(block);
@@ -134,12 +135,12 @@ function makeSystem() {
 		}
 	}
 
-	updateBlocks(frameContent);
+	updateBlocks(currentFrameContent);
 
 	// listen for changes
 	let callback = () => {
 		try {
-			updateBlocks(document.getCurrentOutputFrame().content);
+			updateBlocks(outputTimeline.getCurrentFrame().content);
 		}
 		catch(error) {
 			console.error(`Can't update blocks in 3D view`);

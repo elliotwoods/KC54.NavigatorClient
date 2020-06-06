@@ -43,10 +43,6 @@ class OutputTimeline {
 		return rendererRouter.appState.get_outputFrameIndex();
 	}
 
-	getFrame(frameIndex) {
-		return document.get("outputFrames").nth(frameIndex).value();
-	}
-
 	getCurrentFrame() {
 		let outputFrameIndex = this.getCurrentFrameIndex();
 		return this.getFrame(outputFrameIndex);
@@ -61,12 +57,10 @@ class OutputTimeline {
 	}
 
 	// Add a frame to the end of the sequence
-	addFrame(pose, sourceName, renderData) {
+	addFrame(frameContent, sourceName, renderData) {
 		let frameData = {
 			id: shortid.generate(),
-			content: {
-				configuration: pose
-			},
+			content: frameContent,
 			renderData: renderData,
 			importReport: {
 				source: sourceName,
@@ -85,7 +79,7 @@ class OutputTimeline {
 		let priorFrameCount = this.getFrameCount();
 		if (frameIndex == priorFrameCount) {
 			// append frame
-			this.addFrame(pose);
+			this.addFrame(frameContent, sourceName, renderData);
 		}
 		else if (frameIndex > priorFrameCount) {
 			throw (new Error(`Cannot add new frame at ${frameIndex} since current frame count is ${priorFrameCount}`));
@@ -106,15 +100,29 @@ class OutputTimeline {
 	}
 
 	setFrameData(frameIndex, frameData) {
-		document.get("outputFrames")
+		let outputFrames = document.get("outputFrames");
+		if(outputFrames
+			.size()
+			.value() <= frameIndex) {
+				throw(new Error(`Output frame index #${frameIndex} is out of range`));
+			}
+
+		outputFrames
 			.nth(frameIndex)
 			.assign(frameData)
 			.write();
+		
 		rendererRouter.notifyChange('outputTimeline');
 	}
 
 	getFrame(frameIndex) {
-		return document.get("outputFrames")
+		let outputFrames = document.get("outputFrames");
+		if(outputFrames
+			.size()
+			.value() <= frameIndex) {
+				throw(new Error(`Output frame index #${frameIndex} is out of range`));
+			}
+		return outputFrames
 			.nth(frameIndex)
 			.value();
 	}

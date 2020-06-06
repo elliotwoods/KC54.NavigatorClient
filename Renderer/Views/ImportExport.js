@@ -9,6 +9,7 @@ import { AxisMath } from '../Utils/AxisMath.js'
 import { Constants } from '../Utils/Constants.js'
 import { GuiUtils } from '../Utils/GuiUtils.js'
 import { ErrorHandler } from '../Utils/ErrorHandler.js'
+import { outputTimeline } from '../Data/outputTimeline.js'
 
 class ImportExport extends Functions {
 	constructor(container, state, childType) {
@@ -27,6 +28,9 @@ class ImportExport extends Functions {
 			},
 			exportStopperReport: {
 				icon: "fas fa-file-contract"
+			},
+			exportFrameForRhino : {
+				icon : "fas fa-file-csv"
 			}
 		});
 	}
@@ -234,6 +238,25 @@ class ImportExport extends Functions {
 		let reportString = reportRows.join('\n');
 
 		fs.writeFileSync(saveResult, reportString);
+	}
+
+	exportFrameForRhino() {
+		let saveResult = rendererRouter.saveDialog({
+			title: "Export pose frame for Rhino analysis",
+			filters: [
+				{ name: 'CSV', extensions: ['csv'] }
+			]
+		});
+
+		if (!saveResult) {
+			return;
+		}
+
+		let frame = outputTimeline.getCurrentFrame();
+
+		let frameStrings = frame.content.pose.map(joint => joint.angleToX.toString());
+		let frameString = frameStrings.join('\n');
+		fs.writeFileSync(saveResult, frameString);
 	}
 /*
 	testModal() {

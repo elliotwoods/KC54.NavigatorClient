@@ -287,6 +287,14 @@ class InputTimeline extends Base {
 				buttonPreferences : {
 					icon : "fas fa-bullseye"
 				}
+			},
+			fastRender : {
+				do : async () => {
+					await this.fastRender();
+				},
+				buttonPreferences : {
+					icon : "fas fa-rocket"
+				}
 			}
 		};
 
@@ -586,16 +594,19 @@ class InputTimeline extends Base {
 			return true;
 		}
 
+		// we don't have frame data
 		let frameData = outputTimeline.getFrame(frameIndex);
 		if (!frameData) {
 			return true;
 		}
 
+		// we don't have render data
 		let renderData = frameData.renderData;
 		if (!renderData) {
 			return true;
 		}
 
+		// frame is marked dirty already
 		if (renderData.dirty) {
 			return true;
 		}
@@ -604,12 +615,22 @@ class InputTimeline extends Base {
 			newObjectives = await this.getObjectivesForFrame(frameIndex, false);
 		}
 
-		if (!fastEqual(renderData.objectives, newObjectives)) {
+		if (!fastEqual(InputTimelineUtils.stripMovementObjectives(renderData.objectives), InputTimelineUtils.stripMovementObjectives(newObjectives))) {
 			return true;
 		}
 
 		return false;
 	}
+
+	isFrameDirtyCached(frameIndex) {
+		let outputFrame = outputTimeline.getFrame(frameIndex) 
+		if(outputFrame.renderData) {
+			if('dirty' in outputFrame.renderData) {
+				return outputFrame.renderData.dirty;
+			}
+		}
+		return true;
+	};
 
 	markDirtyFrame(frameIndex) {
 		let frameData = outputTimeline.getFrame(frameIndex);
@@ -624,7 +645,7 @@ class InputTimeline extends Base {
 	}
 
 	async markDirtyFrames() {
-		let frameCount = this.getFrameCount();
+		let frameCount = Math.min(this.getFrameCount(), outputTimeline.getFrameCount());
 		for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
 			let dirty = await this.calculateIfFrameIsDirty(frameIndex);
 			if (dirty) {
@@ -697,11 +718,14 @@ class InputTimeline extends Base {
 	 *
 	 * @param {*} frameIndex
 	 * @param {*} skipNonDirty
+	 * @param {*} additionalObjectives These will not be stored in the renderData objectives
 	 * @returns {bool} frameSkipped - Frame was skipped because it is non-dirty
 	 * @memberof InputTimeline
 	 */
-	async renderAndStoreFrame(frameIndex, skipNonDirty) {
-		let priorFrameContent = await this.getPriorFrameContentForFrame(frameIndex);
+	async renderAndStoreFrame(frameIndex, skipNonDirty, additionalObjectives, priorFrameContent) {
+		if(!priorFrameContent) {
+			priorFrameContent = await this.getPriorFrameContentForFrame(frameIndex);
+		}
 
 		// create objectives
 		let objectives = await this.getObjectivesForFrame(frameIndex, false, priorFrameContent);
@@ -715,11 +739,17 @@ class InputTimeline extends Base {
 
 		// call to the server
 		let callStart = performance.now();
-		let frameContent = await NavigatorServer.optimise(priorFrameContent.pose, objectives, settingsNamespace.get(["optimisation", "preferences"]));
+		let objectivesForCall = additionalObjectives ? [...objectives, ...additionalObjectives] : objectives;
+		let frameContent = await NavigatorServer.optimise(priorFrameContent.pose
+			, objectivesForCall
+			, settingsNamespace.get(["optimisation", "preferences"]));
 		let callEnd = performance.now();
+
+
 		outputTimeline.setFrame(frameIndex, frameContent, "InputTimeline", {
 			dirty: false,
 			objectives: objectives,
+			additionalObjectives: additionalObjectives,
 			renderTime: (callEnd - callStart) / 1000,
 			timestamp : new Date()
 		});
@@ -755,7 +785,7 @@ class InputTimeline extends Base {
 				this.markDirtyFrame(index);
 			}
 		});
-		this.element.children.ruler.children.background.markDirty();
+		this.element.children.ruler.markDirty(true);
 		this.requestRefresh();
 	}
 
@@ -816,7 +846,11 @@ class InputTimeline extends Base {
 
 		let promises = [];
 
-		for(let i = 0; i < await this.getIndexOfFirstDirtyFrame(); i++) {
+		for(let i = this.visibleRangeStart; i < this.visibleRangeEnd; i++) {
+			if(this.isFrameDirtyCached(i)) {
+				continue;
+			}
+
 			let frameData = outputTimeline.getFrame(i);
 			
 			let call = async() => {
@@ -856,9 +890,224 @@ class InputTimeline extends Base {
 	async calculateObjectiveValues() {
 		let pose = outputTimeline.getFrame(this.currentFrameIndex).content.pose;
 		let objectives = this.getObjectivesForFrame(this.currentFrameIndex, false);
+
+		console.log(JSON.stringify(InputTimelineUtils.getFramesToCalculate(0, 9, 8)));
 		console.log(await NavigatorServer.calculateObjectiveValues(pose, objectives));
 
 		// this needs to be completed
+	}
+
+	async fastRender() {
+		let start = 0;
+		let end = 97;
+		let stride = 8;
+		let maxIterations = 1000;
+
+		let renderDependencies = {};
+
+		const maxAcceleration = 0.1;
+		const maxVelocity = 0.1;
+
+		console.log("Starting fast render");
+		let startTime = performance.now();
+
+		// forward march
+		for(let frameIndex = start; frameIndex < end; frameIndex += stride) {
+			if(frameIndex - stride > 0) {
+				if(frameIndex - stride * 2 > 0) {
+					renderDependencies[frameIndex] = [frameIndex - stride, frameIndex - stride*2];
+				}
+				else {
+					renderDependencies[frameIndex] = [frameIndex - stride];
+				}
+			}
+		}
+
+		// center filling
+		for(let frameIndex = start; frameIndex < end; frameIndex += stride / 2) {
+			if(!(frameIndex in renderDependencies)) {
+				renderDependencies[frameIndex] = [frameIndex - stride / 2, frameIndex + stride / 2]
+			}
+		}
+
+		for(let frameIndex = start; frameIndex < end; frameIndex += stride / 4) {
+			if(!(frameIndex in renderDependencies)) {
+				renderDependencies[frameIndex] = [frameIndex - stride / 4, frameIndex + stride / 4]
+			}
+		}
+
+		for(let frameIndex = start; frameIndex < end; frameIndex += stride / 8) {
+			if(!(frameIndex in renderDependencies)) {
+				renderDependencies[frameIndex] = [frameIndex - stride / 8, frameIndex + stride / 8]
+			}
+		}
+
+		renderDependencies[0] = [];
+		renderDependencies[stride] = [0];
+
+		let getDependencies = (frameIndex) => {
+			let dependencies = new Set();
+			for(let dependency of renderDependencies[frameIndex]) {
+				// check if this is already fresh
+				if(!this.isFrameDirtyCached(dependency)) {
+					continue;
+				}
+
+				dependencies.add(dependency);
+
+				let subDependencies = getDependencies(dependency);
+				if(subDependencies.size != 0) {
+					dependencies.add(...subDependencies);
+				}
+			}
+			return dependencies;
+		};
+
+		// flatten dependencies
+		let fullDependencies = {}
+		for(let frameIndex = start; frameIndex < end; frameIndex += 1) {
+			fullDependencies[frameIndex] = getDependencies(frameIndex); // make unique
+		}
+
+		// remove completed frames
+		for(let frameIndexString in fullDependencies) {
+			let frameIndex = parseInt(frameIndexString);
+			if(!this.isFrameDirtyCached(frameIndex)) {
+				delete fullDependencies[frameIndex];
+			}
+		}
+
+		let rounds = [];
+
+		for(let i=0; i<maxIterations; i++) {
+			// find all frames with no dependencies
+			let actions = [];
+			let toRemove = [];
+
+			for(let frameIndexString in fullDependencies) {
+				let frameIndex = parseInt(frameIndexString);
+				if(fullDependencies[frameIndex].size == 0) {
+					actions.push({
+						frameIndex : frameIndex,
+						directDependencies : renderDependencies[frameIndex]
+					});
+					toRemove.push(frameIndex);
+				}
+			}
+
+
+			toRemove.map(frameIndexString => {
+				// remove myself
+				delete fullDependencies[frameIndexString];
+
+				let frameIndex = parseInt(frameIndexString);
+
+				// tell all others that i'm done
+				for(let otherFrameIndexString in fullDependencies) {
+					let otherFrameIndex = parseInt(otherFrameIndexString);
+					if(fullDependencies[otherFrameIndex].has(frameIndex)) {
+						fullDependencies[otherFrameIndex].delete(frameIndex);
+					}
+				}
+			})
+
+			if(actions.length == 0) {
+				break;
+			}
+			else {
+				rounds.push(actions);
+			}
+		}
+
+		let renderFrameCount = 0;
+		for(let round of rounds) {
+			console.log(`Rendering round [${round.map(action => action.frameIndex)}]`)
+			
+			let promises = round.map(action => {
+				let additionalObjectives = []
+				let priorPose = null;
+
+				if(action.directDependencies.length == 1) {
+					// limit forwards with 1 prior frame
+					let tminus1Frame = outputTimeline.getFrame(action.directDependencies[0]).content;
+
+					let tminus1 = tminus1Frame.shaftAngles;
+					let stride = action.frameIndex - action.directDependencies[0];
+					additionalObjectives.push({
+						objective : {
+							type : "LimitShaftAngleVelocityAndAccelerationForward",
+							tminus1 : tminus1,
+							tminus2 : tminus1,
+							maxAcceleration : maxAcceleration,
+							maxVelocity : maxVelocity,
+							stride : stride
+						},
+						weight : 1
+					});
+
+					priorPose = tminus1Frame;
+				}
+				else if(action.directDependencies.length == 2) {
+					let isCentral = action.directDependencies[1] > action.frameIndex;
+					if(isCentral) {
+						// central
+						let stride = action.frameIndex - action.directDependencies[0];
+						let tminus1Frame = outputTimeline.getFrame(action.directDependencies[0]).content;
+						let tminus1 = tminus1Frame.shaftAngles;
+						let tplus1 = outputTimeline.getFrame(action.directDependencies[1]).content.shaftAngles;
+
+						additionalObjectives.push({
+							objective : {
+								type : "LimitShaftAngleVelocityAndAccelerationCentral",
+								tminus1 : tminus1,
+								tplus1 : tplus1,
+								maxAcceleration : maxAcceleration,
+								maxVelocity : maxVelocity,
+								stride : stride
+							},
+							weight : 1
+						});
+
+						// HACK - remove for this one
+						return false;
+
+						priorPose = tminus1Frame;
+					}
+					else {
+						// forward
+						let stride = action.frameIndex - action.directDependencies[1];
+						let tminus1Frame = outputTimeline.getFrame(action.directDependencies[1]).content;
+						let tminus1 = tminus1Frame.shaftAngles;
+						let tminus2 = outputTimeline.getFrame(action.directDependencies[0]).content.shaftAngles;
+
+						additionalObjectives.push({
+							objective : {
+								type : "LimitShaftAngleVelocityAndAccelerationForward",
+								tminus1 : tminus1,
+								tminus1 : tminus2,
+								maxAcceleration : maxAcceleration,
+								maxVelocity : maxVelocity,
+								stride : stride
+							},
+							weight : 1
+						});
+
+						priorPose = tminus1Frame;
+					}
+				}
+
+				return this.renderAndStoreFrame(action.frameIndex, true, additionalObjectives, priorPose);
+			});
+
+			for(let promise of promises) {
+				renderFrameCount++;
+				await promise;
+			}
+			this.requestRefresh();
+		}
+
+		let totalTime = (performance.now() - startTime) / 1000;
+		console.log(`Renderered ${renderFrameCount} frames in ${totalTime}s`)
 	}
 }
 
